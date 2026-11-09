@@ -1,0 +1,458 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AzerothFoundry/vmangos-core/blob/feat/pve-decision-foundation/docs/ai/policy.schema.json",
+  "title": "Bot decision policy schema v1",
+  "description": "Editor assistance for policy JSON. The authoritative C++ parser and registered field/capability catalogs perform final validation. Reference example: ../../config/pve-decision.example.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revision",
+    "enabled",
+    "rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "enabled": {
+      "type": "boolean"
+    },
+    "predicates": {
+      "type": "object",
+      "maxProperties": 64,
+      "propertyNames": {
+        "$ref": "#/$defs/text"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/expression"
+      }
+    },
+    "rules": {
+      "type": "array",
+      "maxItems": 512,
+      "items": {
+        "$ref": "#/$defs/rule"
+      }
+    }
+  },
+  "$comment": "Final C++ validation also rejects duplicate JSON object keys and duplicate rule IDs, document size >1 MiB, JSON nesting >24, nonfinite numbers, unregistered fields/abilities and unsupported targets. Abilities/resources are granted only by the trusted C++ catalog. No JSON field can bypass native execution checks. Expressions use three-valued logic: a missing observation remains Unknown through not, and only True is eligible. No default here overrides the parser. Numeric integer properties require syntactic integer tokens in the C++ JSON parser.",
+  "examples": [
+    {
+      "schema_version": 1,
+      "revision": 1,
+      "enabled": false,
+      "rules": [
+        {
+          "id": "mage-basic-frostbolt",
+          "owner": "pve.rotation",
+          "priority": 100,
+          "ttl_ms": 500,
+          "when": [
+            {
+              "field": "self.class",
+              "op": "eq",
+              "value": 8
+            },
+            {
+              "field": "self.combat",
+              "op": "eq",
+              "value": true
+            },
+            {
+              "field": "target.distance",
+              "op": "lte",
+              "value": 30
+            }
+          ],
+          "action": {
+            "ability": "mage.frostbolt",
+            "target": "enemy"
+          },
+          "when_expr": {
+            "ref": "mage_offense_ready"
+          },
+          "adjust": [
+            {
+              "expr": {
+                "ref": "defensive_pressure"
+              },
+              "add": -200
+            }
+          ]
+        },
+        {
+          "id": "warrior-basic-sunder",
+          "owner": "pve.rotation",
+          "priority": 100,
+          "when": [
+            {
+              "field": "self.class",
+              "op": "eq",
+              "value": 1
+            }
+          ],
+          "action": {
+            "ability": "warrior.sunder_armor",
+            "target": "enemy"
+          }
+        },
+        {
+          "id": "priest-basic-heal",
+          "owner": "pve.rotation",
+          "priority": 200,
+          "when": [
+            {
+              "field": "self.class",
+              "op": "eq",
+              "value": 5
+            },
+            {
+              "field": "self.health_pct",
+              "op": "lt",
+              "value": 60
+            }
+          ],
+          "action": {
+            "ability": "priest.heal",
+            "target": "self"
+          }
+        }
+      ],
+      "predicates": {
+        "resources_healthy": {
+          "all": [
+            {
+              "field": "self.health_pct",
+              "op": "gte",
+              "value": 60
+            },
+            {
+              "field": "self.mana_pct",
+              "op": "gte",
+              "value": 35
+            }
+          ]
+        },
+        "mage_offense_ready": {
+          "all": [
+            {
+              "ref": "resources_healthy"
+            },
+            {
+              "field": "self.ready_spells",
+              "op": "contains",
+              "value": 116
+            },
+            {
+              "not": {
+                "field": "self.controlled",
+                "op": "eq",
+                "value": true
+              }
+            }
+          ]
+        },
+        "defensive_pressure": {
+          "any": [
+            {
+              "field": "self.health_pct",
+              "op": "lt",
+              "value": 35
+            },
+            {
+              "all": [
+                {
+                  "field": "self.mana_pct",
+                  "op": "lt",
+                  "value": 15
+                },
+                {
+                  "field": "self.ready_spells",
+                  "op": "not_contains",
+                  "value": 1953
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$",
+      "$comment": "C++ additionally limits UTF-8 byte length to 128; JSON Schema counts Unicode code points."
+    },
+    "score": {
+      "type": "integer",
+      "minimum": -100000,
+      "maximum": 100000
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/text"
+        },
+        "op": {
+          "enum": [
+            "eq",
+            "ne",
+            "lt",
+            "lte",
+            "gt",
+            "gte",
+            "contains",
+            "not_contains"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "number",
+              "minimum": -1000000000000.0,
+              "maximum": 1000000000000.0
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/$defs/text"
+            }
+          ]
+        }
+      },
+      "required": [
+        "field",
+        "op",
+        "value"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "enum": [
+                  "contains",
+                  "not_contains"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 4294967295
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "op": {
+                "enum": [
+                  "lt",
+                  "lte",
+                  "gt",
+                  "gte"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "type": "number",
+                "minimum": -1000000000000.0,
+                "maximum": 1000000000000.0
+              }
+            }
+          }
+        }
+      ],
+      "$comment": "Field registration and its exact number/flag/text/id-set type, legal operator and value are checked against the C++ FieldCatalog. IDs must be syntactic JSON integers, not decimal-form numbers."
+    },
+    "conditions": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/condition"
+      }
+    },
+    "expression": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/condition"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "all": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "$ref": "#/$defs/expression"
+              }
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "any": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 32,
+              "items": {
+                "$ref": "#/$defs/expression"
+              }
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/expression"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "ref": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "$comment": "Non-leaf expressions have exactly one operator. C++ resolves refs, rejects missing references and cycles, enforces expanded depth <=8, nodes <=256 per expression and <=16384 per policy. JSON Schema cannot enforce those reference-expansion constraints."
+    },
+    "adjustment": {
+      "type": "object",
+      "properties": {
+        "when": {
+          "$ref": "#/$defs/conditions"
+        },
+        "expr": {
+          "$ref": "#/$defs/expression"
+        },
+        "add": {
+          "$ref": "#/$defs/score"
+        }
+      },
+      "required": [
+        "add"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "when"
+          ]
+        },
+        {
+          "required": [
+            "expr"
+          ]
+        }
+      ]
+    },
+    "rule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/text"
+        },
+        "owner": {
+          "$ref": "#/$defs/text"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "priority": {
+          "$ref": "#/$defs/score"
+        },
+        "ttl_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5000,
+          "default": 500
+        },
+        "when": {
+          "$ref": "#/$defs/conditions"
+        },
+        "any": {
+          "$ref": "#/$defs/conditions"
+        },
+        "when_expr": {
+          "$ref": "#/$defs/expression"
+        },
+        "adjust": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/adjustment"
+          }
+        },
+        "action": {
+          "$ref": "#/$defs/action"
+        }
+      },
+      "required": [
+        "id",
+        "owner",
+        "priority",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "action": {
+      "type": "object",
+      "properties": {
+        "ability": {
+          "$ref": "#/$defs/text"
+        },
+        "target": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "required": [
+        "ability",
+        "target"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

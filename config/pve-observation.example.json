@@ -1,0 +1,10 @@
+{
+  "scope": {"actor": 1, "actor_generation": 1, "scene_generation": 1, "map": 0, "instance": 0, "group": 1},
+  "sequence": 1,
+  "now_ms": 1000,
+  "numbers": {"self.class": 5, "self.role": 4, "self.level": 20, "self.health_pct": 30, "self.mana_pct": 80},
+  "flags": {"self.alive": true, "self.combat": true, "self.controlled": false},
+  "texts": {"scene.kind": "world"},
+  "sets": {"self.knows": [2054], "self.ready_spells": [2054]},
+  "targets": {"self": 1}
+}

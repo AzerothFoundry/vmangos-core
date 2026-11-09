@@ -15,6 +15,7 @@
 */
 
 #include "PartyBotAI.h"
+#include "PveDecisionRuntime.h"
 #include "PartyBotLootPolicy.h"
 #include "LootMgr.h"
 #include "Packets/Loot.h"
@@ -1336,6 +1337,7 @@ void PartyBotAI::UpdateAI(uint32 const diff)
         m_resetSpellData = false;
     }
 
+    PveDecisionRuntime::Observe(*this, m_pveDecision);
     Player* pLeader = GetPartyLeader();
     if (!pLeader)
     {

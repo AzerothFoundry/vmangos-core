@@ -199,6 +199,10 @@ set (game_SRCS
     PlayerBots/McBotTactics.cpp
     PlayerBots/PartyBotFormation.cpp
     PlayerBots/PartyBotAI.cpp
+    PlayerBots/BotDecision.cpp
+    PlayerBots/BotDecisionPolicy.cpp
+    PlayerBots/BotEncounter.cpp
+    PlayerBots/PveDecisionRuntime.cpp
     PlayerBots/PartyBotPreset.cpp
     PlayerBots/WorldBotAI.cpp
     PlayerBots/WorldBotTowerTask.cpp
