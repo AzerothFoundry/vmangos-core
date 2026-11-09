@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "id": "example.training-encounter",
+  "initial_phase": "p1",
+  "slots": [
+    {"id": "main_tank", "count": 1, "roles": [3]},
+    {"id": "healer", "count": 1, "roles": [4]},
+    {"id": "damage", "count": 3, "roles": [1, 2]}
+  ],
+  "phases": [
+    {
+      "id": "p1",
+      "min_hold_ms": 1000,
+      "transitions": [
+        {"to": "p2", "all": [{"field": "target.health_pct", "op": "lte", "value": 50}]}
+      ]
+    },
+    {"id": "p2", "min_hold_ms": 1000, "transitions": []}
+  ]
+}

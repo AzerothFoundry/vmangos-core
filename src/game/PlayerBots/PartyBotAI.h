@@ -19,6 +19,7 @@
 
 #include "CombatBotBaseAI.h"
 #include "PartyBotServices.h"
+#include "PveDecisionRuntime.h"
 #include "Group.h"
 #include "ObjectAccessor.h"
 #include <map>
@@ -27,6 +28,8 @@
 class PartyBotAI : public CombatBotBaseAI
 {
 public:
+    // Per-instance state; no global actor pointer registry survives a bot logout.
+    PveDecisionRuntime::State m_pveDecision;
     PartyBotAI() : CombatBotBaseAI() { m_updateTimer.Reset(1000); }
 
     PartyBotAI(Player* pLeader, Player* pClone, CombatBotRoles role, uint8 race, uint8 class_, uint8 level, uint32 mapId, uint32 instanceId, float x, float y, float z, float o)

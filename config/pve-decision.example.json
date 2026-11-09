@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "enabled": false,
+  "rules": [
+    {
+      "id": "mage-basic-frostbolt",
+      "owner": "pve.rotation",
+      "priority": 100,
+      "ttl_ms": 500,
+      "when": [
+        {
+          "field": "self.class",
+          "op": "eq",
+          "value": 8
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 30
+        }
+      ],
+      "action": {
+        "ability": "mage.frostbolt",
+        "target": "enemy"
+      },
+      "when_expr": {
+        "ref": "mage_offense_ready"
+      },
+      "adjust": [
+        {
+          "expr": {
+            "ref": "defensive_pressure"
+          },
+          "add": -200
+        }
+      ]
+    },
+    {
+      "id": "warrior-basic-sunder",
+      "owner": "pve.rotation",
+      "priority": 100,
+      "when": [
+        {
+          "field": "self.class",
+          "op": "eq",
+          "value": 1
+        }
+      ],
+      "action": {
+        "ability": "warrior.sunder_armor",
+        "target": "enemy"
+      }
+    },
+    {
+      "id": "priest-basic-heal",
+      "owner": "pve.rotation",
+      "priority": 200,
+      "when": [
+        {
+          "field": "self.class",
+          "op": "eq",
+          "value": 5
+        },
+        {
+          "field": "self.health_pct",
+          "op": "lt",
+          "value": 60
+        }
+      ],
+      "action": {
+        "ability": "priest.heal",
+        "target": "self"
+      }
+    }
+  ],
+  "predicates": {
+    "resources_healthy": {
+      "all": [
+        {
+          "field": "self.health_pct",
+          "op": "gte",
+          "value": 60
+        },
+        {
+          "field": "self.mana_pct",
+          "op": "gte",
+          "value": 35
+        }
+      ]
+    },
+    "mage_offense_ready": {
+      "all": [
+        {
+          "ref": "resources_healthy"
+        },
+        {
+          "field": "self.ready_spells",
+          "op": "contains",
+          "value": 116
+        },
+        {
+          "not": {
+            "field": "self.controlled",
+            "op": "eq",
+            "value": true
+          }
+        }
+      ]
+    },
+    "defensive_pressure": {
+      "any": [
+        {
+          "field": "self.health_pct",
+          "op": "lt",
+          "value": 35
+        },
+        {
+          "all": [
+            {
+              "field": "self.mana_pct",
+              "op": "lt",
+              "value": 15
+            },
+            {
+              "field": "self.ready_spells",
+              "op": "not_contains",
+              "value": 1953
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
