@@ -46,7 +46,10 @@ void PacketBuilder::WriteCommonMonsterMovePart(MoveSpline const& move_spline, Wo
 {
     MoveSplineFlag splineflags = move_spline.splineflags;
 
-    data << move_spline.spline.getPoint(move_spline.spline.first());
+    // Continuations start where the server is now, not at the old path origin.
+    data << (move_spline.splineflags & MoveSplineFlag::Mask_CatmullRom
+        ? move_spline.spline.getPoint(move_spline.spline.first())
+        : Vector3(move_spline.ComputePosition()));
     data << move_spline.GetId();
 
     switch (splineflags & MoveSplineFlag::Mask_Final_Facing)
@@ -74,40 +77,53 @@ void PacketBuilder::WriteCommonMonsterMovePart(MoveSpline const& move_spline, Wo
     data << move_spline.Duration();
 }
 
-int32 WriteLinearPath(Spline<int32> const& spline, ByteBuffer& data, uint32 start)
+namespace {
+Vector3 LinearOffset(Vector3 const& destination, Vector3 const& point)
 {
-    uint32 maxPointsPerPacket = sWorld.getConfig(CONFIG_UINT32_MAX_POINTS_PER_MVT_PACKET);
-    uint32 last_idx = spline.getPointCount() - 3;
-    int32 lastIdxWritten = -1;
-    if ((last_idx - start) > maxPointsPerPacket)
+    Vector3 offset = destination - point;
+    // [-ZERO] Preserve the native near-zero workaround, including during bounds checks.
+    if (fabs(offset.x) < 0.25 && fabs(offset.y) < 0.25 && fabs(offset.z) < 0.25)
+        offset.z += offset.z < 0 ? 0.51f : 0.26f;
+    return offset;
+}
+bool PackedComponentFits(float value, int minimum, int maximum)
+{
+    // appendPackXYZ rounds to quarter yards BEFORE masking. Test that actual integer,
+    // not a float magnitude approximation: negative and positive bounds differ.
+    double quantized = std::round(double(value) * 4.0);
+    return std::isfinite(quantized) && quantized >= minimum && quantized <= maximum;
+}
+bool PackedOffsetFits(Vector3 const& offset)
+{
+    return PackedComponentFits(offset.x, -1024, 1023) &&
+           PackedComponentFits(offset.y, -1024, 1023) &&
+           PackedComponentFits(offset.z, -512, 511);
+}
+}
+int32 WriteLinearPath(Spline<int32> const& spline, ByteBuffer& data, uint32 start, uint32 maxPoints)
+{
+    uint32 end = spline.last();
+    uint32 budget = std::max(uint32(1), maxPoints);
+    uint32 limit = start + std::min(end - start, budget - 1);
+    uint32 last = start; // Header origin + one float endpoint always forms a legal two-point move.
+    for (uint32 candidate = start + 1; candidate <= limit; ++candidate)
     {
-        last_idx = start + maxPointsPerPacket;
-        lastIdxWritten = last_idx;
+        bool fits = true;
+        for (uint32 i = start; i < candidate; ++i)
+            if (!PackedOffsetFits(LinearOffset(spline.getPoint(candidate), spline.getPoint(i))))
+            { fits = false; break; }
+        // A later endpoint can fit after an earlier one failed (a returning curve).
+        if (fits) last = candidate;
     }
-    Vector3 const* real_path = &spline.getPoint(1);
-    Vector3 destination = real_path[last_idx];
-
-    data << (last_idx - start + 1);
+    Vector3 const& destination = spline.getPoint(last);
+    data << (last - start + 1);
     data << destination;
-    if (last_idx > 1)
+    for (uint32 i = start; i < last; ++i)
     {
-        Vector3 offset;
-        // first and last points already appended
-        for (uint32 i = start; i < last_idx; ++i)
-        {
-            offset = destination - real_path[i];
-            // [-ZERO] The client freezes when it gets a zero offset.
-            if (fabs(offset.x) < 0.25 && fabs(offset.y) < 0.25 && fabs(offset.z) < 0.25)
-            {
-                if (offset.z < 0)
-                    offset.z += 0.51f;
-                else
-                    offset.z += 0.26f;
-            }
-            data.appendPackXYZ(offset.x, offset.y, offset.z);
-        }
+        Vector3 offset = LinearOffset(destination, spline.getPoint(i));
+        data.appendPackXYZ(offset.x, offset.y, offset.z);
     }
-    return lastIdxWritten;
+    return last < end ? int32(last) : -1;
 }
 
 void WriteCatmullRomPath(Spline<int32> const& spline, ByteBuffer& data)
@@ -127,6 +143,11 @@ void WriteCatmullRomCyclicPath(Spline<int32> const& spline, ByteBuffer& data)
 
 int PacketBuilder::WriteMonsterMove(MoveSpline const& move_spline, WorldPacket& data, int firstPoint)
 {
+    return WriteMonsterMove(move_spline, data, firstPoint, sWorld.getConfig(CONFIG_UINT32_MAX_POINTS_PER_MVT_PACKET));
+}
+
+int PacketBuilder::WriteMonsterMove(MoveSpline const& move_spline, WorldPacket& data, int firstPoint, unsigned maxPoints)
+{
     WriteCommonMonsterMovePart(move_spline, data);
     size_t durationPos = data.wpos() - 4;
 
@@ -142,11 +163,30 @@ int PacketBuilder::WriteMonsterMove(MoveSpline const& move_spline, WorldPacket& 
     }
     else
     {
-        int32 lastNode = WriteLinearPath(spline, data, firstPoint);
-        uint32 duration = move_spline.Duration(0, lastNode >= 0 ? lastNode : move_spline.CountSplinePoints());
-        data.put<uint32>(durationPos, duration - move_spline.time_passed);
+        // Include every unvisited corner, including the endpoint of the current segment.
+        firstPoint = std::max(firstPoint, move_spline._currentSplineIdx() + 1);
+        int32 lastNode = WriteLinearPath(spline, data, firstPoint, maxPoints);
+        int32 arrival = spline.length(lastNode >= 0 ? lastNode : spline.last());
+        data.put<uint32>(durationPos, uint32(std::max(1, arrival - move_spline.timePassed())));
         return lastNode;
     }
+}
+
+bool PacketBuilder::WriteContinuation(MoveSpline& move, WorldPacket& data)
+{
+    return WriteContinuation(move, data, sWorld.getConfig(CONFIG_UINT32_MAX_POINTS_PER_MVT_PACKET));
+}
+
+bool PacketBuilder::WriteContinuation(MoveSpline& move, WorldPacket& data, unsigned maxPoints)
+{
+    if (!move.NeedsPacketContinuation()) return false;
+    move.MarkPacketContinuationChecked();
+    int previous = move.getLastPointSent();
+    int next = WriteMonsterMove(move, data, move._currentSplineIdx() + 1, maxPoints);
+    // A clipped prefix can still end at the same point. Only advertise actual progress.
+    if (next >= 0 && next <= previous) return false;
+    move.setLastPointSent(next);
+    return true;
 }
 
 void PacketBuilder::WriteCreate(MoveSpline const& move_spline, ByteBuffer& data)

@@ -47,7 +47,7 @@ class PlayerAI
         // == Fields =======================================
 
         // Pointer to controlled by AI player
-        Player* me;
+        Player* me = nullptr;
         bool enablePositiveSpells;
 };
 

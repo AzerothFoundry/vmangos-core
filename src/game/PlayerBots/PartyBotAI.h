@@ -18,12 +18,16 @@
 #define MANGOS_PARTYBOTAI_H
 
 #include "CombatBotBaseAI.h"
+#include "PartyBotServices.h"
 #include "Group.h"
 #include "ObjectAccessor.h"
+#include <map>
+#include <utility>
 
 class PartyBotAI : public CombatBotBaseAI
 {
 public:
+    PartyBotAI() : CombatBotBaseAI() { m_updateTimer.Reset(1000); }
 
     PartyBotAI(Player* pLeader, Player* pClone, CombatBotRoles role, uint8 race, uint8 class_, uint8 level, uint32 mapId, uint32 instanceId, float x, float y, float z, float o)
         : CombatBotBaseAI(), m_race(race), m_class(class_), m_level(level), m_mapId(mapId), m_instanceId(instanceId), m_x(x), m_y(y), m_z(z), m_o(o)
@@ -41,16 +45,16 @@ public:
         m_updateTimer.Reset(2000);
     }
 
-    bool OnSessionLoaded(PlayerBotEntry* entry, WorldSession* sess) final;
-    void OnPlayerLogin() final;
-    void UpdateAI(uint32 const diff) final;
-    void OnPacketReceived(WorldPacket const* packet) final;
+    bool OnSessionLoaded(PlayerBotEntry* entry, WorldSession* sess) override;
+    void OnPlayerLogin() override;
+    void UpdateAI(uint32 const diff) override;
+    void OnPacketReceived(WorldPacket const* packet) override;
 
     void CloneFromPlayer(Player const* pPlayer);
     void AddToPlayerGroup();
 
     bool CanTryToCastSpell(Unit const* pTarget, SpellEntry const* pSpellEntry) const final;
-    Player* GetPartyLeader() const;
+    virtual Player* GetPartyLeader() const;
     bool AttackStart(Unit* pVictim);
     Unit* SelectAttackTarget(Player* pLeader) const;
     Unit* SelectPartyAttackTarget() const;
@@ -58,7 +62,17 @@ public:
     Player* SelectShieldTarget() const;
     Unit* GetMarkedTarget(RaidTargetIcon mark) const;
     bool CanUseCrowdControl(SpellEntry const* pSpellEntry, Unit* pTarget) const;
+    SpellCastResult CastPartySpell(Unit* target, SpellEntry const* spell, bool triggered);
+    SpellCastResult CastPartySpell(Unit* target, uint32 spellId, bool triggered);
     bool DrinkAndEat();
+    bool TryResurrectParty();
+    bool OwnsResurrectionApproach() const;
+    void StopResurrectionApproach();
+    void PrepareRecoveryCast(bool stopMoving);
+    bool TryEmergencyHeal();
+    bool TryRecoveryDispel(Unit* target, SpellEntry const* spell);
+    bool BuffRaidBlessings();
+    void ConfigureRaidSupport();
     bool ShouldAutoRevive() const;
     bool IsValidDistancingTarget(Unit* pTarget, Unit* pEnemy);
     Unit* GetDistancingTarget(Unit* pEnemy);
@@ -104,7 +118,26 @@ public:
     float m_y = 0.0f;
     float m_z = 0.0f;
     float m_o = 0.0f;
+    uint32 m_presetSpecId = 0;
+    uint32 m_presetGearId = 0;
+    uint32 m_ownerReferenceSpec = 0;
+    float m_ownerGearRatio = 0;
+    float m_appliedGearRatio = 0;
+    float m_presetTargetRatio = 0;
+    uint32 m_presetEquipped = 0;
+    uint32 m_presetKnownSpells = 0;
+    uint32 m_presetTotalSpells = 0;
+    bool m_presetPhase6 = false;
+    uint32 m_presetExpectedItems = 0;
+    std::map<uint8, std::pair<uint32,uint32>> m_presetChosenItems;
+    bool m_presetLimited = false;
+    std::string m_presetReport;
+    PartyBotServiceState m_service;
+    bool m_quickRaid = false;
     bool m_resetSpellData = false;
+    ObjectGuid m_resurrectionApproachTarget;
+    uint32 m_resurrectionApproachStarted = 0;
+    std::map<uint64, uint32> m_failedResurrectionTargets;
 };
 
 #endif

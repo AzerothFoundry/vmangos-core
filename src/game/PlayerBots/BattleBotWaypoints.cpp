@@ -16,6 +16,7 @@
 
 #include "BattleBotAI.h"
 #include "BattleBotWaypoints.h"
+#include "SnowfallApproachPolicy.h"
 #include "WorldPacket.h"
 #include "Opcodes.h"
 #include "Player.h"
@@ -178,6 +179,9 @@ std::vector<uint32> const vFlagsAB = { GO_AB_ALLIANCE_BANNER , GO_AB_CONTESTED_B
 
 void AtFlag(BattleBotAI* pAI, std::vector<uint32> const& vFlagIds)
 {
+    // AB legacy waypoint callbacks use the same capture lease/risk/native gate.
+    if(pAI->me->GetBattleGround()&&pAI->me->GetBattleGround()->GetTypeID()==BATTLEGROUND_AB){pAI->TryCaptureArathiFlag();return;}
+
     if (Player* pFriend = pAI->me->FindNearestFriendlyPlayer(INTERACTION_DISTANCE))
     {
         if (pFriend->GetCurrentSpell(CURRENT_GENERIC_SPELL) &&
@@ -236,27 +240,7 @@ void AtCaveExit(BattleBotAI* pAI)
 
 void MoveToNextPointSpecial(BattleBotAI* pAI)
 {
-    if (!pAI->m_currentPath)
-        return;
-
-    uint32 const lastPointInPath = pAI->m_movingInReverse ? 0 : ((*pAI->m_currentPath).size() - 1);
-
-    if ((pAI->m_currentPoint == lastPointInPath) ||
-        (pAI->me->IsInCombat() && !pAI->ShouldIgnoreCombat()) || !pAI->me->IsAlive())
-    {
-        // Path is over.
-        pAI->ClearPath();
-        return;
-    }
-
-    if (pAI->m_movingInReverse)
-        pAI->m_currentPoint--;
-    else
-        pAI->m_currentPoint++;
-
-    BattleBotWaypoint& nextPoint = pAI->m_currentPath->at(pAI->m_currentPoint);
-
-    pAI->me->GetMotionMaster()->MovePoint(pAI->m_currentPoint, nextPoint.x + frand(-1, 1), nextPoint.y + frand(-1, 1), nextPoint.z, MOVE_NONE);
+    pAI->AdvanceLegacyWaypoint(MOVE_NONE,false);
 }
 
 std::vector<RecordedMovementPacket> vAllianceGraveyardJumpPath =
@@ -1750,41 +1734,46 @@ std::vector<BattleBotPath*> const vPaths_NoReverseAllowed =
 
 void BattleBotAI::MovementInform(uint32 movementType, uint32 data)
 {
-    if (movementType == POINT_MOTION_TYPE)
-    {
-        if (m_currentPath && m_currentPath->at(data).pFunc)
-            (*m_currentPath->at(data).pFunc)(this);
-        else
-            MoveToNextPoint();
-
-        ActivateNearbyAreaTrigger();
-    }
+    if(movementType!=POINT_MOTION_TYPE)return;
+    if(!me->IsInWorld()||me->IsBeingTeleported()||!me->IsAlive()){ClearPath();return;}
+    // Objective/preparation points are not indexes into a legacy authored path.
+    if(!BattleBotWaypointPolicy::IsTicket(data)){ActivateNearbyAreaTrigger();return;}
+    if(!m_currentPath || !BattleBotWaypointPolicy::Accept(m_waypointTicket,data,reinterpret_cast<std::uintptr_t>(m_currentPath),m_currentPath->size(),m_currentPoint))return;
+    BattleBotWaypoint point=(*m_currentPath)[m_currentPoint];
+    // Finalize is also called when a point is cancelled. A cancellation is not
+    // an arrival and must not run an endpoint action or advance another route.
+    if(me->GetDistance(point.x,point.y,point.z)>5.0f){ClearPath();return;}
+    if(point.pFunc)(*point.pFunc)(this);else MoveToNextPoint();
+    ActivateNearbyAreaTrigger();
 }
 
 void BattleBotAI::MoveToNextPoint()
 {
-    if (!m_currentPath)
-        return;
-
-    uint32 const lastPointInPath = m_movingInReverse ? 0 : ((*m_currentPath).size() - 1);
-
-    if ((m_currentPoint == lastPointInPath) ||
-        (me->IsInCombat() && !ShouldIgnoreCombat()) || !me->IsAlive())
-    {
-        // Path is over.
-        ClearPath();
-        return;
-    }
-
-    if (m_movingInReverse)
-        m_currentPoint--;
-    else
-        m_currentPoint++;
-
-    BattleBotWaypoint& nextPoint = m_currentPath->at(m_currentPoint);
-
-    me->GetMotionMaster()->MovePoint(m_currentPoint, nextPoint.x + frand(-1, 1), nextPoint.y + frand(-1, 1), nextPoint.z, MOVE_PATHFINDING | MOVE_EXCLUDE_STEEP_SLOPES);
+    AdvanceLegacyWaypoint(MOVE_PATHFINDING|MOVE_EXCLUDE_STEEP_SLOPES,true);
 }
+
+void BattleBotAI::AdvanceLegacyWaypoint(uint32 options,bool allowTaskTravel)
+{
+    BattleBotWaypointPolicy::Invalidate(m_waypointTicket);
+    if(!m_currentPath || m_currentPath->empty() || !me->IsInWorld() || me->IsBeingTeleported() || !me->IsAlive() ||
+       (me->IsInCombat()&&!ShouldIgnoreCombat()&&!(allowTaskTravel&&m_wsgTravel))){ClearPath();return;}
+    uint32 next=0;
+    // UINT_MAX forward / size reverse are intentional pre-first sentinels used
+    // by closest-point route initialization; every other invalid index aborts.
+    if(!BattleBotWaypointPolicy::Next(m_currentPath->size(),m_currentPoint,m_movingInReverse,next)){ClearPath();return;}
+    m_currentPoint=next;
+    BattleBotWaypoint point=(*m_currentPath)[next];
+    // Arm before replacing the native generator: its Finalize can synchronously
+    // report the previous point. Only this new one-shot ticket may complete.
+    uint32 ticket=BattleBotWaypointPolicy::Arm(m_waypointTicket,reinterpret_cast<std::uintptr_t>(m_currentPath),next);
+    me->GetMotionMaster()->MovePoint(ticket,point.x+frand(-1,1),point.y+frand(-1,1),point.z,options);
+}
+
+namespace {
+unsigned SnowfallSide(BattleBotPath const* path){return path==&vPath_AV_Iceblood_Garrison_to_Snowfall_Flag?1:path==&vPath_AV_Snowfall_Flag_to_Field_of_Strife_Stoneheart_Snowfall_Crossroad?2:0;}
+bool SnowfallAllowed(Player* actor,BattleBotPath const* path,bool reverse){return SnowfallApproachPolicy::Allowed(unsigned(actor->GetBGTeam()),SnowfallSide(path),reverse);}
+}
+std::string BattleBotSnowfallRouteName(BattleBotPath const* path,bool reverse){unsigned side=SnowfallSide(path);return side==1?(reverse?"south_descent":"horde_south_ascent"):side==2?(reverse?"alliance_north_ascent":"north_descent"):"other";}
 
 bool BattleBotAI::StartNewPathFromBeginning()
 {
@@ -1820,8 +1809,9 @@ bool BattleBotAI::StartNewPathFromBeginning()
 
     for (const auto& pPath : *vPaths)
     {
+        if(!pPath||pPath->empty())continue;
         BattleBotWaypoint* pStart = &((*pPath)[0]);
-        if (me->GetDistance(pStart->x, pStart->y, pStart->z) < INTERACTION_DISTANCE)
+        if (SnowfallAllowed(me,pPath,false) && me->GetDistance(pStart->x, pStart->y, pStart->z) < INTERACTION_DISTANCE)
             availablePaths.emplace_back(AvailablePath(pPath, false));
 
         // Some paths are not allowed backwards.
@@ -1829,7 +1819,7 @@ bool BattleBotAI::StartNewPathFromBeginning()
             continue;
 
         BattleBotWaypoint* pEnd = &((*pPath)[(*pPath).size() - 1]);
-        if (me->GetDistance(pEnd->x, pEnd->y, pEnd->z) < INTERACTION_DISTANCE)
+        if (SnowfallAllowed(me,pPath,true) && me->GetDistance(pEnd->x, pEnd->y, pEnd->z) < INTERACTION_DISTANCE)
             availablePaths.emplace_back(AvailablePath(pPath, true));
     }
 
@@ -1874,6 +1864,7 @@ void BattleBotAI::StartNewPathFromAnywhere()
 
     for (const auto& pPath : *vPaths)
     {
+        if(!pPath||pPath->empty()||!SnowfallAllowed(me,pPath,false))continue;
         for (uint32 i = 0; i < pPath->size(); i++)
         {
             BattleBotWaypoint& waypoint = ((*pPath)[i]);
@@ -1905,10 +1896,11 @@ bool BattleBotAI::StartNewPathToPosition(Position const& targetPosition, std::ve
 
     for (const auto& pPath : vPaths)
     {
+        if(!pPath||pPath->empty())continue;
         {
             BattleBotWaypoint& lastPoint = ((*pPath)[pPath->size() - 1]);
             float const distanceFromPathEndToTarget = GetDistance3D(lastPoint, targetPosition);
-            if (closestDistanceToTarget > distanceFromPathEndToTarget)
+            if (SnowfallAllowed(me,pPath,false) && closestDistanceToTarget > distanceFromPathEndToTarget)
             {
                 float closestDistanceFromMeToPoint = FLT_MAX;
 
@@ -1934,7 +1926,7 @@ bool BattleBotAI::StartNewPathToPosition(Position const& targetPosition, std::ve
         {
             BattleBotWaypoint& firstPoint = ((*pPath)[0]);
             float const distanceFromPathBeginToTarget = GetDistance3D(firstPoint, targetPosition);
-            if (closestDistanceToTarget > distanceFromPathBeginToTarget)
+            if (SnowfallAllowed(me,pPath,true) && closestDistanceToTarget > distanceFromPathBeginToTarget)
             {
                 float closestDistanceFromMeToPoint = FLT_MAX;
 
@@ -2153,29 +2145,7 @@ bool BattleBotAI::StartNewPathToObjective()
         }
         case BATTLEGROUND_WS:
         {
-            if (me->GetTeam() == HORDE)
-            {
-                if (me->HasAura(AURA_SILVERWING_FLAG))
-                    return StartNewPathToPosition(WS_FLAG_POS_HORDE, vPaths_WS);
-                if (!static_cast<BattleGroundWS*>(bg)->IsAllianceFlagPickedup())
-                {
-                    float const distance = me->GetDistance(WS_FLAG_POS_ALLIANCE);
-                    if (distance > 20.0f && distance < 300.0f)
-                        return StartNewPathToPosition(WS_FLAG_POS_ALLIANCE, vPaths_WS);
-                }
-            }
-            else
-            {
-                if (me->HasAura(AURA_WARSONG_FLAG))
-                    return StartNewPathToPosition(WS_FLAG_POS_ALLIANCE, vPaths_WS);
-                if (!static_cast<BattleGroundWS*>(bg)->IsHordeFlagPickedup())
-                {
-                    float const distance = me->GetDistance(WS_FLAG_POS_HORDE);
-                    if (distance > 20.0f && distance < 300.0f)
-                        return StartNewPathToPosition(WS_FLAG_POS_HORDE, vPaths_WS);
-                }
-            }
-            break;
+            return StartWarsongObjective();
         }
     }
 
@@ -2184,6 +2154,8 @@ bool BattleBotAI::StartNewPathToObjective()
 
 void BattleBotAI::ClearPath()
 {
+    m_avRouteStaleAt=0;
+    BattleBotWaypointPolicy::Invalidate(m_waypointTicket);
     m_currentPath = nullptr;
     m_currentPoint = 0;
     m_movingInReverse = false;

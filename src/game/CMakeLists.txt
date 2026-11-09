@@ -16,6 +16,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 set (game_SRCS
+    CharacterOverrides.cpp
     AccountMgr.cpp
     AuraRemovalMgr.cpp
     AutoBroadCastMgr.cpp
@@ -67,6 +68,7 @@ set (game_SRCS
     AI/TotemAI.cpp
     Anticheat/Anticheat.cpp
     AuctionHouse/AuctionHouseBotMgr.cpp
+    AuctionHouse/MaterialSupply.cpp
     AuctionHouse/AuctionHouseMgr.cpp
     Battlegrounds/BattleGround.cpp
     Battlegrounds/BattleGroundAB.cpp
@@ -82,6 +84,9 @@ set (game_SRCS
     Chat/MasterPlayerChat.cpp
     Commands/AccountCommands.cpp
     Commands/CharacterCommands.cpp
+    Commands/GmSkillTools.cpp
+    Commands/GmUiCommands.cpp
+    Commands/GmItemBrowser.cpp
     Commands/CreatureCommands.cpp
     Commands/DebugCommands.cpp
     Commands/LookupCommands.cpp
@@ -129,6 +134,7 @@ set (game_SRCS
     LFG/LFGMgr.cpp
     LFG/LFGQueue.cpp
     Mail/Mail.cpp
+    Mail/GmItemMail.cpp
     Mail/MassMailMgr.cpp
     Maps/GridMap.cpp
     Maps/GridNotifiers.cpp
@@ -189,12 +195,26 @@ set (game_SRCS
     PacketBroadcast/ChatCommands.cpp
     PacketBroadcast/MovementBroadcaster.cpp
     PacketBroadcast/PlayerBroadcaster.cpp
+    PlayerBots/RaidCoordination.cpp
+    PlayerBots/McBotTactics.cpp
+    PlayerBots/PartyBotFormation.cpp
     PlayerBots/PartyBotAI.cpp
+    PlayerBots/PartyBotPreset.cpp
+    PlayerBots/WorldBotAI.cpp
+    PlayerBots/WorldBotTowerTask.cpp
+    PlayerBots/WorldBotPKTask.cpp
+    PlayerBots/WorldBotManager.cpp
+    PlayerBots/WorldBotModes.cpp
+    PlayerBots/PartyBotServices.cpp
     PlayerBots/CombatBotBaseAI.cpp
     PlayerBots/BattleBotAI.cpp
+    PlayerBots/PvPCombatPolicy.cpp
+    PlayerBots/BattleBotPolicyRuntime.cpp
+    PlayerBots/BattleBotTactics.cpp
     PlayerBots/BattleBotWaypoints.cpp
     PlayerBots/PlayerBotAI.cpp
     PlayerBots/PlayerBotMgr.cpp
+    PlayerBots/PlayerBotMatch.cpp
     Server/Protocol/Opcodes.cpp
     Server/Packets/Battleground.cpp
     Server/Packets/AuctionHouse.cpp

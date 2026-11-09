@@ -175,7 +175,8 @@ struct boss_skeramAI : public ScriptedAI
         // Initial value was 4+ but it was changed in patch 1.12 to be less dependant on raid
         // We assume value is number of players / 10 (raid of 40 people in Classic -> value of 4)
         if (sWorld.GetWowPatch() >= WOW_PATCH_112)
-            m_maxMeleeAllowed = m_pInstance->GetMap()->GetPlayersCountExceptGMs() / 10;
+            // Summoning this scripted NPC outside AQ has no instance controller.
+            m_maxMeleeAllowed = m_creature->GetMap()->GetPlayersCountExceptGMs() / 10;
         else
             m_maxMeleeAllowed = 4;
     }

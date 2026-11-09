@@ -43,6 +43,7 @@ class PointMovementGenerator
 
         void UnitSpeedChanged() override { m_recalculateSpeed = true; }
 
+        uint32 GetId() const { return m_id; }
         MovementGeneratorType GetMovementGeneratorType() const override { return POINT_MOTION_TYPE; }
 
         bool GetDestination(float& x, float& y, float& z) const { x=m_x; y=m_y; z=m_z; return true; }

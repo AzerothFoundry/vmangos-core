@@ -30,6 +30,7 @@
 #include "Object.h"
 #include "Chat.h"
 #include "BattleGroundMgr.h"
+#include "PlayerBotMatch.h"
 #include "BattleGroundWS.h"
 #include "BattleGround.h"
 #include "Language.h"
@@ -465,6 +466,8 @@ void WorldSession::HandleBattleFieldPortOpcode(WorldPackets::Battleground::Battl
 
             _player->GetSession()->SendPacket(sBattleGroundMgr.BuildBattleGroundStatusPacket(bg, queueSlot, STATUS_IN_PROGRESS, 0, bg->GetStartTime()));
             // remove battleground queue status from BGmgr
+            // Native invitation has passed all checks; retain arrivals until WORLDPORT_ACK adds them.
+            BotMatch::ObserveHumanPort(_player, bg->GetInstanceID());
             bgQueue.RemovePlayer(_player->GetObjectGuid(), false);
             // this is still needed here if battleground "jumping" shouldn't add deserter debuff
             // also this is required to prevent stuck at old battleground after SetBattleGroundId set to new

@@ -239,6 +239,12 @@ class Spell
         SpellCastResult CheckRange(bool strict);
         SpellCastResult CheckPower() const;
         SpellCastResult CheckCasterAuras() const;
+        static SpellCastResult CheckCasterAurasFor(Unit* caster, SpellEntry const* info, uint32 castTime);
+        uint64 GetCastInstanceId() const { return m_castInstanceId; }
+    private:
+        static uint64 NextCastInstanceId();
+        uint64 const m_castInstanceId = NextCastInstanceId();
+    public:
         bool ValidateExplicitTargetMask() const;
 
         float CalculateDamage(SpellEffectIndex i, Unit* target) { return m_caster->CalculateSpellEffectValue(target, m_spellInfo, i, &m_currentBasePoints[i], this); }

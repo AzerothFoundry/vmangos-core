@@ -1054,6 +1054,12 @@ PerformanceLog.SlowPacketBroadcast = 0
 #        Default: 0 (hide values)
 #                 1 (show values)
 #
+#    ShowEnemyBuffs
+#        Allow observers to list hostile unit buffs using the native aura visibility flag.
+#        Changes refresh existing visible units after reload config. No extra aura durations.
+#        Default: 0 (normal 1.12 rules, Detect Magic and GM visibility retained)
+#                 1 (show hostile buffs; does not make unselectable units selectable)
+#
 #    MaxPlayerLevel
 #        Max level that can be reached by a player for experience (in range from 1 to 100).
 #        Change not recommended
@@ -1306,6 +1312,7 @@ LimitPlayTime = 0
 RestrictUnverifiedAccounts = 0
 SkipCinematics = 0
 ShowHealthValues = 0
+ShowEnemyBuffs = 0
 MaxPlayerLevel = 60
 StartPlayerLevel = 1
 StartPlayerMoney = 0
@@ -3215,6 +3222,13 @@ AHBot.itemcount = 50
 #                 0 (normal starting items)
 #                 2 (premade gear template)
 #
+#    BattleBot.AutoMatchAfterSeconds
+#        Wait before adding scoped, equipment-matched bots when only one faction
+#        has real players in a queue bracket. Manual cancellation blocks that queue
+#        entry until requeue. Independent of AutoJoin; do not enable both modes.
+#        Range: 0..300 seconds; 0 disables new automatic requests. Hot reloadable.
+#        Default: 0
+#
 #    BattleBot.AutoJoin
 #        Adds enough battlebots for battleground to start when a player queues.
 #        Default: 0 - off
@@ -3239,6 +3253,7 @@ PartyBot.RandomGearLevelDifference = 10
 
 BattleBot.AutoEquip = 1
 BattleBot.AutoJoin = 0
+BattleBot.AutoMatchAfterSeconds = 0
 
 ###################################################################################################################
 # MAIL FLOODING MITIGATION
@@ -3335,3 +3350,18 @@ DynamicRespawn.AffectLevelBelow = 0
 DynamicRespawn.PlayersThreshold = 0
 DynamicRespawn.PlayersMaxLevelDiff = 0
 
+
+# Bot-only 3.3-style Need eligibility; no human vote restrictions.
+# Persistent bot inventories only; temporary companions keep passing.
+# This is eligibility, not spec upgrade scoring. Reloadable.
+BotLoot33.Enabled = 0
+
+# GM skill browser static client description catalog (UTF-8 id TAB text).
+# Loaded once on first query; restart to replace catalog contents.
+# Descriptions are client base text, not live character-scaled calculations.
+GmSkills.EffectsFile = "gm-skills-effects-zhCN.tsv"
+
+# Persistent Eastern Plaguelands player squads. Roster is loaded on first use.
+WorldBotTower.Enabled = 0
+WorldBotTower.File = "/workspace/vmangos/_install/etc/world-bot-towers.json"
+WorldBotTower.StatusFile = "/workspace/vmangos/run/world-bot-towers-status.json"

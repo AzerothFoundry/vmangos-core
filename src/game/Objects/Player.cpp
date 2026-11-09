@@ -24,6 +24,7 @@
 #include <sstream>
 
 #include "Player.h"
+#include "CharacterOverrides.h"
 #include "Bag.h"
 #include "Language.h"
 #include "Database/DatabaseEnv.h"
@@ -3869,7 +3870,7 @@ void Player::RemoveSpell(uint32 spellId, bool disabled, bool learnLowRank)
     if (sSpellMgr.IsPrimaryProfessionFirstRankSpell(spellId))
     {
         uint32 freeProfs = GetFreePrimaryProfessionPoints() + 1;
-        if (freeProfs <= sWorld.getConfig(CONFIG_UINT32_MAX_PRIMARY_TRADE_SKILL))
+        if (freeProfs <= CharacterOverrides::ProfessionLimit(this))
             SetFreePrimaryProfessions(freeProfs);
     }
 
@@ -16190,6 +16191,21 @@ bool Player::SaveNewPlayer(WorldSession* session, uint32 guidlow, std::string co
         return false;
     }
 
+    // Each successful creation receives one package. Prepare every attachment
+    // before opening the creation transaction, so allocation/prototype failure
+    // cannot leave a character with a partial package.
+    ObjectGuid const newPlayerGuid(HIGHGUID_PLAYER, guidlow);
+    std::vector<std::unique_ptr<Item>> starterBags;
+    ItemPrototype const* starterBag = sObjectMgr.GetItemPrototype(4500);
+    if (!starterBag || starterBag->ContainerSlots != 16 || starterBag->GetMaxStackSize() != 1)
+        return false;
+    for (unsigned i = 0; i < 4; ++i)
+    {
+        std::unique_ptr<Item> bag(Item::CreateItem(4500, 1, newPlayerGuid));
+        if (!bag) return false;
+        starterBags.push_back(std::move(bag));
+    }
+
     CharacterDatabase.BeginTransaction(guidlow);
 
     static SqlStatementID insChar;
@@ -16309,10 +16325,28 @@ bool Player::SaveNewPlayer(WorldSession* session, uint32 guidlow, std::string co
     uberInsert.addUInt64(uint64(time(nullptr))); // logout time (for rested xp)
     uberInsert.Execute();
 
-    sObjectMgr.SetPlayerWorldMask(guidlow, WORLD_DEFAULT_CHAR);
     session->SaveTutorialsData(); // changed only while character in game
 
-    CharacterDatabase.CommitTransaction();
+    // Keep character, attachments and all four envelopes in the existing
+    // creation transaction. Money remains in mail until claimed.
+    std::vector<std::function<void(bool)>> mailCompletion;
+    for (unsigned i = 0; i < starterBags.size(); ++i)
+    {
+        Item* bag = starterBags[i].get();
+        bag->SaveToDB();
+        MailDraft draft("新手补给 " + std::to_string(i + 1) + "/4：16格背包" +
+                        (i == 0 ? "，另附100金币" : ""));
+        draft.AddItem(starterBags[i].release());
+        if (i == 0) draft.SetMoney(1000000);
+        draft.SendMailTo(MailReceiver(newPlayerGuid),
+                         MailSender(MAIL_NORMAL, uint32(0), MAIL_STATIONERY_GM),
+                         MAIL_CHECK_MASK_NONE, 0, 0, false, &mailCompletion);
+    }
+
+    bool const creationCommitted = CharacterDatabase.CommitTransactionDirect();
+    for (auto& complete : mailCompletion) complete(creationCommitted);
+    if (!creationCommitted) return false;
+    sObjectMgr.SetPlayerWorldMask(guidlow, WORLD_DEFAULT_CHAR);
 
     uint32 zoneId = 0;
     uint32 areaId = 0;
@@ -16344,24 +16378,28 @@ void Player::UpdateCharacterFlags()
     SetCharacterFlag(CHARACTER_FLAG_GM_MODE, HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_GM));
 }
 
-void Player::SaveToDB(bool online, bool force)
+bool Player::SaveToDB(bool online, bool force, bool synchronous)
 {
+    // Persistent World actors must not reorder map-phase auto-save and world
+    // initialization checkpoints through the asynchronous serial queue.
+    if(IsBot() && GetSession()->GetBot() && GetSession()->GetBot()->ai &&
+       GetSession()->GetBot()->ai->AllowsPersistentSave())synchronous=true;
     // we should assure this: ASSERT((m_nextSave != sWorld.getConfig(CONFIG_UINT32_INTERVAL_SAVE)));
     // delay auto save at any saves (manual, in code, or autosave)
     m_nextSave = sWorld.getConfig(CONFIG_UINT32_INTERVAL_SAVE);
 
     // Do not save bots
     if (IsSavingDisabled())
-        return;
+        return false;
 
     // lets allow only players in world to be saved
     if (!force && IsBeingTeleportedFar())
     {
         ScheduleDelayedOperation(DELAYED_SAVE_PLAYER);
-        return;
+        return false;
     }
 
-    CharacterDatabase.BeginTransaction(GetGUIDLow());
+    if(CharacterDatabase.InTransaction() || !CharacterDatabase.BeginTransaction(GetGUIDLow()))return false;
 
     m_honorMgr.Update();
 
@@ -16519,7 +16557,8 @@ void Player::SaveToDB(bool online, bool force)
     sObjectMgr.SetPlayerWorldMask(GetGUIDLow(), GetWorldMask());
     GetSession()->SaveTutorialsData();                      // changed only while character in game
 
-    CharacterDatabase.CommitTransaction();
+    bool committed=synchronous?CharacterDatabase.CommitTransactionDirect():CharacterDatabase.CommitTransaction();
+    if(!committed){if(CharacterDatabase.InTransaction())CharacterDatabase.RollbackTransaction();return false;}
 
     // check if stats should only be saved on logout
     // save stats can be out of transaction
@@ -16534,6 +16573,7 @@ void Player::SaveToDB(bool online, bool force)
         data->uiLevel = GetLevel();
         data->uiZoneId = GetCachedZoneId();
     }
+    return true;
 }
 
 // fast save function for item/money cheating preventing - save only inventory and money state
@@ -19025,7 +19065,7 @@ void Player::ScheduleCameraUpdate(ObjectGuid guid)
 
 void Player::InitPrimaryProfessions()
 {
-    SetFreePrimaryProfessions(sWorld.getConfig(CONFIG_UINT32_MAX_PRIMARY_TRADE_SKILL));
+    SetFreePrimaryProfessions(CharacterOverrides::ProfessionLimit(this));
 }
 
 void Player::SetComboPoints()
@@ -20499,7 +20539,7 @@ void Player::AutoStoreLoot(Loot& loot, bool broadcast, uint8 bag, uint8 slot)
 uint32 Player::CalculateTalentsPoints() const
 {
     uint32 talentPointsForLevel = GetLevel() < 10 ? 0 : GetLevel() - 9;
-    return uint32(talentPointsForLevel * sWorld.getConfig(CONFIG_FLOAT_RATE_TALENT));
+    return GetLevel()<10 ? 0 : CharacterOverrides::TalentPoints(this,uint32(talentPointsForLevel * sWorld.getConfig(CONFIG_FLOAT_RATE_TALENT)));
 }
 
 struct DoPlayerLearnSpell

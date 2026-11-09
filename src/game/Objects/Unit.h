@@ -625,6 +625,7 @@ class Unit : public SpellCaster
         AuraList m_modAuras[TOTAL_AURAS];
         uint32 m_lastManaUseSpellId;
         uint32 m_lastManaUseTimer;
+        bool m_showEnemyBuffsSent = false;
         uint32 m_spellUpdateTimeBuffer;
 
         void _UpdateSpells(uint32 time);

@@ -1,5 +1,9 @@
+#include "BotLoot33.h"
+#include "LootMgr.h"
 #include "World.h"
 #include "CombatBotBaseAI.h"
+#include "PartyBotAI.h"
+#include "RaidCoordination.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "Group.h"
@@ -1207,6 +1211,11 @@ void CombatBotBaseAI::PopulateSpellData()
                     if (IsHigherRankSpell(m_spells.warrior.pShieldSlam))
                         m_spells.warrior.pShieldSlam = pSpellEntry;
                 }
+                else if (pSpellEntry->SpellName[0].find("Revenge") != std::string::npos)
+                {
+                    if (IsHigherRankSpell(m_spells.warrior.pRevenge))
+                        m_spells.warrior.pRevenge = pSpellEntry;
+                }
                 else if (pSpellEntry->SpellName[0].find("Sunder Armor") != std::string::npos)
                 {
                     if (IsHigherRankSpell(m_spells.warrior.pSunderArmor))
@@ -1874,7 +1883,9 @@ bool CombatBotBaseAI::AreOthersOnSameTarget(ObjectGuid guid, bool checkMelee, bo
 
 bool CombatBotBaseAI::FindAndHealInjuredAlly(float selfHealPercent, float groupHealPercent)
 {
-    Unit* pTarget = SelectHealTarget(selfHealPercent, groupHealPercent);
+    Unit* pTarget = nullptr;
+    if(auto* party=dynamic_cast<PartyBotAI*>(this))pTarget=RaidCoordination::HealTarget(*party,selfHealPercent,groupHealPercent);
+    if(!pTarget)pTarget = SelectHealTarget(selfHealPercent, groupHealPercent);
     if (!pTarget)
         return false;
 
@@ -1996,6 +2007,8 @@ Unit* CombatBotBaseAI::SelectHealTarget(float selfHealPercent, float groupHealPe
         return nullptr;
 
     Unit* pTarget = nullptr;
+    Unit* petTarget = nullptr;
+    float petHealthPercent = 100.0f;
     float healthPercent = 100.0f;
 
     if (Group* pGroup = me->GetGroup())
@@ -2009,27 +2022,31 @@ Unit* CombatBotBaseAI::SelectHealTarget(float selfHealPercent, float groupHealPe
                     continue;
 
                 // Avoid all healers picking same target.
-                if (pTarget && !IsTankClass(pMember->GetClass()) && AreOthersOnSameTarget(pMember->GetObjectGuid(), false, true))
+                if (pTarget && pMember->GetHealthPercent() >= 25.0f &&
+                    !IsTankClass(pMember->GetClass()) && AreOthersOnSameTarget(pMember->GetObjectGuid(), false, true))
                     continue;
 
-                // Check if we should heal party member.
-                if ((IsValidHealTarget(pMember, groupHealPercent) &&
-                    healthPercent > pMember->GetHealthPercent()) ||
-                    // Or a pet if there are no injured players.
-                    (!pTarget && (pMember = pMember->GetPet()) &&
-                      IsValidHealTarget(pMember, groupHealPercent)))
+                // Players always take priority over pets, regardless of group
+                // iteration order. A critically injured player must not be
+                // skipped merely because another healer has selected them.
+                if (IsValidHealTarget(pMember, groupHealPercent) &&
+                    healthPercent > pMember->GetHealthPercent())
                 {
                     healthPercent = pMember->GetHealthPercent();
                     pTarget = pMember;
                 }
+                if (Unit* pet = pMember->GetPet())
+                    if (IsValidHealTarget(pet, groupHealPercent) &&
+                        pet->GetHealthPercent() < petHealthPercent)
+                    {
+                        petHealthPercent = pet->GetHealthPercent();
+                        petTarget = pet;
+                    }
             }
         }
     }
 
-    if (healthPercent == 100.0f)
-        return nullptr;
-
-    return pTarget;
+    return pTarget ? pTarget : petTarget;
 }
 
 Unit* CombatBotBaseAI::SelectPeriodicHealTarget(float selfHealPercent, float groupHealPercent) const
@@ -2310,24 +2327,76 @@ Player* CombatBotBaseAI::SelectBuffTarget(SpellEntry const* pSingleSpellEntry, S
 
 Player* CombatBotBaseAI::SelectDispelTarget(SpellEntry const* pSpellEntry) const
 {
-    Group* pGroup = me->GetGroup();
-    if (pGroup)
-    {
-        for (GroupReference* itr = pGroup->GetFirstMember(); itr != nullptr; itr = itr->next())
+    if (!pSpellEntry)
+        return nullptr;
+
+    Player* best = nullptr;
+    unsigned bestUrgency = 0;
+    float bestHealth = 101.0f;
+    float bestDistance = 0.0f;
+    uint32 dispelMask = 0;
+    for (uint8 i = 0; i < MAX_EFFECT_INDEX; ++i)
+        if (pSpellEntry->Effect[i] == SPELL_EFFECT_DISPEL)
+            dispelMask |= Spells::GetDispellMask(DispelType(pSpellEntry->EffectMiscValue[i]));
+
+    if (Group* group = me->GetGroup())
+        for (GroupReference* itr = group->GetFirstMember(); itr; itr = itr->next())
         {
-            if (Player* pMember = itr->getSource())
+            Player* member = itr->getSource();
+            // Do not let an uncastable first member (for example one already
+            // carrying Abolish Poison) starve every later member of a dispel.
+            // Group support also applies to an explicitly friendly GM member.
+            if (!member || !member->IsAlive() || member->GetMap() != me->GetMap() ||
+                !me->IsValidHelpfulTarget(member) ||
+                !IsValidDispelTarget(member, pSpellEntry) ||
+                !me->IsWithinLOSInMap(member) ||
+                !pSpellEntry->IsTargetInRange(me, member) ||
+                !CanTryToCastSpell(member, pSpellEntry))
+                continue;
+
+            unsigned urgency = 0;
+            for (auto const& entry : member->GetSpellAuraHolderMap())
             {
-                if (me->IsValidHelpfulTarget(pMember) &&
-                   !pMember->IsGameMaster() &&
-                    IsValidDispelTarget(pMember, pSpellEntry) &&
-                    me->IsWithinLOSInMap(pMember) &&
-                    me->IsWithinDist(pMember, 30.0f))
-                    return pMember;
+                SpellAuraHolder const* holder = entry.second;
+                SpellEntry const* aura = holder->GetSpellProto();
+                if (holder->IsPositive() || !(Spells::GetDispellMask(DispelType(aura->Dispel)) & dispelMask))
+                    continue;
+                unsigned current = 1;
+                for (uint8 i = 0; i < MAX_EFFECT_INDEX; ++i)
+                    switch (aura->EffectApplyAuraName[i])
+                    {
+                        case SPELL_AURA_MOD_CHARM:
+                        case SPELL_AURA_MOD_CONFUSE:
+                        case SPELL_AURA_MOD_FEAR:
+                        case SPELL_AURA_MOD_STUN:
+                        case SPELL_AURA_MOD_ROOT:
+                        case SPELL_AURA_MOD_SILENCE:
+                        case SPELL_AURA_MOD_PACIFY:
+                        case SPELL_AURA_MOD_PACIFY_SILENCE:
+                            current = 3;
+                            break;
+                        case SPELL_AURA_PERIODIC_DAMAGE:
+                        case SPELL_AURA_PERIODIC_DAMAGE_PERCENT:
+                        case SPELL_AURA_PERIODIC_LEECH:
+                            if (current < 2) current = 2;
+                            break;
+                    }
+                if (current > urgency) urgency = current;
+            }
+            float const health = member->GetHealthPercent();
+            float const distance = me->GetDistance(member);
+            if (!best || urgency > bestUrgency ||
+                (urgency == bestUrgency && (health < bestHealth ||
+                 (health == bestHealth && (distance < bestDistance ||
+                  (distance == bestDistance && member->GetGUID() < best->GetGUID()))))))
+            {
+                best = member;
+                bestUrgency = urgency;
+                bestHealth = health;
+                bestDistance = distance;
             }
         }
-    }
-
-    return nullptr;
+    return best;
 }
 
 void CombatBotBaseAI::SummonPetIfNeeded()
@@ -2344,15 +2413,16 @@ void CombatBotBaseAI::SummonPetIfNeeded()
         {
             if (Pet* pPet = me->GetPet())
             {
-                if (!pPet->IsAlive())
+                if (!pPet->IsAlive() && AllowLegacySpell(sSpellMgr.GetSpellEntry(SPELL_REVIVE_PET)))
                     me->CastSpell(pPet, SPELL_REVIVE_PET, true);
             }
-            else
+            else if (AllowLegacySpell(sSpellMgr.GetSpellEntry(SPELL_CALL_PET)))
                 me->CastSpell(me, SPELL_CALL_PET, true);
 
             return;
         }
 
+        if (!AllowLegacySpell(sSpellMgr.GetSpellEntry(SPELL_TAME_BEAST)))return;
         uint32 petId = PickRandomValue( PET_WOLF, PET_CAT, PET_BEAR, PET_CRAB, PET_GORILLA, PET_BIRD,
                                         PET_BOAR, PET_BAT, PET_CROC, PET_SPIDER, PET_OWL, PET_STRIDER,
                                         PET_SCORPID, PET_SERPENT, PET_RAPTOR, PET_TURTLE, PET_HYENA );
@@ -2379,7 +2449,10 @@ void CombatBotBaseAI::SummonPetIfNeeded()
         if (me->HasSpell(SPELL_SUMMON_SUCCUBUS))
             vSummons.push_back(SPELL_SUMMON_SUCCUBUS);
         if (!vSummons.empty())
-            me->CastSpell(me, SelectRandomContainerElement(vSummons), true);
+        {
+            uint32 spell=SelectRandomContainerElement(vSummons);
+            if(AllowLegacySpell(sSpellMgr.GetSpellEntry(spell)))me->CastSpell(me, spell, true);
+        }
     }
 }
 
@@ -2861,7 +2934,7 @@ bool CombatBotBaseAI::CanTryToCastSpell(Unit const* pTarget, SpellEntry const* p
 
 SpellCastResult CombatBotBaseAI::DoCastSpell(Unit* pTarget, SpellEntry const* pSpellEntry)
 {
-    if (m_preventCasting)
+    if (m_preventCasting || !AllowLegacySpell(pSpellEntry))
         return SPELL_FAILED_DONT_REPORT;
 
     if (me != pTarget)
@@ -3079,6 +3152,7 @@ SpellCastResult CombatBotBaseAI::CastWeaponBuff(SpellEntry const* pSpellEntry, E
     if (pWeapon->GetEnchantmentId(TEMP_ENCHANTMENT_SLOT))
         return SPELL_FAILED_ITEM_ALREADY_ENCHANTED;
 
+    if (!AllowLegacySpell(pSpellEntry))return SPELL_FAILED_DONT_REPORT;
     Spell* spell = new Spell(me, pSpellEntry, true, ObjectGuid(), nullptr, nullptr, nullptr);
     SpellCastTargets targets;
     targets.setItemTarget(pWeapon);
@@ -3106,7 +3180,7 @@ bool CombatBotBaseAI::UseItemEffect(Item* pItem, bool onlyToBreakCC)
         {
             if (SpellEntry const* pSpellEntry = sSpellMgr.GetSpellEntry(itr.SpellId))
             {
-                if (me->IsSpellReady(pSpellEntry, pProto))
+                if (AllowLegacySpell(pSpellEntry) && me->IsSpellReady(pSpellEntry, pProto))
                 {
                     if (onlyToBreakCC && !pSpellEntry->HasAttribute(SPELL_ATTR_EX_IMMUNITY_PURGES_EFFECT))
                         continue;
@@ -3238,12 +3312,12 @@ bool CombatBotBaseAI::IsWearingShield(Player* pPlayer) const
 
 bool CombatBotBaseAI::IsInDuel() const
 {
-    return me->m_duel && me->m_duel->startTime != 0;
+    return me && me->m_duel && me->m_duel->startTime != 0;
 }
 
 CombatBotRoles CombatBotBaseAI::GetRole() const
 {
-    if (m_role == ROLE_HEALER && IsInDuel())
+    if (me && m_role == ROLE_HEALER && IsInDuel())
     {
         if (IsMeleeDamageClass(me->GetClass()))
             return ROLE_MELEE_DPS;
@@ -3271,9 +3345,8 @@ void CombatBotBaseAI::SendBattlefieldPortPacket()
     }
 }
 
-void CombatBotBaseAI::SendBattlemasterJoinPacket(uint8 battlegroundId)
+void CombatBotBaseAI::SendBattlemasterJoinPacket(uint8 battlegroundId, uint32 instanceId)
 {
-    uint32 instanceId = 0; // first available
     uint32 mapId;
     switch (battlegroundId)
     {
@@ -3411,16 +3484,27 @@ void CombatBotBaseAI::OnPacketReceived(WorldPacket const* packet)
         }
         case SMSG_LOOT_START_ROLL:
         {
-            if (!me)
+            if (!me || !me->IsBot() || !me->IsInWorld() || me->IsBeingTeleported() || !me->GetGroup() || packet->size()<24)
                 return;
 
-            uint64 guid = *((uint64*)(*packet).contents());
-            uint32 slot = *(((uint32*)(*packet).contents()) + 2);
-
+            WorldPacket read(*packet);read.rpos(0);uint64 guid=0;uint32 slot=0,itemId=0,suffix=0;int32 randomProperty=0;
+            read>>guid>>slot>>itemId>>suffix>>randomProperty;
             auto data = std::make_unique<WorldPackets::Loot::LootRoll>();
             data->lootedTarget = ObjectGuid(guid);
             data->itemSlot = slot;
             data->rollType = ROLL_PASS;
+            if(BotLoot33::Enabled()){
+                auto item=sObjectMgr.GetItemPrototype(itemId);
+                BotLoot33Policy::Decision result{BotLoot33Policy::Vote::Pass,"stale_or_unmatched_loot"};
+                if(Creature* corpse=me->GetMap()->GetCreature(ObjectGuid(guid)))
+                    if(corpse->GetGroupLootRecipient()==me->GetGroup()&&slot<corpse->loot.items.size()){
+                        auto const& drop=corpse->loot.items[slot];
+                        if(drop.itemid==itemId&&drop.randomPropertyId==randomProperty&&drop.count)
+                            result=BotLoot33::Decide(me,item,drop.count,randomProperty);
+                    }
+                data->rollType=result.vote==BotLoot33Policy::Vote::Need?ROLL_NEED:result.vote==BotLoot33Policy::Vote::Greed?ROLL_GREED:ROLL_PASS;
+                sLog.Out(LOG_BASIC,LOG_LVL_MINIMAL,"[BotLoot33] bot=%u item=%u slot=%u vote=%u reason=%s",me->GetGUIDLow(),itemId,slot,uint32(data->rollType),result.reason);
+            }
             me->GetSession()->QueuePacket(std::move(data));
             return;
         }

@@ -67,8 +67,10 @@
 #include "LFGMgr.h"
 #include "AutoBroadCastMgr.h"
 #include "AuctionHouseBotMgr.h"
+#include "MaterialSupply.h"
 #include "Transports/TransportMgr.h"
 #include "PlayerBotMgr.h"
+#include "WorldBotManager.h"
 #include "ZoneScriptMgr.h"
 #include "CharacterDatabaseCache.h"
 #include "CreatureGroups.h"
@@ -634,6 +636,8 @@ void World::LoadConfigSettings(bool reload)
 
     setConfig(CONFIG_BOOL_SKIP_CINEMATICS, "SkipCinematics", false);
     setConfig(CONFIG_BOOL_OBJECT_HEALTH_VALUE_SHOW, "ShowHealthValues", false);
+    setConfig(CONFIG_BOOL_SHOW_ENEMY_BUFFS, "ShowEnemyBuffs", false);
+    sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "* Enemy buff visibility: [%s]", getConfig(CONFIG_BOOL_SHOW_ENEMY_BUFFS) ? "ON" : "OFF");
     if (configNoReload(reload, CONFIG_UINT32_MAX_PLAYER_LEVEL, "MaxPlayerLevel", PLAYER_MAX_LEVEL))
         setConfigMinMax(CONFIG_UINT32_MAX_PLAYER_LEVEL, "MaxPlayerLevel", PLAYER_MAX_LEVEL, 1, PLAYER_STRONG_MAX_LEVEL);
     setConfigMinMax(CONFIG_UINT32_START_PLAYER_LEVEL, "StartPlayerLevel", 1, 1, getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL));
@@ -996,7 +1000,7 @@ void World::LoadConfigSettings(bool reload)
 
     setConfigMinMax(CONFIG_UINT32_SPELL_EFFECT_DELAY, "Spell.EffectDelay", 400, 0, 1000);
     setConfigMinMax(CONFIG_UINT32_SPELL_PROC_DELAY, "Spell.ProcDelay", 400, 0, 1000);
-    setConfigMinMax(CONFIG_UINT32_DEBUFF_LIMIT, "DebuffLimit", 0, 0, 40);
+    setConfigMinMax(CONFIG_UINT32_DEBUFF_LIMIT, "DebuffLimit", 0, 0, 80);
 
     // If max debuff slots is at 0, decide based on patch.
     if (getConfig(CONFIG_UINT32_DEBUFF_LIMIT) == 0)
@@ -2008,6 +2012,7 @@ void World::Update(uint32 diff)
         sAuctionHouseBotMgr.Update();
         // Handle expired auctions
         sAuctionMgr.Update();
+        MaterialSupply::Update();
     }
 
     {
@@ -2129,6 +2134,7 @@ void World::Update(uint32 diff)
 
     // Update PlayerBotMgr
     sPlayerBotMgr.Update(diff);
+    WorldBotManager::Update(diff);
     // Update AutoBroadcast
     sAutoBroadCastMgr.Update(diff);
     // Update ban list if necessary

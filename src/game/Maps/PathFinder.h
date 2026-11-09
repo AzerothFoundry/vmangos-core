@@ -59,7 +59,9 @@ enum PathType
 class PathInfo
 {
     public:
-        PathInfo(Unit const* owner);
+        PathInfo(Unit const* owner, uint32 searchNodes = 0);
+        PathInfo(PathInfo const&) = delete;
+        PathInfo& operator=(PathInfo const&) = delete;
         ~PathInfo();
 
         // return value : true if new path was calculated
@@ -85,6 +87,7 @@ class PathInfo
         bool UpdateForMelee(Unit* pTarget, float meleeReach);
         void CutPathWithDynamicLoS();
         float Length() const;
+        void ExcludeLiquids() { m_filter.setExcludeFlags(m_filter.getExcludeFlags() | NAV_WATER | NAV_MAGMA | NAV_SLIME); }
         void ExcludeSteepSlopes() { m_filter.setExcludeFlags(NAV_STEEP_SLOPES); }
         static dtPolyRef FindWalkPoly(dtNavMeshQuery const* query, float const* pointYZX, dtQueryFilter const& filter, float* closestPointYZX, float zSearchDist = 10.0f);
         void SetTransport(GenericTransport* t) { m_transport = t; }
@@ -108,6 +111,8 @@ class PathInfo
         GenericTransport*       m_transport;
         Unit const* const       m_sourceUnit;       // the unit that is moving
         dtNavMesh const*        m_navMesh;          // the nav mesh
+        uint32 m_searchNodes;
+        dtNavMeshQuery* m_ownedNavQuery = nullptr;
         dtNavMeshQuery const*   m_navMeshQuery;     // the nav mesh query used to find the path
         uint32          m_targetAllowedFlags;
 

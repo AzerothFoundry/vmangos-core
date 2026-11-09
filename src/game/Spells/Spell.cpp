@@ -1,3 +1,4 @@
+#include <atomic>
 /*
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
  * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos/zero>
@@ -54,6 +55,12 @@ using namespace Spells;
 #define SPELL_CHANNEL_VISUAL_TIMER 800
 
 extern pEffect SpellEffects[TOTAL_SPELL_EFFECTS];
+
+uint64 Spell::NextCastInstanceId()
+{
+    static std::atomic<uint64> sequence{0};
+    return sequence.fetch_add(1,std::memory_order_relaxed)+1;
+}
 
 Spell::Spell(Unit* caster, SpellEntry const* info, bool triggered, ObjectGuid originalCasterGUID, SpellEntry const* triggeredBy, Unit* victim, SpellEntry const* triggeredByParent):
     m_spellInfo(info), m_triggeredBySpellInfo(triggeredBy), m_triggeredByParentSpellInfo(triggeredByParent), m_caster(caster), m_casterUnit(caster), m_IsTriggeredSpell(triggered)
@@ -6563,6 +6570,11 @@ SpellCastResult Spell::CheckPetCast(Unit* target)
 }
 
 SpellCastResult Spell::CheckCasterAuras() const
+{
+    return CheckCasterAurasFor(m_casterUnit,m_spellInfo,m_casttime);
+}
+
+SpellCastResult Spell::CheckCasterAurasFor(Unit* m_casterUnit,SpellEntry const* m_spellInfo,uint32 m_casttime)
 {
     if (!m_casterUnit)
         return SPELL_CAST_OK;

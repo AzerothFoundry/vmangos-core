@@ -33,10 +33,10 @@
 #define SMOOTH_PATH_STEP_SIZE 2.0f
 
 ////////////////// PathInfo //////////////////
-PathInfo::PathInfo(Unit const* owner) :
+PathInfo::PathInfo(Unit const* owner, uint32 searchNodes) :
     m_polyLength(0), m_type(PATHFIND_BLANK), m_useStraightPath(false), m_forceDestination(false),
     m_pointPathLimit(MAX_POINT_PATH_LENGTH), m_transport(nullptr), m_sourceUnit(owner),
-    m_navMesh(nullptr), m_navMeshQuery(nullptr), m_targetAllowedFlags(0)
+    m_navMesh(nullptr), m_searchNodes(searchNodes?std::min<uint32>(65535,std::max<uint32>(2048,searchNodes)):0), m_navMeshQuery(nullptr), m_targetAllowedFlags(0)
 {
     //DEBUG_FILTER_LOG(LOG_FILTER_PATHFINDING, "++ PathFinder::PathInfo for %u \n", m_sourceUnit->GetGUIDLow());
     createFilter();
@@ -45,6 +45,7 @@ PathInfo::PathInfo(Unit const* owner) :
 
 PathInfo::~PathInfo()
 {
+    if(m_ownedNavQuery)dtFreeNavMeshQuery(m_ownedNavQuery);
     //DEBUG_FILTER_LOG(LOG_FILTER_PATHFINDING, "++ PathInfo::~PathInfo() for %u \n", m_sourceUnit->GetGUID());
 }
 
@@ -63,6 +64,8 @@ bool PathInfo::calculate(float destX, float destY, float destZ, bool forceDest, 
 
 bool PathInfo::calculate(Vector3 const& start, Vector3 dest, bool forceDest, bool offsets)
 {
+    if(m_ownedNavQuery){dtFreeNavMeshQuery(m_ownedNavQuery);m_ownedNavQuery=nullptr;}
+    m_navMeshQuery=nullptr;m_navMesh=nullptr;
     m_pathPoints.clear();
     m_forceDestination = forceDest;
     m_type = PATHFIND_BLANK;
@@ -91,6 +94,15 @@ bool PathInfo::calculate(Vector3 const& start, Vector3 dest, bool forceDest, boo
 
     if (m_navMeshQuery)
         m_navMesh = m_navMeshQuery->getAttachedNavMesh();
+
+    if(m_searchNodes && m_navMesh){
+        m_ownedNavQuery=dtAllocNavMeshQuery();
+        if(!m_ownedNavQuery || dtStatusFailed(m_ownedNavQuery->init(m_navMesh,m_searchNodes))){
+            if(m_ownedNavQuery){dtFreeNavMeshQuery(m_ownedNavQuery);m_ownedNavQuery=nullptr;}
+            m_type=PATHFIND_NOPATH;return false;
+        }
+        m_navMeshQuery=m_ownedNavQuery;
+    }
 
     //DEBUG_FILTER_LOG(LOG_FILTER_PATHFINDING, "++ PathFinder::calculate() for %u \n", m_sourceUnit->GetGUIDLow());
 

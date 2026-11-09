@@ -1370,6 +1370,13 @@ ObjectGuid BattleGround::GetSingleCreatureGuid(uint8 event1, uint8 event2)
     return ObjectGuid();
 }
 
+std::vector<ObjectGuid> const& BattleGround::GetEventGameObjectGuids(uint8 event1,uint8 event2) const
+{
+    static std::vector<ObjectGuid> const empty;
+    auto it=m_eventObjects.find(MAKE_PAIR32(event1,event2));
+    return it==m_eventObjects.end()?empty:it->second.gameobjects;
+}
+
 ObjectGuid BattleGround::GetSingleGameObjectGuid(uint8 event1, uint8 event2)
 {
     BGObjects::const_iterator itr = m_eventObjects[MAKE_PAIR32(event1, event2)].gameobjects.begin();

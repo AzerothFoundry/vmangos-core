@@ -12,6 +12,7 @@
 #include "PlayerBotAI.h"
 #include "PartyBotAI.h"
 #include "BattleBotAI.h"
+#include "PlayerBotMatch.h"
 #include "BattleBotWaypoints.h"
 #include "BattleGroundMgr.h"
 #include "MapManager.h"
@@ -189,6 +190,7 @@ void PlayerBotMgr::OnPlayerInWorld(Player* player)
 
 void PlayerBotMgr::Update(uint32 diff)
 {
+    BotMatch::Tick(diff);
     // Temporary bots.
     std::map<uint32, uint32>::iterator it;
     for (it = m_tempBots.begin(); it != m_tempBots.end(); ++it)
@@ -231,13 +233,25 @@ void PlayerBotMgr::Update(uint32 diff)
             continue;
         }
 
+        if (iter->second->state == PB_STATE_LOADING && iter->second->requestRemoval)
+        {
+            // Cancel before OnSessionLoaded can construct an avatar. Existing
+            // session processing observes OFFLINE and performs normal teardown,
+            // including sessions still waiting for World::AddSession.
+            DeleteBot(iter);
+            iter->second->requestRemoval = false;
+            if (iter->second->customBot) iter = m_bots.erase(iter);
+            else ++iter;
+            continue;
+        }
+
         if (iter->second->state == PB_STATE_ONLINE)
         {
             if (iter->second->requestRemoval)
             {
                 if (iter->second->ai && iter->second->ai->me)
                 {
-                    if (!iter->second->ai->me->IsAlive())
+                    if (!iter->second->ai->me->IsAlive() && !iter->second->ai->AllowsPersistentSave())
                     {
                         // don't leave permanent corpse
                         iter->second->ai->me->ResurrectPlayer(1.0f);
@@ -249,7 +263,7 @@ void PlayerBotMgr::Update(uint32 diff)
                 DeleteBot(iter);
 
                 if (WorldSession* sess = sWorld.FindSession(iter->second->accountId))
-                    sess->LogoutPlayer(m_confAllowSaving);
+                    sess->LogoutPlayer(m_confAllowSaving || (iter->second->ai && iter->second->ai->AllowsPersistentSave()));
 
                 iter->second->requestRemoval = false;
 
@@ -335,6 +349,8 @@ void PlayerBotMgr::Update(uint32 diff)
 
             for (uint32 bracketId = BG_BRACKET_ID_FIRST; bracketId < MAX_BATTLEGROUND_BRACKETS; ++bracketId)
             {
+                if (BotMatch::OwnsQueue(BattleGroundQueueTypeId(queueType), BattleGroundBracketId(bracketId)))
+                    continue;
                 if (!hasPlayerInQueue[bracketId])
                     continue;
 
@@ -392,6 +408,33 @@ bool PlayerBotMgr::AddOrRemoveBot()
 
 }
 
+bool PlayerBotMgr::AddOwnedBot(std::unique_ptr<PlayerBotAI> ai)
+{
+    auto entry = std::make_shared<PlayerBotEntry>();
+    entry->ai = std::move(ai);
+    entry->accountId = GenBotAccountId();
+    entry->playerGUID = sObjectMgr.GeneratePlayerLowGuid();
+    entry->customBot = true;
+    entry->ai->botEntry = entry.get();
+    m_bots.emplace(entry->playerGUID, entry);
+    if (AddBot(entry->playerGUID, false)) return true;
+    m_bots.erase(entry->playerGUID); // No session was started; release owned AI safely.
+    return false;
+}
+
+std::vector<PartyBotAI const*> PlayerBotMgr::GetOwnedPartyBots(ObjectGuid owner, bool includeRemoving) const
+{
+    std::vector<PartyBotAI const*> result;
+    for (auto const& pair : m_bots)
+    {
+        auto const& entry = pair.second;
+        if ((!includeRemoving && entry->requestRemoval) || (entry->state != PB_STATE_LOADING && entry->state != PB_STATE_ONLINE)) continue;
+        auto const* ai = dynamic_cast<PartyBotAI const*>(entry->ai.get());
+        if (ai && ai->m_leaderGuid == owner) result.push_back(ai);
+    }
+    return result;
+}
+
 bool PlayerBotMgr::AddBot(PlayerBotAI* ai)
 {
     // Find a correct accountid ?
@@ -414,6 +457,11 @@ bool PlayerBotMgr::AddBot(uint32 playerGUID, bool chatBot, PlayerBotAI* pAI)
     else
         accountId = iter->second->accountId;
 
+    if(pAI && pAI->AllowsPersistentSave()) {
+        if(iter!=m_bots.end() && (iter->second->state==PB_STATE_ONLINE || iter->second->state==PB_STATE_LOADING))return false;
+        accountId=sObjectMgr.GetPlayerAccountIdByGUID(playerGUID);
+        if(iter!=m_bots.end())iter->second->accountId=accountId;
+    }
     if (!accountId)
     {
         sLog.Out(LOG_BASIC, LOG_LVL_DETAIL, "Player account %u not found...", playerGUID);

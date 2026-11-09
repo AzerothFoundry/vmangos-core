@@ -62,6 +62,7 @@ namespace Movement
             int32           time_passed;
             int32           point_Idx;
             int32           last_point_sent_Idx;
+            int32           last_packet_check_Idx;
             int32           point_Idx_offset;
             bool            m_uninterruptible;
             char const*     mvtOrigin; // For debug purposes
@@ -84,7 +85,7 @@ namespace Movement
             const MySpline& _Spline() const { return spline;}
             int32 _currentSplineIdx() const { return point_Idx;}
             void _Finalize();
-            void _Interrupt() { splineflags.done = true;}
+            void _Interrupt() { splineflags.done = true; last_packet_check_Idx = -1; }
 
             void Initialize(MoveSplineInitArgs const&);
             bool Initialized() const { return !spline.empty();}
@@ -121,7 +122,13 @@ namespace Movement
             uint32 CountSplinePoints() const { return spline.last(); }
             int32 currentPathIdx() const;
             int32 getLastPointSent() const { return last_point_sent_Idx; }
-            void setLastPointSent(int i) { last_point_sent_Idx = i; }
+            void setLastPointSent(int i) { last_point_sent_Idx = i; last_packet_check_Idx = point_Idx; }
+            bool NeedsPacketContinuation() const
+            {
+                return !Finalized() && !isCyclic() && last_point_sent_Idx >= 0 &&
+                    last_point_sent_Idx < point_Idx + 3 && last_packet_check_Idx != point_Idx;
+            }
+            void MarkPacketContinuationChecked() { last_packet_check_Idx = point_Idx; }
 
             int32 Duration() const { return spline.length();}
             int32 Duration(int first, int last) const { return spline.length(first, last);}

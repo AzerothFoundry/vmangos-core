@@ -508,6 +508,13 @@ class Map : public GridRefManager<NGridType>
 
         Player* GetPlayer(ObjectGuid guid);
         GameObject* GetGameObject(ObjectGuid const& guid) { return GetObject<GameObject>(guid); }
+        // Map update-thread only: snapshots registrations without visiting/loading cells.
+        // Raw pointers must not escape the current update/command or mutate registrations.
+        std::vector<Creature*> GetLoadedCreatures() const
+        {
+            std::shared_lock<std::shared_timed_mutex> lock(m_objectsStore_lock);
+            return m_objectsStore.snapshot<Creature>();
+        }
         Creature* GetCreature(ObjectGuid const& guid) { return GetObject<Creature>(guid); }
         Pet* GetPet(ObjectGuid const& guid) { return GetObject<Pet>(guid); }
         Creature* GetAnyTypeCreature(ObjectGuid guid);      // normal creature or pet

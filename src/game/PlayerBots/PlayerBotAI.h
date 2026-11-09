@@ -40,6 +40,7 @@ class PlayerBotAI: public PlayerAI
         virtual void OnBotEntryLoad(PlayerBotEntry* entry) {}
         virtual void OnPacketReceived(WorldPacket const* /*packet*/) {} // server has sent a packet to this session
         void UpdateAI(uint32 const /*diff*/) override; // Handle delayed teleports
+        virtual bool AllowsPersistentSave() const { return false; }
         virtual void OnPlayerLogin() {}
         virtual void BeforeAddToMap(Player* player) {} // me=nullptr at call
         // Helpers

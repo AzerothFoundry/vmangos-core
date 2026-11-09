@@ -29,6 +29,7 @@
  */
 
 #include "Mail.h"
+#include <memory>
 #include "WorldSession.h"
 #include "Opcodes.h"
 #include "Log.h"
@@ -297,10 +298,10 @@ void MailDraft::SendReturnToSender(uint32 sender_acc, ObjectGuid sender_guid, Ob
  * @param checked              The mask used to specify the mail.
  * @param deliver_delay        The delay after which the mail is delivered in seconds
  */
-void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sender, MailCheckMask checked, uint32 deliver_delay, uint32 expire_delay)
+void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sender, MailCheckMask checked, uint32 deliver_delay, uint32 expire_delay, bool ownTransaction, std::vector<std::function<void(bool)>>* completion)
 {
+    MANGOS_ASSERT(ownTransaction || (CharacterDatabase.InTransaction() && completion));
     Player* pReceiver = receiver.GetPlayer();               // can be nullptr
-    MasterPlayer* masterReceiver = sObjectAccessor.FindMasterPlayer(receiver.GetPlayerGuid());
 
     bool has_items = !m_items.empty();
 
@@ -331,7 +332,7 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
     // Add to DB
     std::string safe_subject = GetSubject();
 
-    CharacterDatabase.BeginTransaction();
+    if (ownTransaction) CharacterDatabase.BeginTransaction();
     CharacterDatabase.escape_string(safe_subject);
     CharacterDatabase.PExecute("INSERT INTO `mail` (`id`, `message_type`, `stationery`, `mail_template_id`, `sender_guid`, `receiver_guid`, `subject`, `item_text_id`, `has_items`, `expire_time`, `deliver_time`, `money`, `cod`, `checked`) "
                                "VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '%s', '%u', '%u', '" UI64FMTD "','" UI64FMTD "', '%u', '%u', '%u')",
@@ -343,46 +344,53 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
         CharacterDatabase.PExecute("INSERT INTO `mail_items` (`mail_id`, `item_guid`, `item_id`, `receiver_guid`) VALUES ('%u', '%u', '%u','%u')",
                                    mailId, item->GetGUIDLow(), item->GetEntry(), receiver.GetPlayerGuid().GetCounter());
     }
-    CharacterDatabase.CommitTransaction();
+    if (ownTransaction) CharacterDatabase.CommitTransaction();
 
-    // For online receiver update in game mail status and data
-    if (masterReceiver)
+    // External-transaction callers must not publish mail or attachments until
+    // the database reports a successful commit. The closure owns all pointers
+    // while pending, including when the caller exits without publishing.
+    struct PendingDelivery
     {
-        masterReceiver->AddNewMailDeliverTime(deliver_time);
-
-        Mail *m = new Mail;
-        m->messageID = mailId;
-        m->mailTemplateId = GetMailTemplateId();
-        m->subject = GetSubject();
-        m->itemTextId = GetBodyId();
-        m->money = GetMoney();
-        m->COD = GetCOD();
-
-        for (const auto& itr : m_items)
+        ObjectGuid receiver;
+        std::unique_ptr<Mail> mail;
+        std::vector<std::unique_ptr<Item>> items;
+        void Finish(bool success)
         {
-            Item* item = itr.second;
-            m->AddItem(item->GetGUIDLow(), item->GetEntry());
+            if (!success || !mail) return;
+            MasterPlayer* master = sObjectAccessor.FindMasterPlayer(receiver);
+            if (!master) return; // DB is authoritative for offline recipients.
+            master->AddNewMailDeliverTime(mail->deliver_time);
+            master->AddMail(mail.release());
+            for (auto& item : items) master->AddMItem(item.release());
         }
-
-        m->messageType = sender.GetMailMessageType();
-        m->stationery = sender.GetStationery();
-        m->sender = sender.GetSenderId();
-        m->receiverGuid = receiver.GetPlayerGuid();
-        m->expire_time = expire_time;
-        m->deliver_time = deliver_time;
-        m->checked = checked;
-        m->state = MAIL_STATE_UNCHANGED;
-
-        masterReceiver->AddMail(m);                           // to insert new mail to beginning of maillist
-
-        if (!m_items.empty())
-        {
-            for (const auto& itr : m_items)
-                masterReceiver->AddMItem(itr.second);
-        }
+    };
+    auto pending = std::make_shared<PendingDelivery>();
+    pending->receiver = receiver.GetPlayerGuid();
+    pending->mail.reset(new Mail);
+    Mail* m = pending->mail.get();
+    m->messageID = mailId;
+    m->mailTemplateId = GetMailTemplateId();
+    m->subject = GetSubject();
+    m->itemTextId = GetBodyId();
+    m->money = GetMoney();
+    m->COD = GetCOD();
+    for (auto const& itr : m_items)
+    {
+        Item* item = itr.second;
+        m->AddItem(item->GetGUIDLow(), item->GetEntry());
+        pending->items.emplace_back(item);
     }
-    else if (!m_items.empty())
-        deleteIncludedItems();
+    m_items.clear();
+    m->messageType = sender.GetMailMessageType();
+    m->stationery = sender.GetStationery();
+    m->sender = sender.GetSenderId();
+    m->receiverGuid = receiver.GetPlayerGuid();
+    m->expire_time = expire_time;
+    m->deliver_time = deliver_time;
+    m->checked = checked;
+    m->state = MAIL_STATE_UNCHANGED;
+    if (ownTransaction) pending->Finish(true); // Preserve native caller timing.
+    else completion->push_back([pending](bool success) { pending->Finish(success); });
 }
 
 /**

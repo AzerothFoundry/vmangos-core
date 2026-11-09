@@ -83,7 +83,7 @@ public:
 
     virtual void OnPacketReceived(WorldPacket const* packet) override;
     void SendBattlefieldPortPacket();
-    void SendBattlemasterJoinPacket(uint8 battlegroundId);
+    void SendBattlemasterJoinPacket(uint8 battlegroundId, uint32 instanceId = 0);
     void SendAreaTriggerPacket(uint32 areaTriggerId);
     void ActivateNearbyAreaTrigger();
 
@@ -122,6 +122,7 @@ public:
     int32 GetIncomingdamage(Unit const* pTarget) const;
     bool AreOthersOnSameTarget(ObjectGuid guid, bool checkMelee = true, bool checkSpells = true) const;
 
+    virtual bool AllowLegacySpell(SpellEntry const*) const { return true; }
     SpellCastResult DoCastSpell(Unit* pTarget, SpellEntry const* pSpellEntry);
     virtual bool CanTryToCastSpell(Unit const* pTarget, SpellEntry const* pSpellEntry) const;
     bool IsWearingShield(Player* pPlayer) const;
@@ -130,7 +131,7 @@ public:
 
     void EquipOrUseNewItem();
     void AddItemToInventory(uint32 itemId, uint32 count = 1);
-    void AddHunterAmmo();
+    virtual void AddHunterAmmo();
     uint8 GetHighestHonorRankFromEquippedItems() const;
     void UpdateVisualHonorRankBasedOnItems();
     void BeginChasing(Unit* pVictim) const;
@@ -469,6 +470,7 @@ public:
             SpellEntry const* pShieldBash;
             SpellEntry const* pShieldSlam;
             SpellEntry const* pSunderArmor;
+            SpellEntry const* pRevenge;
             SpellEntry const* pConcussionBlow;
             SpellEntry const* pPiercingHowl;
         } warrior;

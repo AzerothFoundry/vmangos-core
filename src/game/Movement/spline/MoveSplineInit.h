@@ -128,6 +128,8 @@ namespace Movement
             PathFinder path(&unit);
             if (options & MOVE_EXCLUDE_STEEP_SLOPES)
                 path.ExcludeSteepSlopes();
+            if (options & MOVE_EXCLUDE_LIQUID)
+                path.ExcludeLiquids();
             path.setUseStrightPath(options & MOVE_STRAIGHT_PATH);
             path.calculate(dest.x, dest.y, dest.z, options & MOVE_FORCE_DESTINATION);
             Move(&path);

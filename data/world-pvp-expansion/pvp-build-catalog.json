@@ -1,0 +1,7269 @@
+[
+  {
+    "id": 62001,
+    "class_id": 1,
+    "role": 1,
+    "name": "PVP-Arms-Enrage-Sword",
+    "talents": [
+      {
+        "talentId": 130,
+        "rank": 5,
+        "spellId": 16466,
+        "name": "偏斜（等级 1）"
+      },
+      {
+        "talentId": 127,
+        "rank": 3,
+        "spellId": 12659,
+        "name": "强化撕裂（等级 1）"
+      },
+      {
+        "talentId": 641,
+        "rank": 5,
+        "spellId": 12679,
+        "name": "战术掌握（等级 1）"
+      },
+      {
+        "talentId": 131,
+        "rank": 2,
+        "spellId": 12963,
+        "name": "强化压制（等级 1）"
+      },
+      {
+        "talentId": 137,
+        "rank": 1,
+        "spellId": 12296,
+        "name": "愤怒掌控"
+      },
+      {
+        "talentId": 121,
+        "rank": 3,
+        "spellId": 12867,
+        "name": "重伤（等级 1）"
+      },
+      {
+        "talentId": 662,
+        "rank": 2,
+        "spellId": 16494,
+        "name": "穿刺（等级 1）"
+      },
+      {
+        "talentId": 133,
+        "rank": 1,
+        "spellId": 12292,
+        "name": "横扫攻击"
+      },
+      {
+        "talentId": 123,
+        "rank": 5,
+        "spellId": 12815,
+        "name": "剑类武器专精（等级 1）"
+      },
+      {
+        "talentId": 129,
+        "rank": 3,
+        "spellId": 23695,
+        "name": "强化断筋（等级 1）"
+      },
+      {
+        "talentId": 135,
+        "rank": 1,
+        "spellId": 12294,
+        "name": "致死打击（等级 1）"
+      },
+      {
+        "talentId": 157,
+        "rank": 5,
+        "spellId": 12856,
+        "name": "残忍（等级 1）"
+      },
+      {
+        "talentId": 159,
+        "rank": 5,
+        "spellId": 13002,
+        "name": "怒不可遏（等级 1）"
+      },
+      {
+        "talentId": 160,
+        "rank": 1,
+        "spellId": 12323,
+        "name": "刺耳怒吼"
+      },
+      {
+        "talentId": 661,
+        "rank": 3,
+        "spellId": 16492,
+        "name": "血之狂热（等级 1）"
+      },
+      {
+        "talentId": 154,
+        "rank": 1,
+        "spellId": 12318,
+        "name": "强化战斗怒吼（等级 1）"
+      },
+      {
+        "talentId": 155,
+        "rank": 5,
+        "spellId": 13048,
+        "name": "狂怒（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "161": 31,
+      "164": 20
+    },
+    "learnTalentOrder": [
+      [
+        127,
+        0
+      ],
+      [
+        127,
+        1
+      ],
+      [
+        127,
+        2
+      ],
+      [
+        130,
+        0
+      ],
+      [
+        130,
+        1
+      ],
+      [
+        130,
+        2
+      ],
+      [
+        130,
+        3
+      ],
+      [
+        130,
+        4
+      ],
+      [
+        157,
+        0
+      ],
+      [
+        157,
+        1
+      ],
+      [
+        157,
+        2
+      ],
+      [
+        157,
+        3
+      ],
+      [
+        157,
+        4
+      ],
+      [
+        159,
+        0
+      ],
+      [
+        159,
+        1
+      ],
+      [
+        159,
+        2
+      ],
+      [
+        159,
+        3
+      ],
+      [
+        159,
+        4
+      ],
+      [
+        641,
+        0
+      ],
+      [
+        641,
+        1
+      ],
+      [
+        641,
+        2
+      ],
+      [
+        641,
+        3
+      ],
+      [
+        641,
+        4
+      ],
+      [
+        121,
+        0
+      ],
+      [
+        121,
+        1
+      ],
+      [
+        121,
+        2
+      ],
+      [
+        131,
+        0
+      ],
+      [
+        131,
+        1
+      ],
+      [
+        137,
+        0
+      ],
+      [
+        154,
+        0
+      ],
+      [
+        160,
+        0
+      ],
+      [
+        661,
+        0
+      ],
+      [
+        661,
+        1
+      ],
+      [
+        661,
+        2
+      ],
+      [
+        155,
+        0
+      ],
+      [
+        155,
+        1
+      ],
+      [
+        155,
+        2
+      ],
+      [
+        155,
+        3
+      ],
+      [
+        155,
+        4
+      ],
+      [
+        662,
+        0
+      ],
+      [
+        662,
+        1
+      ],
+      [
+        123,
+        0
+      ],
+      [
+        123,
+        1
+      ],
+      [
+        123,
+        2
+      ],
+      [
+        123,
+        3
+      ],
+      [
+        123,
+        4
+      ],
+      [
+        133,
+        0
+      ],
+      [
+        129,
+        0
+      ],
+      [
+        129,
+        1
+      ],
+      [
+        129,
+        2
+      ],
+      [
+        135,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      71,
+      355,
+      676,
+      871,
+      1161,
+      1672,
+      1680,
+      1719,
+      2458,
+      2565,
+      2687,
+      3127,
+      5246,
+      6554,
+      7373,
+      11556,
+      11574,
+      11578,
+      11581,
+      11585,
+      11597,
+      11605,
+      12292,
+      12294,
+      12296,
+      12318,
+      12323,
+      12659,
+      12679,
+      12815,
+      12856,
+      12867,
+      12963,
+      13002,
+      13048,
+      16466,
+      16492,
+      16494,
+      18499,
+      20230,
+      20560,
+      20569,
+      20617,
+      20662,
+      23695,
+      23894,
+      23925,
+      25286,
+      25288,
+      25289
+    ],
+    "baseSpellCount": 33,
+    "requiredSkills": [
+      12292,
+      12294,
+      12296,
+      12323
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 1,
+      "weapon": "two_hand_sword_and_optional_shield",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62002,
+    "class_id": 1,
+    "role": 1,
+    "name": "PVP-Arms-LastStand",
+    "talents": [
+      {
+        "talentId": 130,
+        "rank": 5,
+        "spellId": 16466,
+        "name": "偏斜（等级 1）"
+      },
+      {
+        "talentId": 641,
+        "rank": 5,
+        "spellId": 12679,
+        "name": "战术掌握（等级 1）"
+      },
+      {
+        "talentId": 127,
+        "rank": 3,
+        "spellId": 12659,
+        "name": "强化撕裂（等级 1）"
+      },
+      {
+        "talentId": 131,
+        "rank": 2,
+        "spellId": 12963,
+        "name": "强化压制（等级 1）"
+      },
+      {
+        "talentId": 137,
+        "rank": 1,
+        "spellId": 12296,
+        "name": "愤怒掌控"
+      },
+      {
+        "talentId": 121,
+        "rank": 3,
+        "spellId": 12867,
+        "name": "重伤（等级 1）"
+      },
+      {
+        "talentId": 662,
+        "rank": 2,
+        "spellId": 16494,
+        "name": "穿刺（等级 1）"
+      },
+      {
+        "talentId": 133,
+        "rank": 1,
+        "spellId": 12292,
+        "name": "横扫攻击"
+      },
+      {
+        "talentId": 123,
+        "rank": 5,
+        "spellId": 12815,
+        "name": "剑类武器专精（等级 1）"
+      },
+      {
+        "talentId": 129,
+        "rank": 3,
+        "spellId": 23695,
+        "name": "强化断筋（等级 1）"
+      },
+      {
+        "talentId": 135,
+        "rank": 1,
+        "spellId": 12294,
+        "name": "致死打击（等级 1）"
+      },
+      {
+        "talentId": 157,
+        "rank": 5,
+        "spellId": 12856,
+        "name": "残忍（等级 1）"
+      },
+      {
+        "talentId": 1601,
+        "rank": 5,
+        "spellId": 12727,
+        "name": "盾牌专精（等级 1）"
+      },
+      {
+        "talentId": 142,
+        "rank": 2,
+        "spellId": 12818,
+        "name": "强化血性狂暴（等级 1）"
+      },
+      {
+        "talentId": 141,
+        "rank": 5,
+        "spellId": 12962,
+        "name": "钢铁意志（等级 1）"
+      },
+      {
+        "talentId": 153,
+        "rank": 1,
+        "spellId": 12975,
+        "name": "破釜沉舟"
+      },
+      {
+        "talentId": 140,
+        "rank": 2,
+        "spellId": 12761,
+        "name": "坚韧（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "161": 31,
+      "163": 15,
+      "164": 5
+    },
+    "learnTalentOrder": [
+      [
+        127,
+        0
+      ],
+      [
+        127,
+        1
+      ],
+      [
+        127,
+        2
+      ],
+      [
+        130,
+        0
+      ],
+      [
+        130,
+        1
+      ],
+      [
+        130,
+        2
+      ],
+      [
+        130,
+        3
+      ],
+      [
+        130,
+        4
+      ],
+      [
+        157,
+        0
+      ],
+      [
+        157,
+        1
+      ],
+      [
+        157,
+        2
+      ],
+      [
+        157,
+        3
+      ],
+      [
+        157,
+        4
+      ],
+      [
+        1601,
+        0
+      ],
+      [
+        1601,
+        1
+      ],
+      [
+        1601,
+        2
+      ],
+      [
+        1601,
+        3
+      ],
+      [
+        1601,
+        4
+      ],
+      [
+        140,
+        0
+      ],
+      [
+        140,
+        1
+      ],
+      [
+        141,
+        0
+      ],
+      [
+        141,
+        1
+      ],
+      [
+        141,
+        2
+      ],
+      [
+        141,
+        3
+      ],
+      [
+        141,
+        4
+      ],
+      [
+        142,
+        0
+      ],
+      [
+        142,
+        1
+      ],
+      [
+        641,
+        0
+      ],
+      [
+        641,
+        1
+      ],
+      [
+        641,
+        2
+      ],
+      [
+        641,
+        3
+      ],
+      [
+        641,
+        4
+      ],
+      [
+        121,
+        0
+      ],
+      [
+        121,
+        1
+      ],
+      [
+        121,
+        2
+      ],
+      [
+        131,
+        0
+      ],
+      [
+        131,
+        1
+      ],
+      [
+        137,
+        0
+      ],
+      [
+        153,
+        0
+      ],
+      [
+        662,
+        0
+      ],
+      [
+        662,
+        1
+      ],
+      [
+        123,
+        0
+      ],
+      [
+        123,
+        1
+      ],
+      [
+        123,
+        2
+      ],
+      [
+        123,
+        3
+      ],
+      [
+        123,
+        4
+      ],
+      [
+        133,
+        0
+      ],
+      [
+        129,
+        0
+      ],
+      [
+        129,
+        1
+      ],
+      [
+        129,
+        2
+      ],
+      [
+        135,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      71,
+      355,
+      676,
+      871,
+      1161,
+      1672,
+      1680,
+      1719,
+      2458,
+      2565,
+      2687,
+      3127,
+      5246,
+      6554,
+      7373,
+      11556,
+      11574,
+      11578,
+      11581,
+      11585,
+      11597,
+      11605,
+      12292,
+      12294,
+      12296,
+      12659,
+      12679,
+      12727,
+      12761,
+      12815,
+      12818,
+      12856,
+      12867,
+      12962,
+      12963,
+      12975,
+      16466,
+      16494,
+      18499,
+      20230,
+      20560,
+      20569,
+      20617,
+      20662,
+      23695,
+      23894,
+      23925,
+      25286,
+      25288,
+      25289
+    ],
+    "baseSpellCount": 33,
+    "requiredSkills": [
+      12292,
+      12294,
+      12296,
+      12975
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 1,
+      "weapon": "two_hand_sword_and_optional_shield",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62003,
+    "class_id": 2,
+    "role": 1,
+    "name": "PVP-Retribution-Control",
+    "talents": [
+      {
+        "talentId": 1450,
+        "rank": 5,
+        "spellId": 20266,
+        "name": "神圣之力（等级 1）"
+      },
+      {
+        "talentId": 1449,
+        "rank": 5,
+        "spellId": 20261,
+        "name": "神圣智慧（等级 1）"
+      },
+      {
+        "talentId": 1432,
+        "rank": 5,
+        "spellId": 20208,
+        "name": "精神集中（等级 1）"
+      },
+      {
+        "talentId": 1444,
+        "rank": 3,
+        "spellId": 20239,
+        "name": "治疗之光（等级 1）"
+      },
+      {
+        "talentId": 1435,
+        "rank": 1,
+        "spellId": 26573,
+        "name": "奉献（等级 1）"
+      },
+      {
+        "talentId": 1628,
+        "rank": 1,
+        "spellId": 9453,
+        "name": "不灭信仰（等级 1）"
+      },
+      {
+        "talentId": 1407,
+        "rank": 5,
+        "spellId": 20105,
+        "name": "祈福（等级 1）"
+      },
+      {
+        "talentId": 1401,
+        "rank": 4,
+        "spellId": 20047,
+        "name": "强化力量祝福（等级 1）"
+      },
+      {
+        "talentId": 1631,
+        "rank": 2,
+        "spellId": 25957,
+        "name": "强化审判（等级 1）"
+      },
+      {
+        "talentId": 1403,
+        "rank": 3,
+        "spellId": 20062,
+        "name": "偏斜（等级 1）"
+      },
+      {
+        "talentId": 1411,
+        "rank": 5,
+        "spellId": 20121,
+        "name": "定罪（等级 1）"
+      },
+      {
+        "talentId": 1481,
+        "rank": 1,
+        "spellId": 20375,
+        "name": "命令圣印（等级 1）"
+      },
+      {
+        "talentId": 1634,
+        "rank": 2,
+        "spellId": 26023,
+        "name": "正义追击（等级 1）"
+      },
+      {
+        "talentId": 1632,
+        "rank": 2,
+        "spellId": 25988,
+        "name": "以眼还眼（等级 1）"
+      },
+      {
+        "talentId": 1409,
+        "rank": 1,
+        "spellId": 20218,
+        "name": "圣洁光环"
+      },
+      {
+        "talentId": 1402,
+        "rank": 5,
+        "spellId": 20059,
+        "name": "复仇（等级 1）"
+      },
+      {
+        "talentId": 1441,
+        "rank": 1,
+        "spellId": 20066,
+        "name": "忏悔"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "381": 31,
+      "382": 20
+    },
+    "learnTalentOrder": [
+      [
+        1401,
+        0
+      ],
+      [
+        1401,
+        1
+      ],
+      [
+        1401,
+        2
+      ],
+      [
+        1401,
+        3
+      ],
+      [
+        1407,
+        0
+      ],
+      [
+        1407,
+        1
+      ],
+      [
+        1407,
+        2
+      ],
+      [
+        1407,
+        3
+      ],
+      [
+        1407,
+        4
+      ],
+      [
+        1449,
+        0
+      ],
+      [
+        1449,
+        1
+      ],
+      [
+        1449,
+        2
+      ],
+      [
+        1449,
+        3
+      ],
+      [
+        1449,
+        4
+      ],
+      [
+        1450,
+        0
+      ],
+      [
+        1450,
+        1
+      ],
+      [
+        1450,
+        2
+      ],
+      [
+        1450,
+        3
+      ],
+      [
+        1450,
+        4
+      ],
+      [
+        1403,
+        0
+      ],
+      [
+        1403,
+        1
+      ],
+      [
+        1403,
+        2
+      ],
+      [
+        1432,
+        0
+      ],
+      [
+        1432,
+        1
+      ],
+      [
+        1432,
+        2
+      ],
+      [
+        1432,
+        3
+      ],
+      [
+        1432,
+        4
+      ],
+      [
+        1631,
+        0
+      ],
+      [
+        1631,
+        1
+      ],
+      [
+        1411,
+        0
+      ],
+      [
+        1411,
+        1
+      ],
+      [
+        1411,
+        2
+      ],
+      [
+        1411,
+        3
+      ],
+      [
+        1411,
+        4
+      ],
+      [
+        1435,
+        0
+      ],
+      [
+        1444,
+        0
+      ],
+      [
+        1444,
+        1
+      ],
+      [
+        1444,
+        2
+      ],
+      [
+        1481,
+        0
+      ],
+      [
+        1628,
+        0
+      ],
+      [
+        1634,
+        0
+      ],
+      [
+        1634,
+        1
+      ],
+      [
+        1632,
+        0
+      ],
+      [
+        1632,
+        1
+      ],
+      [
+        1409,
+        0
+      ],
+      [
+        1402,
+        0
+      ],
+      [
+        1402,
+        1
+      ],
+      [
+        1402,
+        2
+      ],
+      [
+        1402,
+        3
+      ],
+      [
+        1402,
+        4
+      ],
+      [
+        1441,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      1020,
+      1038,
+      1044,
+      1152,
+      3127,
+      4987,
+      5573,
+      9453,
+      10278,
+      10293,
+      10301,
+      10308,
+      10310,
+      10314,
+      10318,
+      10326,
+      13819,
+      19746,
+      19752,
+      19896,
+      19898,
+      19900,
+      19943,
+      19979,
+      20047,
+      20059,
+      20062,
+      20066,
+      20105,
+      20121,
+      20164,
+      20208,
+      20218,
+      20239,
+      20261,
+      20266,
+      20271,
+      20293,
+      20308,
+      20349,
+      20357,
+      20375,
+      20729,
+      20773,
+      20920,
+      20924,
+      23214,
+      24239,
+      25290,
+      25291,
+      25292,
+      25780,
+      25890,
+      25895,
+      25898,
+      25899,
+      25916,
+      25918,
+      25957,
+      25988,
+      26023,
+      26573,
+      33391
+    ],
+    "baseSpellCount": 44,
+    "requiredSkills": [
+      20066,
+      20218,
+      20375,
+      26573
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 1,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62004,
+    "class_id": 2,
+    "role": 4,
+    "name": "PVP-Holy-Protection",
+    "talents": [
+      {
+        "talentId": 1449,
+        "rank": 5,
+        "spellId": 20261,
+        "name": "神圣智慧（等级 1）"
+      },
+      {
+        "talentId": 1432,
+        "rank": 5,
+        "spellId": 20208,
+        "name": "精神集中（等级 1）"
+      },
+      {
+        "talentId": 1444,
+        "rank": 3,
+        "spellId": 20239,
+        "name": "治疗之光（等级 1）"
+      },
+      {
+        "talentId": 1628,
+        "rank": 2,
+        "spellId": 25836,
+        "name": "不灭信仰（等级 1）"
+      },
+      {
+        "talentId": 1461,
+        "rank": 5,
+        "spellId": 20215,
+        "name": "启发（等级 1）"
+      },
+      {
+        "talentId": 1433,
+        "rank": 1,
+        "spellId": 20216,
+        "name": "神恩术"
+      },
+      {
+        "talentId": 1450,
+        "rank": 4,
+        "spellId": 20265,
+        "name": "神圣之力（等级 1）"
+      },
+      {
+        "talentId": 1627,
+        "rank": 5,
+        "spellId": 25829,
+        "name": "神圣强化（等级 1）"
+      },
+      {
+        "talentId": 1502,
+        "rank": 1,
+        "spellId": 20473,
+        "name": "神圣震击（等级 1）"
+      },
+      {
+        "talentId": 1421,
+        "rank": 5,
+        "spellId": 20137,
+        "name": "盾牌壁垒（等级 1）"
+      },
+      {
+        "talentId": 1425,
+        "rank": 2,
+        "spellId": 20175,
+        "name": "守护者的宠爱（等级 1）"
+      },
+      {
+        "talentId": 1630,
+        "rank": 3,
+        "spellId": 20193,
+        "name": "精确（等级 1）"
+      },
+      {
+        "talentId": 1442,
+        "rank": 1,
+        "spellId": 20217,
+        "name": "王者祝福"
+      },
+      {
+        "talentId": 1423,
+        "rank": 4,
+        "spellId": 20146,
+        "name": "坚韧（等级 1）"
+      },
+      {
+        "talentId": 1521,
+        "rank": 3,
+        "spellId": 20489,
+        "name": "强化制裁之锤（等级 1）"
+      },
+      {
+        "talentId": 1626,
+        "rank": 2,
+        "spellId": 20255,
+        "name": "强化专注光环（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "382": 31,
+      "383": 20
+    },
+    "learnTalentOrder": [
+      [
+        1421,
+        0
+      ],
+      [
+        1421,
+        1
+      ],
+      [
+        1421,
+        2
+      ],
+      [
+        1421,
+        3
+      ],
+      [
+        1421,
+        4
+      ],
+      [
+        1449,
+        0
+      ],
+      [
+        1449,
+        1
+      ],
+      [
+        1449,
+        2
+      ],
+      [
+        1449,
+        3
+      ],
+      [
+        1449,
+        4
+      ],
+      [
+        1450,
+        0
+      ],
+      [
+        1450,
+        1
+      ],
+      [
+        1450,
+        2
+      ],
+      [
+        1450,
+        3
+      ],
+      [
+        1423,
+        0
+      ],
+      [
+        1423,
+        1
+      ],
+      [
+        1423,
+        2
+      ],
+      [
+        1423,
+        3
+      ],
+      [
+        1425,
+        0
+      ],
+      [
+        1425,
+        1
+      ],
+      [
+        1432,
+        0
+      ],
+      [
+        1432,
+        1
+      ],
+      [
+        1432,
+        2
+      ],
+      [
+        1432,
+        3
+      ],
+      [
+        1432,
+        4
+      ],
+      [
+        1630,
+        0
+      ],
+      [
+        1630,
+        1
+      ],
+      [
+        1630,
+        2
+      ],
+      [
+        1442,
+        0
+      ],
+      [
+        1444,
+        0
+      ],
+      [
+        1444,
+        1
+      ],
+      [
+        1444,
+        2
+      ],
+      [
+        1628,
+        0
+      ],
+      [
+        1628,
+        1
+      ],
+      [
+        1461,
+        0
+      ],
+      [
+        1461,
+        1
+      ],
+      [
+        1461,
+        2
+      ],
+      [
+        1461,
+        3
+      ],
+      [
+        1461,
+        4
+      ],
+      [
+        1521,
+        0
+      ],
+      [
+        1521,
+        1
+      ],
+      [
+        1521,
+        2
+      ],
+      [
+        1626,
+        0
+      ],
+      [
+        1626,
+        1
+      ],
+      [
+        1433,
+        0
+      ],
+      [
+        1627,
+        0
+      ],
+      [
+        1627,
+        1
+      ],
+      [
+        1627,
+        2
+      ],
+      [
+        1627,
+        3
+      ],
+      [
+        1627,
+        4
+      ],
+      [
+        1502,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      1020,
+      1038,
+      1044,
+      1152,
+      3127,
+      4987,
+      5573,
+      10278,
+      10293,
+      10301,
+      10308,
+      10310,
+      10314,
+      10318,
+      10326,
+      13819,
+      19746,
+      19752,
+      19896,
+      19898,
+      19900,
+      19943,
+      19979,
+      20137,
+      20146,
+      20164,
+      20175,
+      20193,
+      20208,
+      20215,
+      20216,
+      20217,
+      20239,
+      20255,
+      20261,
+      20265,
+      20271,
+      20293,
+      20308,
+      20349,
+      20357,
+      20473,
+      20489,
+      20729,
+      20773,
+      20930,
+      23214,
+      24239,
+      25290,
+      25291,
+      25292,
+      25780,
+      25829,
+      25836,
+      25890,
+      25895,
+      25898,
+      25899,
+      25916,
+      25918,
+      33391
+    ],
+    "baseSpellCount": 44,
+    "requiredSkills": [
+      20216,
+      20217,
+      20473
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 4,
+      "weapon": "healing_caster",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62005,
+    "class_id": 3,
+    "role": 2,
+    "name": "PVP-Marksman-Survival",
+    "talents": [
+      {
+        "talentId": 1341,
+        "rank": 5,
+        "spellId": 19415,
+        "name": "强化震荡射击（等级 1）"
+      },
+      {
+        "talentId": 1342,
+        "rank": 2,
+        "spellId": 19417,
+        "name": "效率（等级 1）"
+      },
+      {
+        "talentId": 1344,
+        "rank": 5,
+        "spellId": 19431,
+        "name": "夺命射击（等级 1）"
+      },
+      {
+        "talentId": 1345,
+        "rank": 1,
+        "spellId": 19434,
+        "name": "瞄准射击（等级 1）"
+      },
+      {
+        "talentId": 1352,
+        "rank": 3,
+        "spellId": 19500,
+        "name": "鹰眼（等级 1）"
+      },
+      {
+        "talentId": 1349,
+        "rank": 5,
+        "spellId": 19490,
+        "name": "致死射击（等级 1）"
+      },
+      {
+        "talentId": 1353,
+        "rank": 1,
+        "spellId": 19503,
+        "name": "驱散射击"
+      },
+      {
+        "talentId": 1347,
+        "rank": 3,
+        "spellId": 24691,
+        "name": "弹幕（等级 1）"
+      },
+      {
+        "talentId": 1362,
+        "rank": 5,
+        "spellId": 19511,
+        "name": "远程武器专精（等级 1）"
+      },
+      {
+        "talentId": 1361,
+        "rank": 1,
+        "spellId": 19506,
+        "name": "强击光环（等级 1）"
+      },
+      {
+        "talentId": 1301,
+        "rank": 3,
+        "spellId": 19153,
+        "name": "人型生物杀手（等级 1）"
+      },
+      {
+        "talentId": 1311,
+        "rank": 2,
+        "spellId": 19297,
+        "name": "偏斜（等级 1）"
+      },
+      {
+        "talentId": 1304,
+        "rank": 5,
+        "spellId": 19390,
+        "name": "诱捕（等级 1）"
+      },
+      {
+        "talentId": 1305,
+        "rank": 2,
+        "spellId": 19232,
+        "name": "强化摔绊（等级 1）"
+      },
+      {
+        "talentId": 1306,
+        "rank": 2,
+        "spellId": 19245,
+        "name": "灵巧陷阱（等级 1）"
+      },
+      {
+        "talentId": 1622,
+        "rank": 5,
+        "spellId": 19259,
+        "name": "生存专家（等级 1）"
+      },
+      {
+        "talentId": 1308,
+        "rank": 1,
+        "spellId": 19263,
+        "name": "威慑"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "362": 20,
+      "363": 31
+    },
+    "learnTalentOrder": [
+      [
+        1301,
+        0
+      ],
+      [
+        1301,
+        1
+      ],
+      [
+        1301,
+        2
+      ],
+      [
+        1311,
+        0
+      ],
+      [
+        1311,
+        1
+      ],
+      [
+        1341,
+        0
+      ],
+      [
+        1341,
+        1
+      ],
+      [
+        1341,
+        2
+      ],
+      [
+        1341,
+        3
+      ],
+      [
+        1341,
+        4
+      ],
+      [
+        1342,
+        0
+      ],
+      [
+        1342,
+        1
+      ],
+      [
+        1304,
+        0
+      ],
+      [
+        1304,
+        1
+      ],
+      [
+        1304,
+        2
+      ],
+      [
+        1304,
+        3
+      ],
+      [
+        1304,
+        4
+      ],
+      [
+        1305,
+        0
+      ],
+      [
+        1305,
+        1
+      ],
+      [
+        1344,
+        0
+      ],
+      [
+        1344,
+        1
+      ],
+      [
+        1344,
+        2
+      ],
+      [
+        1344,
+        3
+      ],
+      [
+        1344,
+        4
+      ],
+      [
+        1306,
+        0
+      ],
+      [
+        1306,
+        1
+      ],
+      [
+        1308,
+        0
+      ],
+      [
+        1345,
+        0
+      ],
+      [
+        1352,
+        0
+      ],
+      [
+        1352,
+        1
+      ],
+      [
+        1352,
+        2
+      ],
+      [
+        1622,
+        0
+      ],
+      [
+        1622,
+        1
+      ],
+      [
+        1622,
+        2
+      ],
+      [
+        1622,
+        3
+      ],
+      [
+        1622,
+        4
+      ],
+      [
+        1349,
+        0
+      ],
+      [
+        1349,
+        1
+      ],
+      [
+        1349,
+        2
+      ],
+      [
+        1349,
+        3
+      ],
+      [
+        1349,
+        4
+      ],
+      [
+        1347,
+        0
+      ],
+      [
+        1347,
+        1
+      ],
+      [
+        1347,
+        2
+      ],
+      [
+        1353,
+        0
+      ],
+      [
+        1362,
+        0
+      ],
+      [
+        1362,
+        1
+      ],
+      [
+        1362,
+        2
+      ],
+      [
+        1362,
+        3
+      ],
+      [
+        1362,
+        4
+      ],
+      [
+        1361,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      883,
+      982,
+      1002,
+      1462,
+      1494,
+      1515,
+      1543,
+      2641,
+      3045,
+      3127,
+      4195,
+      4196,
+      4197,
+      4198,
+      4199,
+      4200,
+      4201,
+      4202,
+      5048,
+      5049,
+      5116,
+      5118,
+      5149,
+      5384,
+      6197,
+      6991,
+      13159,
+      13161,
+      13163,
+      13544,
+      13809,
+      14266,
+      14268,
+      14271,
+      14273,
+      14277,
+      14280,
+      14287,
+      14295,
+      14305,
+      14311,
+      14317,
+      14325,
+      14327,
+      14923,
+      14924,
+      14925,
+      14926,
+      14927,
+      15632,
+      19153,
+      19232,
+      19245,
+      19259,
+      19263,
+      19297,
+      19390,
+      19415,
+      19417,
+      19431,
+      19434,
+      19490,
+      19500,
+      19503,
+      19506,
+      19511,
+      19878,
+      19879,
+      19880,
+      19882,
+      19883,
+      19884,
+      19885,
+      20190,
+      20904,
+      20906,
+      24440,
+      24441,
+      24463,
+      24464,
+      24475,
+      24476,
+      24477,
+      24478,
+      24490,
+      24494,
+      24495,
+      24508,
+      24509,
+      24510,
+      24511,
+      24512,
+      24513,
+      24514,
+      24515,
+      24516,
+      24547,
+      24556,
+      24557,
+      24558,
+      24559,
+      24560,
+      24561,
+      24562,
+      24631,
+      24632,
+      24691,
+      25294,
+      25295,
+      25296
+    ],
+    "baseSpellCount": 91,
+    "requiredSkills": [
+      19263,
+      19434,
+      19503,
+      19506
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62006,
+    "class_id": 3,
+    "role": 2,
+    "name": "PVP-BeastMaster-Aimed",
+    "talents": [
+      {
+        "talentId": 1389,
+        "rank": 5,
+        "spellId": 19587,
+        "name": "耐久训练（等级 1）"
+      },
+      {
+        "talentId": 1395,
+        "rank": 3,
+        "spellId": 19612,
+        "name": "厚皮（等级 1）"
+      },
+      {
+        "talentId": 1382,
+        "rank": 2,
+        "spellId": 19553,
+        "name": "强化雄鹰守护（等级 1）"
+      },
+      {
+        "talentId": 1396,
+        "rank": 5,
+        "spellId": 19620,
+        "name": "狂怒释放（等级 1）"
+      },
+      {
+        "talentId": 1391,
+        "rank": 1,
+        "spellId": 19596,
+        "name": "野兽迅捷"
+      },
+      {
+        "talentId": 1393,
+        "rank": 5,
+        "spellId": 19602,
+        "name": "凶暴（等级 1）"
+      },
+      {
+        "talentId": 1387,
+        "rank": 1,
+        "spellId": 19577,
+        "name": "胁迫"
+      },
+      {
+        "talentId": 1385,
+        "rank": 2,
+        "spellId": 19573,
+        "name": "强化治疗宠物（等级 1）"
+      },
+      {
+        "talentId": 1390,
+        "rank": 1,
+        "spellId": 19590,
+        "name": "野兽戒律（等级 1）"
+      },
+      {
+        "talentId": 1397,
+        "rank": 5,
+        "spellId": 19625,
+        "name": "狂乱（等级 1）"
+      },
+      {
+        "talentId": 1386,
+        "rank": 1,
+        "spellId": 19574,
+        "name": "狂野怒火"
+      },
+      {
+        "talentId": 1341,
+        "rank": 5,
+        "spellId": 19415,
+        "name": "强化震荡射击（等级 1）"
+      },
+      {
+        "talentId": 1344,
+        "rank": 5,
+        "spellId": 19431,
+        "name": "夺命射击（等级 1）"
+      },
+      {
+        "talentId": 1345,
+        "rank": 1,
+        "spellId": 19434,
+        "name": "瞄准射击（等级 1）"
+      },
+      {
+        "talentId": 1352,
+        "rank": 3,
+        "spellId": 19500,
+        "name": "鹰眼（等级 1）"
+      },
+      {
+        "talentId": 1342,
+        "rank": 1,
+        "spellId": 19416,
+        "name": "效率（等级 1）"
+      },
+      {
+        "talentId": 1349,
+        "rank": 5,
+        "spellId": 19490,
+        "name": "致死射击（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "361": 31,
+      "363": 20
+    },
+    "learnTalentOrder": [
+      [
+        1341,
+        0
+      ],
+      [
+        1341,
+        1
+      ],
+      [
+        1341,
+        2
+      ],
+      [
+        1341,
+        3
+      ],
+      [
+        1341,
+        4
+      ],
+      [
+        1342,
+        0
+      ],
+      [
+        1382,
+        0
+      ],
+      [
+        1382,
+        1
+      ],
+      [
+        1389,
+        0
+      ],
+      [
+        1389,
+        1
+      ],
+      [
+        1389,
+        2
+      ],
+      [
+        1389,
+        3
+      ],
+      [
+        1389,
+        4
+      ],
+      [
+        1344,
+        0
+      ],
+      [
+        1344,
+        1
+      ],
+      [
+        1344,
+        2
+      ],
+      [
+        1344,
+        3
+      ],
+      [
+        1344,
+        4
+      ],
+      [
+        1395,
+        0
+      ],
+      [
+        1395,
+        1
+      ],
+      [
+        1395,
+        2
+      ],
+      [
+        1345,
+        0
+      ],
+      [
+        1352,
+        0
+      ],
+      [
+        1352,
+        1
+      ],
+      [
+        1352,
+        2
+      ],
+      [
+        1391,
+        0
+      ],
+      [
+        1396,
+        0
+      ],
+      [
+        1396,
+        1
+      ],
+      [
+        1396,
+        2
+      ],
+      [
+        1396,
+        3
+      ],
+      [
+        1396,
+        4
+      ],
+      [
+        1349,
+        0
+      ],
+      [
+        1349,
+        1
+      ],
+      [
+        1349,
+        2
+      ],
+      [
+        1349,
+        3
+      ],
+      [
+        1349,
+        4
+      ],
+      [
+        1385,
+        0
+      ],
+      [
+        1385,
+        1
+      ],
+      [
+        1393,
+        0
+      ],
+      [
+        1393,
+        1
+      ],
+      [
+        1393,
+        2
+      ],
+      [
+        1393,
+        3
+      ],
+      [
+        1393,
+        4
+      ],
+      [
+        1387,
+        0
+      ],
+      [
+        1390,
+        0
+      ],
+      [
+        1397,
+        0
+      ],
+      [
+        1397,
+        1
+      ],
+      [
+        1397,
+        2
+      ],
+      [
+        1397,
+        3
+      ],
+      [
+        1397,
+        4
+      ],
+      [
+        1386,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      883,
+      982,
+      1002,
+      1462,
+      1494,
+      1515,
+      1543,
+      2641,
+      3045,
+      3127,
+      4195,
+      4196,
+      4197,
+      4198,
+      4199,
+      4200,
+      4201,
+      4202,
+      5048,
+      5049,
+      5116,
+      5118,
+      5149,
+      5384,
+      6197,
+      6991,
+      13159,
+      13161,
+      13163,
+      13544,
+      13809,
+      14266,
+      14268,
+      14271,
+      14273,
+      14277,
+      14280,
+      14287,
+      14295,
+      14305,
+      14311,
+      14317,
+      14325,
+      14327,
+      14923,
+      14924,
+      14925,
+      14926,
+      14927,
+      15632,
+      19415,
+      19416,
+      19431,
+      19434,
+      19490,
+      19500,
+      19553,
+      19573,
+      19574,
+      19577,
+      19587,
+      19590,
+      19596,
+      19602,
+      19612,
+      19620,
+      19625,
+      19878,
+      19879,
+      19880,
+      19882,
+      19883,
+      19884,
+      19885,
+      20190,
+      20904,
+      24440,
+      24441,
+      24463,
+      24464,
+      24475,
+      24476,
+      24477,
+      24478,
+      24490,
+      24494,
+      24495,
+      24508,
+      24509,
+      24510,
+      24511,
+      24512,
+      24513,
+      24514,
+      24515,
+      24516,
+      24547,
+      24556,
+      24557,
+      24558,
+      24559,
+      24560,
+      24561,
+      24562,
+      24631,
+      24632,
+      25294,
+      25295,
+      25296
+    ],
+    "baseSpellCount": 91,
+    "requiredSkills": [
+      19434,
+      19574,
+      19577,
+      19596
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62007,
+    "class_id": 4,
+    "role": 1,
+    "name": "PVP-ColdBlood-Hemorrhage-Prep",
+    "talents": [
+      {
+        "talentId": 270,
+        "rank": 5,
+        "spellId": 14142,
+        "name": "恶意（等级 1）"
+      },
+      {
+        "talentId": 276,
+        "rank": 3,
+        "spellId": 14164,
+        "name": "强化剔骨（等级 1）"
+      },
+      {
+        "talentId": 273,
+        "rank": 3,
+        "spellId": 14161,
+        "name": "无情（等级 1）"
+      },
+      {
+        "talentId": 274,
+        "rank": 2,
+        "spellId": 14159,
+        "name": "谋杀（等级 1）"
+      },
+      {
+        "talentId": 281,
+        "rank": 1,
+        "spellId": 14179,
+        "name": "无情打击"
+      },
+      {
+        "talentId": 269,
+        "rank": 5,
+        "spellId": 14137,
+        "name": "致命偷袭（等级 1）"
+      },
+      {
+        "talentId": 268,
+        "rank": 1,
+        "spellId": 14113,
+        "name": "强化毒药（等级 1）"
+      },
+      {
+        "talentId": 280,
+        "rank": 1,
+        "spellId": 14177,
+        "name": "冷血"
+      },
+      {
+        "talentId": 203,
+        "rank": 3,
+        "spellId": 13792,
+        "name": "强化凿击（等级 1）"
+      },
+      {
+        "talentId": 241,
+        "rank": 5,
+        "spellId": 13973,
+        "name": "欺诈高手（等级 1）"
+      },
+      {
+        "talentId": 244,
+        "rank": 5,
+        "spellId": 14065,
+        "name": "伪装（等级 1）"
+      },
+      {
+        "talentId": 247,
+        "rank": 1,
+        "spellId": 13981,
+        "name": "飘忽不定（等级 1）"
+      },
+      {
+        "talentId": 245,
+        "rank": 3,
+        "spellId": 13980,
+        "name": "先发制人（等级 1）"
+      },
+      {
+        "talentId": 303,
+        "rank": 1,
+        "spellId": 14278,
+        "name": "鬼魅攻击"
+      },
+      {
+        "talentId": 246,
+        "rank": 3,
+        "spellId": 14071,
+        "name": "调整（等级 1）"
+      },
+      {
+        "talentId": 262,
+        "rank": 3,
+        "spellId": 14095,
+        "name": "强化闷棍（等级 1）"
+      },
+      {
+        "talentId": 1123,
+        "rank": 3,
+        "spellId": 14173,
+        "name": "锯齿利刃（等级 1）"
+      },
+      {
+        "talentId": 284,
+        "rank": 1,
+        "spellId": 14185,
+        "name": "伺机待发"
+      },
+      {
+        "talentId": 681,
+        "rank": 1,
+        "spellId": 16511,
+        "name": "出血（等级 1）"
+      },
+      {
+        "talentId": 265,
+        "rank": 1,
+        "spellId": 14082,
+        "name": "卑鄙（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "181": 3,
+      "182": 21,
+      "183": 27
+    },
+    "learnTalentOrder": [
+      [
+        203,
+        0
+      ],
+      [
+        203,
+        1
+      ],
+      [
+        203,
+        2
+      ],
+      [
+        241,
+        0
+      ],
+      [
+        241,
+        1
+      ],
+      [
+        241,
+        2
+      ],
+      [
+        241,
+        3
+      ],
+      [
+        241,
+        4
+      ],
+      [
+        270,
+        0
+      ],
+      [
+        270,
+        1
+      ],
+      [
+        270,
+        2
+      ],
+      [
+        270,
+        3
+      ],
+      [
+        270,
+        4
+      ],
+      [
+        276,
+        0
+      ],
+      [
+        276,
+        1
+      ],
+      [
+        276,
+        2
+      ],
+      [
+        244,
+        0
+      ],
+      [
+        244,
+        1
+      ],
+      [
+        244,
+        2
+      ],
+      [
+        244,
+        3
+      ],
+      [
+        244,
+        4
+      ],
+      [
+        247,
+        0
+      ],
+      [
+        273,
+        0
+      ],
+      [
+        273,
+        1
+      ],
+      [
+        273,
+        2
+      ],
+      [
+        274,
+        0
+      ],
+      [
+        274,
+        1
+      ],
+      [
+        245,
+        0
+      ],
+      [
+        245,
+        1
+      ],
+      [
+        245,
+        2
+      ],
+      [
+        269,
+        0
+      ],
+      [
+        269,
+        1
+      ],
+      [
+        269,
+        2
+      ],
+      [
+        269,
+        3
+      ],
+      [
+        269,
+        4
+      ],
+      [
+        281,
+        0
+      ],
+      [
+        303,
+        0
+      ],
+      [
+        246,
+        0
+      ],
+      [
+        246,
+        1
+      ],
+      [
+        246,
+        2
+      ],
+      [
+        262,
+        0
+      ],
+      [
+        262,
+        1
+      ],
+      [
+        262,
+        2
+      ],
+      [
+        268,
+        0
+      ],
+      [
+        1123,
+        0
+      ],
+      [
+        1123,
+        1
+      ],
+      [
+        1123,
+        2
+      ],
+      [
+        265,
+        0
+      ],
+      [
+        280,
+        0
+      ],
+      [
+        284,
+        0
+      ],
+      [
+        681,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      921,
+      1725,
+      1769,
+      1787,
+      1804,
+      1833,
+      1842,
+      1857,
+      1860,
+      2094,
+      2836,
+      2842,
+      3127,
+      3421,
+      5277,
+      6510,
+      6774,
+      8643,
+      11198,
+      11269,
+      11275,
+      11286,
+      11290,
+      11294,
+      11297,
+      11300,
+      11305,
+      11343,
+      11400,
+      13230,
+      13792,
+      13973,
+      13980,
+      13981,
+      14065,
+      14071,
+      14082,
+      14095,
+      14113,
+      14137,
+      14142,
+      14159,
+      14161,
+      14164,
+      14173,
+      14177,
+      14179,
+      14185,
+      14278,
+      16511,
+      25300,
+      25302,
+      25347
+    ],
+    "baseSpellCount": 33,
+    "requiredSkills": [
+      14177,
+      14179,
+      14185,
+      14278,
+      16511
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 1,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62008,
+    "class_id": 4,
+    "role": 1,
+    "name": "PVP-ColdBlood-Prep-Dagger",
+    "talents": [
+      {
+        "talentId": 270,
+        "rank": 5,
+        "spellId": 14142,
+        "name": "恶意（等级 1）"
+      },
+      {
+        "talentId": 276,
+        "rank": 3,
+        "spellId": 14164,
+        "name": "强化剔骨（等级 1）"
+      },
+      {
+        "talentId": 273,
+        "rank": 3,
+        "spellId": 14161,
+        "name": "无情（等级 1）"
+      },
+      {
+        "talentId": 274,
+        "rank": 2,
+        "spellId": 14159,
+        "name": "谋杀（等级 1）"
+      },
+      {
+        "talentId": 281,
+        "rank": 1,
+        "spellId": 14179,
+        "name": "无情打击"
+      },
+      {
+        "talentId": 269,
+        "rank": 5,
+        "spellId": 14137,
+        "name": "致命偷袭（等级 1）"
+      },
+      {
+        "talentId": 272,
+        "rank": 1,
+        "spellId": 14144,
+        "name": "冷酷攻击（等级 1）"
+      },
+      {
+        "talentId": 280,
+        "rank": 1,
+        "spellId": 14177,
+        "name": "冷血"
+      },
+      {
+        "talentId": 203,
+        "rank": 3,
+        "spellId": 13792,
+        "name": "强化凿击（等级 1）"
+      },
+      {
+        "talentId": 201,
+        "rank": 2,
+        "spellId": 13863,
+        "name": "强化邪恶攻击（等级 1）"
+      },
+      {
+        "talentId": 202,
+        "rank": 3,
+        "spellId": 13866,
+        "name": "强化背刺（等级 1）"
+      },
+      {
+        "talentId": 261,
+        "rank": 5,
+        "spellId": 14075,
+        "name": "伺机而动（等级 1）"
+      },
+      {
+        "talentId": 244,
+        "rank": 5,
+        "spellId": 14065,
+        "name": "伪装（等级 1）"
+      },
+      {
+        "talentId": 263,
+        "rank": 3,
+        "spellId": 14081,
+        "name": "强化伏击（等级 1）"
+      },
+      {
+        "talentId": 245,
+        "rank": 3,
+        "spellId": 13980,
+        "name": "先发制人（等级 1）"
+      },
+      {
+        "talentId": 262,
+        "rank": 3,
+        "spellId": 14095,
+        "name": "强化闷棍（等级 1）"
+      },
+      {
+        "talentId": 247,
+        "rank": 2,
+        "spellId": 14066,
+        "name": "飘忽不定（等级 1）"
+      },
+      {
+        "talentId": 284,
+        "rank": 1,
+        "spellId": 14185,
+        "name": "伺机待发"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "181": 8,
+      "182": 21,
+      "183": 22
+    },
+    "learnTalentOrder": [
+      [
+        201,
+        0
+      ],
+      [
+        201,
+        1
+      ],
+      [
+        203,
+        0
+      ],
+      [
+        203,
+        1
+      ],
+      [
+        203,
+        2
+      ],
+      [
+        261,
+        0
+      ],
+      [
+        261,
+        1
+      ],
+      [
+        261,
+        2
+      ],
+      [
+        261,
+        3
+      ],
+      [
+        261,
+        4
+      ],
+      [
+        270,
+        0
+      ],
+      [
+        270,
+        1
+      ],
+      [
+        270,
+        2
+      ],
+      [
+        270,
+        3
+      ],
+      [
+        270,
+        4
+      ],
+      [
+        272,
+        0
+      ],
+      [
+        276,
+        0
+      ],
+      [
+        276,
+        1
+      ],
+      [
+        276,
+        2
+      ],
+      [
+        202,
+        0
+      ],
+      [
+        202,
+        1
+      ],
+      [
+        202,
+        2
+      ],
+      [
+        244,
+        0
+      ],
+      [
+        244,
+        1
+      ],
+      [
+        244,
+        2
+      ],
+      [
+        244,
+        3
+      ],
+      [
+        244,
+        4
+      ],
+      [
+        247,
+        0
+      ],
+      [
+        247,
+        1
+      ],
+      [
+        273,
+        0
+      ],
+      [
+        273,
+        1
+      ],
+      [
+        273,
+        2
+      ],
+      [
+        274,
+        0
+      ],
+      [
+        274,
+        1
+      ],
+      [
+        245,
+        0
+      ],
+      [
+        245,
+        1
+      ],
+      [
+        245,
+        2
+      ],
+      [
+        263,
+        0
+      ],
+      [
+        263,
+        1
+      ],
+      [
+        263,
+        2
+      ],
+      [
+        269,
+        0
+      ],
+      [
+        269,
+        1
+      ],
+      [
+        269,
+        2
+      ],
+      [
+        269,
+        3
+      ],
+      [
+        269,
+        4
+      ],
+      [
+        281,
+        0
+      ],
+      [
+        262,
+        0
+      ],
+      [
+        262,
+        1
+      ],
+      [
+        262,
+        2
+      ],
+      [
+        280,
+        0
+      ],
+      [
+        284,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      921,
+      1725,
+      1769,
+      1787,
+      1804,
+      1833,
+      1842,
+      1857,
+      1860,
+      2094,
+      2836,
+      2842,
+      3127,
+      3421,
+      5277,
+      6510,
+      6774,
+      8643,
+      11198,
+      11269,
+      11275,
+      11286,
+      11290,
+      11294,
+      11297,
+      11300,
+      11305,
+      11343,
+      11400,
+      13230,
+      13792,
+      13863,
+      13866,
+      13980,
+      14065,
+      14066,
+      14075,
+      14081,
+      14095,
+      14137,
+      14142,
+      14144,
+      14159,
+      14161,
+      14164,
+      14177,
+      14179,
+      14185,
+      25300,
+      25302,
+      25347
+    ],
+    "baseSpellCount": 33,
+    "requiredSkills": [
+      14177,
+      14179,
+      14185
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 1,
+      "weapon": "daggers",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62009,
+    "class_id": 5,
+    "role": 2,
+    "name": "PVP-Shadow-Control",
+    "talents": [
+      {
+        "talentId": 342,
+        "rank": 5,
+        "spellId": 14791,
+        "name": "坚定意志（等级 1）"
+      },
+      {
+        "talentId": 344,
+        "rank": 2,
+        "spellId": 14767,
+        "name": "强化真言术：韧（等级 1）"
+      },
+      {
+        "talentId": 343,
+        "rank": 3,
+        "spellId": 14769,
+        "name": "强化真言术：盾（等级 1）"
+      },
+      {
+        "talentId": 321,
+        "rank": 2,
+        "spellId": 14774,
+        "name": "殉难（等级 1）"
+      },
+      {
+        "talentId": 348,
+        "rank": 1,
+        "spellId": 14751,
+        "name": "心灵专注"
+      },
+      {
+        "talentId": 464,
+        "rank": 5,
+        "spellId": 15326,
+        "name": "昏阙（等级 1）"
+      },
+      {
+        "talentId": 482,
+        "rank": 2,
+        "spellId": 15317,
+        "name": "强化暗言术：痛（等级 1）"
+      },
+      {
+        "talentId": 463,
+        "rank": 5,
+        "spellId": 15330,
+        "name": "暗影集中（等级 1）"
+      },
+      {
+        "talentId": 542,
+        "rank": 2,
+        "spellId": 15448,
+        "name": "强化心灵尖啸（等级 1）"
+      },
+      {
+        "talentId": 481,
+        "rank": 5,
+        "spellId": 15316,
+        "name": "强化心灵震爆（等级 1）"
+      },
+      {
+        "talentId": 501,
+        "rank": 1,
+        "spellId": 15407,
+        "name": "精神鞭笞（等级 1）"
+      },
+      {
+        "talentId": 881,
+        "rank": 3,
+        "spellId": 17325,
+        "name": "暗影延伸（等级 1）"
+      },
+      {
+        "talentId": 461,
+        "rank": 5,
+        "spellId": 15334,
+        "name": "暗影之波（等级 1）"
+      },
+      {
+        "talentId": 541,
+        "rank": 1,
+        "spellId": 15487,
+        "name": "沉默"
+      },
+      {
+        "talentId": 484,
+        "rank": 1,
+        "spellId": 15286,
+        "name": "吸血鬼的拥抱"
+      },
+      {
+        "talentId": 1638,
+        "rank": 2,
+        "spellId": 27840,
+        "name": "强化吸血鬼的拥抱（等级 1）"
+      },
+      {
+        "talentId": 462,
+        "rank": 5,
+        "spellId": 15310,
+        "name": "黑暗（等级 1）"
+      },
+      {
+        "talentId": 521,
+        "rank": 1,
+        "spellId": 15473,
+        "name": "暗影形态"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "201": 13,
+      "203": 38
+    },
+    "learnTalentOrder": [
+      [
+        342,
+        0
+      ],
+      [
+        342,
+        1
+      ],
+      [
+        342,
+        2
+      ],
+      [
+        342,
+        3
+      ],
+      [
+        342,
+        4
+      ],
+      [
+        464,
+        0
+      ],
+      [
+        464,
+        1
+      ],
+      [
+        464,
+        2
+      ],
+      [
+        464,
+        3
+      ],
+      [
+        464,
+        4
+      ],
+      [
+        321,
+        0
+      ],
+      [
+        321,
+        1
+      ],
+      [
+        343,
+        0
+      ],
+      [
+        343,
+        1
+      ],
+      [
+        343,
+        2
+      ],
+      [
+        344,
+        0
+      ],
+      [
+        344,
+        1
+      ],
+      [
+        463,
+        0
+      ],
+      [
+        463,
+        1
+      ],
+      [
+        463,
+        2
+      ],
+      [
+        463,
+        3
+      ],
+      [
+        463,
+        4
+      ],
+      [
+        482,
+        0
+      ],
+      [
+        482,
+        1
+      ],
+      [
+        348,
+        0
+      ],
+      [
+        481,
+        0
+      ],
+      [
+        481,
+        1
+      ],
+      [
+        481,
+        2
+      ],
+      [
+        481,
+        3
+      ],
+      [
+        481,
+        4
+      ],
+      [
+        501,
+        0
+      ],
+      [
+        542,
+        0
+      ],
+      [
+        542,
+        1
+      ],
+      [
+        461,
+        0
+      ],
+      [
+        461,
+        1
+      ],
+      [
+        461,
+        2
+      ],
+      [
+        461,
+        3
+      ],
+      [
+        461,
+        4
+      ],
+      [
+        881,
+        0
+      ],
+      [
+        881,
+        1
+      ],
+      [
+        881,
+        2
+      ],
+      [
+        484,
+        0
+      ],
+      [
+        541,
+        0
+      ],
+      [
+        1638,
+        0
+      ],
+      [
+        1638,
+        1
+      ],
+      [
+        462,
+        0
+      ],
+      [
+        462,
+        1
+      ],
+      [
+        462,
+        2
+      ],
+      [
+        462,
+        3
+      ],
+      [
+        462,
+        4
+      ],
+      [
+        521,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      528,
+      552,
+      988,
+      1706,
+      2053,
+      6064,
+      9485,
+      10876,
+      10890,
+      10894,
+      10901,
+      10909,
+      10912,
+      10917,
+      10934,
+      10938,
+      10942,
+      10947,
+      10952,
+      10953,
+      10958,
+      14751,
+      14767,
+      14769,
+      14774,
+      14791,
+      15261,
+      15286,
+      15310,
+      15316,
+      15317,
+      15326,
+      15330,
+      15334,
+      15407,
+      15448,
+      15473,
+      15487,
+      17325,
+      18807,
+      20770,
+      21564,
+      25314,
+      25315,
+      25316,
+      27683,
+      27840
+    ],
+    "baseSpellCount": 28,
+    "requiredSkills": [
+      14751,
+      15286,
+      15407,
+      15473,
+      15487
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62010,
+    "class_id": 5,
+    "role": 4,
+    "name": "PVP-Discipline-Holy-Support",
+    "talents": [
+      {
+        "talentId": 342,
+        "rank": 5,
+        "spellId": 14791,
+        "name": "坚定意志（等级 1）"
+      },
+      {
+        "talentId": 343,
+        "rank": 3,
+        "spellId": 14769,
+        "name": "强化真言术：盾（等级 1）"
+      },
+      {
+        "talentId": 344,
+        "rank": 2,
+        "spellId": 14767,
+        "name": "强化真言术：韧（等级 1）"
+      },
+      {
+        "talentId": 348,
+        "rank": 1,
+        "spellId": 14751,
+        "name": "心灵专注"
+      },
+      {
+        "talentId": 321,
+        "rank": 2,
+        "spellId": 14774,
+        "name": "殉难（等级 1）"
+      },
+      {
+        "talentId": 347,
+        "rank": 3,
+        "spellId": 14777,
+        "name": "冥想（等级 1）"
+      },
+      {
+        "talentId": 341,
+        "rank": 5,
+        "spellId": 14783,
+        "name": "精神敏锐（等级 1）"
+      },
+      {
+        "talentId": 1201,
+        "rank": 5,
+        "spellId": 18555,
+        "name": "心灵之力（等级 1）"
+      },
+      {
+        "talentId": 350,
+        "rank": 2,
+        "spellId": 14772,
+        "name": "强化法力燃烧（等级 1）"
+      },
+      {
+        "talentId": 351,
+        "rank": 1,
+        "spellId": 14752,
+        "name": "神圣之灵（等级 1）"
+      },
+      {
+        "talentId": 1202,
+        "rank": 1,
+        "spellId": 18544,
+        "name": "意志之力（等级 1）"
+      },
+      {
+        "talentId": 322,
+        "rank": 1,
+        "spellId": 10060,
+        "name": "能量灌注"
+      },
+      {
+        "talentId": 410,
+        "rank": 2,
+        "spellId": 15012,
+        "name": "治疗专注（等级 1）"
+      },
+      {
+        "talentId": 406,
+        "rank": 3,
+        "spellId": 17191,
+        "name": "强化恢复（等级 1）"
+      },
+      {
+        "talentId": 401,
+        "rank": 5,
+        "spellId": 15011,
+        "name": "神圣专精（等级 1）"
+      },
+      {
+        "talentId": 1636,
+        "rank": 3,
+        "spellId": 27816,
+        "name": "神恩回复（等级 1）"
+      },
+      {
+        "talentId": 361,
+        "rank": 3,
+        "spellId": 15363,
+        "name": "灵感（等级 1）"
+      },
+      {
+        "talentId": 408,
+        "rank": 3,
+        "spellId": 15014,
+        "name": "强化治疗术（等级 1）"
+      },
+      {
+        "talentId": 442,
+        "rank": 1,
+        "spellId": 15237,
+        "name": "神圣新星（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "201": 31,
+      "202": 20
+    },
+    "learnTalentOrder": [
+      [
+        342,
+        0
+      ],
+      [
+        342,
+        1
+      ],
+      [
+        342,
+        2
+      ],
+      [
+        342,
+        3
+      ],
+      [
+        342,
+        4
+      ],
+      [
+        401,
+        0
+      ],
+      [
+        401,
+        1
+      ],
+      [
+        401,
+        2
+      ],
+      [
+        401,
+        3
+      ],
+      [
+        401,
+        4
+      ],
+      [
+        406,
+        0
+      ],
+      [
+        406,
+        1
+      ],
+      [
+        406,
+        2
+      ],
+      [
+        410,
+        0
+      ],
+      [
+        410,
+        1
+      ],
+      [
+        321,
+        0
+      ],
+      [
+        321,
+        1
+      ],
+      [
+        343,
+        0
+      ],
+      [
+        343,
+        1
+      ],
+      [
+        343,
+        2
+      ],
+      [
+        344,
+        0
+      ],
+      [
+        344,
+        1
+      ],
+      [
+        347,
+        0
+      ],
+      [
+        347,
+        1
+      ],
+      [
+        347,
+        2
+      ],
+      [
+        348,
+        0
+      ],
+      [
+        361,
+        0
+      ],
+      [
+        361,
+        1
+      ],
+      [
+        361,
+        2
+      ],
+      [
+        442,
+        0
+      ],
+      [
+        1636,
+        0
+      ],
+      [
+        1636,
+        1
+      ],
+      [
+        1636,
+        2
+      ],
+      [
+        341,
+        0
+      ],
+      [
+        341,
+        1
+      ],
+      [
+        341,
+        2
+      ],
+      [
+        341,
+        3
+      ],
+      [
+        341,
+        4
+      ],
+      [
+        350,
+        0
+      ],
+      [
+        350,
+        1
+      ],
+      [
+        408,
+        0
+      ],
+      [
+        408,
+        1
+      ],
+      [
+        408,
+        2
+      ],
+      [
+        351,
+        0
+      ],
+      [
+        1201,
+        0
+      ],
+      [
+        1201,
+        1
+      ],
+      [
+        1201,
+        2
+      ],
+      [
+        1201,
+        3
+      ],
+      [
+        1201,
+        4
+      ],
+      [
+        1202,
+        0
+      ],
+      [
+        322,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      528,
+      552,
+      988,
+      1706,
+      2053,
+      6064,
+      9485,
+      10060,
+      10876,
+      10890,
+      10894,
+      10901,
+      10909,
+      10912,
+      10917,
+      10934,
+      10938,
+      10942,
+      10947,
+      10952,
+      10953,
+      10958,
+      14751,
+      14752,
+      14767,
+      14769,
+      14772,
+      14774,
+      14777,
+      14783,
+      14791,
+      15011,
+      15012,
+      15014,
+      15237,
+      15261,
+      15363,
+      17191,
+      18544,
+      18555,
+      20770,
+      21564,
+      25314,
+      25315,
+      25316,
+      27683,
+      27801,
+      27816,
+      27841
+    ],
+    "baseSpellCount": 28,
+    "requiredSkills": [
+      10060,
+      14751,
+      14752,
+      15237
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 4,
+      "weapon": "healing_caster",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62011,
+    "class_id": 7,
+    "role": 2,
+    "name": "PVP-Elemental-Restoration",
+    "talents": [
+      {
+        "talentId": 563,
+        "rank": 5,
+        "spellId": 16108,
+        "name": "震荡（等级 1）"
+      },
+      {
+        "talentId": 564,
+        "rank": 5,
+        "spellId": 16112,
+        "name": "传导（等级 1）"
+      },
+      {
+        "talentId": 1640,
+        "rank": 3,
+        "spellId": 28998,
+        "name": "元素防护（等级 1）"
+      },
+      {
+        "talentId": 574,
+        "rank": 1,
+        "spellId": 16164,
+        "name": "元素集中"
+      },
+      {
+        "talentId": 562,
+        "rank": 5,
+        "spellId": 16120,
+        "name": "雷霆召唤（等级 1）"
+      },
+      {
+        "talentId": 1642,
+        "rank": 3,
+        "spellId": 29065,
+        "name": "风暴之眼（等级 1）"
+      },
+      {
+        "talentId": 1641,
+        "rank": 2,
+        "spellId": 29000,
+        "name": "风暴来临（等级 1）"
+      },
+      {
+        "talentId": 565,
+        "rank": 1,
+        "spellId": 16089,
+        "name": "元素之怒"
+      },
+      {
+        "talentId": 721,
+        "rank": 5,
+        "spellId": 16582,
+        "name": "闪电掌握（等级 1）"
+      },
+      {
+        "talentId": 573,
+        "rank": 1,
+        "spellId": 16166,
+        "name": "元素掌握"
+      },
+      {
+        "talentId": 586,
+        "rank": 5,
+        "spellId": 16229,
+        "name": "强化治疗波（等级 1）"
+      },
+      {
+        "talentId": 595,
+        "rank": 5,
+        "spellId": 16225,
+        "name": "图腾集中（等级 1）"
+      },
+      {
+        "talentId": 587,
+        "rank": 5,
+        "spellId": 16234,
+        "name": "治疗专注（等级 1）"
+      },
+      {
+        "talentId": 582,
+        "rank": 1,
+        "spellId": 16189,
+        "name": "图腾掌握"
+      },
+      {
+        "talentId": 594,
+        "rank": 4,
+        "spellId": 16220,
+        "name": "潮汐掌握（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "261": 31,
+      "262": 20
+    },
+    "learnTalentOrder": [
+      [
+        563,
+        0
+      ],
+      [
+        563,
+        1
+      ],
+      [
+        563,
+        2
+      ],
+      [
+        563,
+        3
+      ],
+      [
+        563,
+        4
+      ],
+      [
+        564,
+        0
+      ],
+      [
+        564,
+        1
+      ],
+      [
+        564,
+        2
+      ],
+      [
+        564,
+        3
+      ],
+      [
+        564,
+        4
+      ],
+      [
+        586,
+        0
+      ],
+      [
+        586,
+        1
+      ],
+      [
+        586,
+        2
+      ],
+      [
+        586,
+        3
+      ],
+      [
+        586,
+        4
+      ],
+      [
+        595,
+        0
+      ],
+      [
+        595,
+        1
+      ],
+      [
+        595,
+        2
+      ],
+      [
+        595,
+        3
+      ],
+      [
+        595,
+        4
+      ],
+      [
+        1640,
+        0
+      ],
+      [
+        1640,
+        1
+      ],
+      [
+        1640,
+        2
+      ],
+      [
+        562,
+        0
+      ],
+      [
+        562,
+        1
+      ],
+      [
+        562,
+        2
+      ],
+      [
+        562,
+        3
+      ],
+      [
+        562,
+        4
+      ],
+      [
+        574,
+        0
+      ],
+      [
+        582,
+        0
+      ],
+      [
+        587,
+        0
+      ],
+      [
+        587,
+        1
+      ],
+      [
+        587,
+        2
+      ],
+      [
+        587,
+        3
+      ],
+      [
+        587,
+        4
+      ],
+      [
+        594,
+        0
+      ],
+      [
+        594,
+        1
+      ],
+      [
+        594,
+        2
+      ],
+      [
+        594,
+        3
+      ],
+      [
+        1642,
+        0
+      ],
+      [
+        1642,
+        1
+      ],
+      [
+        1642,
+        2
+      ],
+      [
+        565,
+        0
+      ],
+      [
+        1641,
+        0
+      ],
+      [
+        1641,
+        1
+      ],
+      [
+        721,
+        0
+      ],
+      [
+        721,
+        1
+      ],
+      [
+        721,
+        2
+      ],
+      [
+        721,
+        3
+      ],
+      [
+        721,
+        4
+      ],
+      [
+        573,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      131,
+      526,
+      546,
+      556,
+      2484,
+      2645,
+      2870,
+      6196,
+      6495,
+      8012,
+      8143,
+      8166,
+      8170,
+      8177,
+      10408,
+      10414,
+      10428,
+      10432,
+      10438,
+      10463,
+      10468,
+      10473,
+      10479,
+      10497,
+      10538,
+      10587,
+      10601,
+      10605,
+      10614,
+      10623,
+      11315,
+      15112,
+      15208,
+      16089,
+      16108,
+      16112,
+      16120,
+      16164,
+      16166,
+      16189,
+      16220,
+      16225,
+      16229,
+      16234,
+      16316,
+      16342,
+      16356,
+      16362,
+      16387,
+      16582,
+      20608,
+      20777,
+      25357,
+      25359,
+      25361,
+      25908,
+      28998,
+      29000,
+      29065,
+      29228
+    ],
+    "baseSpellCount": 45,
+    "requiredSkills": [
+      16089,
+      16164,
+      16166,
+      16189
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62012,
+    "class_id": 7,
+    "role": 4,
+    "name": "PVP-Restoration-Support",
+    "talents": [
+      {
+        "talentId": 614,
+        "rank": 5,
+        "spellId": 17489,
+        "name": "先祖知识（等级 1）"
+      },
+      {
+        "talentId": 586,
+        "rank": 5,
+        "spellId": 16229,
+        "name": "强化治疗波（等级 1）"
+      },
+      {
+        "talentId": 593,
+        "rank": 5,
+        "spellId": 16217,
+        "name": "潮汐集中（等级 1）"
+      },
+      {
+        "talentId": 595,
+        "rank": 5,
+        "spellId": 16225,
+        "name": "图腾集中（等级 1）"
+      },
+      {
+        "talentId": 588,
+        "rank": 5,
+        "spellId": 16208,
+        "name": "恢复图腾（等级 1）"
+      },
+      {
+        "talentId": 591,
+        "rank": 1,
+        "spellId": 16188,
+        "name": "自然迅捷"
+      },
+      {
+        "talentId": 587,
+        "rank": 5,
+        "spellId": 16234,
+        "name": "治疗专注（等级 1）"
+      },
+      {
+        "talentId": 582,
+        "rank": 1,
+        "spellId": 16189,
+        "name": "图腾掌握"
+      },
+      {
+        "talentId": 594,
+        "rank": 5,
+        "spellId": 16221,
+        "name": "潮汐掌握（等级 1）"
+      },
+      {
+        "talentId": 590,
+        "rank": 1,
+        "spellId": 16190,
+        "name": "法力之潮图腾（等级 1）"
+      },
+      {
+        "talentId": 1646,
+        "rank": 3,
+        "spellId": 29191,
+        "name": "治疗之赐（等级 1）"
+      },
+      {
+        "talentId": 1648,
+        "rank": 3,
+        "spellId": 29202,
+        "name": "治疗之道（等级 1）"
+      },
+      {
+        "talentId": 592,
+        "rank": 5,
+        "spellId": 16213,
+        "name": "净化（等级 1）"
+      },
+      {
+        "talentId": 581,
+        "rank": 2,
+        "spellId": 16235,
+        "name": "先祖治疗（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "262": 46,
+      "263": 5
+    },
+    "learnTalentOrder": [
+      [
+        586,
+        0
+      ],
+      [
+        586,
+        1
+      ],
+      [
+        586,
+        2
+      ],
+      [
+        586,
+        3
+      ],
+      [
+        586,
+        4
+      ],
+      [
+        593,
+        0
+      ],
+      [
+        593,
+        1
+      ],
+      [
+        593,
+        2
+      ],
+      [
+        593,
+        3
+      ],
+      [
+        593,
+        4
+      ],
+      [
+        614,
+        0
+      ],
+      [
+        614,
+        1
+      ],
+      [
+        614,
+        2
+      ],
+      [
+        614,
+        3
+      ],
+      [
+        614,
+        4
+      ],
+      [
+        581,
+        0
+      ],
+      [
+        581,
+        1
+      ],
+      [
+        595,
+        0
+      ],
+      [
+        595,
+        1
+      ],
+      [
+        595,
+        2
+      ],
+      [
+        595,
+        3
+      ],
+      [
+        595,
+        4
+      ],
+      [
+        582,
+        0
+      ],
+      [
+        587,
+        0
+      ],
+      [
+        587,
+        1
+      ],
+      [
+        587,
+        2
+      ],
+      [
+        587,
+        3
+      ],
+      [
+        587,
+        4
+      ],
+      [
+        1646,
+        0
+      ],
+      [
+        1646,
+        1
+      ],
+      [
+        1646,
+        2
+      ],
+      [
+        588,
+        0
+      ],
+      [
+        588,
+        1
+      ],
+      [
+        588,
+        2
+      ],
+      [
+        588,
+        3
+      ],
+      [
+        588,
+        4
+      ],
+      [
+        594,
+        0
+      ],
+      [
+        594,
+        1
+      ],
+      [
+        594,
+        2
+      ],
+      [
+        594,
+        3
+      ],
+      [
+        594,
+        4
+      ],
+      [
+        591,
+        0
+      ],
+      [
+        1648,
+        0
+      ],
+      [
+        1648,
+        1
+      ],
+      [
+        1648,
+        2
+      ],
+      [
+        592,
+        0
+      ],
+      [
+        592,
+        1
+      ],
+      [
+        592,
+        2
+      ],
+      [
+        592,
+        3
+      ],
+      [
+        592,
+        4
+      ],
+      [
+        590,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      131,
+      526,
+      546,
+      556,
+      2484,
+      2645,
+      2870,
+      6196,
+      6495,
+      8012,
+      8143,
+      8166,
+      8170,
+      8177,
+      10408,
+      10414,
+      10428,
+      10432,
+      10438,
+      10463,
+      10468,
+      10473,
+      10479,
+      10497,
+      10538,
+      10587,
+      10601,
+      10605,
+      10614,
+      10623,
+      11315,
+      15112,
+      15208,
+      16188,
+      16189,
+      16190,
+      16208,
+      16213,
+      16217,
+      16221,
+      16225,
+      16229,
+      16234,
+      16235,
+      16316,
+      16342,
+      16356,
+      16362,
+      16387,
+      17359,
+      17489,
+      20608,
+      20777,
+      25357,
+      25359,
+      25361,
+      25908,
+      29191,
+      29202,
+      29228
+    ],
+    "baseSpellCount": 45,
+    "requiredSkills": [
+      16188,
+      16189,
+      16190
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 4,
+      "weapon": "healing_caster",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62013,
+    "class_id": 8,
+    "role": 2,
+    "name": "PVP-Frost-Counterspell",
+    "talents": [
+      {
+        "talentId": 74,
+        "rank": 2,
+        "spellId": 12592,
+        "name": "奥术精妙（等级 1）"
+      },
+      {
+        "talentId": 76,
+        "rank": 3,
+        "spellId": 12840,
+        "name": "奥术集中（等级 1）"
+      },
+      {
+        "talentId": 1650,
+        "rank": 5,
+        "spellId": 29447,
+        "name": "魔法吸收（等级 1）"
+      },
+      {
+        "talentId": 75,
+        "rank": 5,
+        "spellId": 12577,
+        "name": "奥术专注（等级 1）"
+      },
+      {
+        "talentId": 88,
+        "rank": 2,
+        "spellId": 12598,
+        "name": "强化法术反制（等级 1）"
+      },
+      {
+        "talentId": 37,
+        "rank": 5,
+        "spellId": 16766,
+        "name": "强化寒冰箭（等级 1）"
+      },
+      {
+        "talentId": 1649,
+        "rank": 3,
+        "spellId": 29440,
+        "name": "元素精准（等级 1）"
+      },
+      {
+        "talentId": 73,
+        "rank": 5,
+        "spellId": 15053,
+        "name": "寒冰碎片（等级 1）"
+      },
+      {
+        "talentId": 62,
+        "rank": 2,
+        "spellId": 12475,
+        "name": "强化冰霜新星（等级 1）"
+      },
+      {
+        "talentId": 65,
+        "rank": 3,
+        "spellId": 12571,
+        "name": "极寒冰霜（等级 1）"
+      },
+      {
+        "talentId": 69,
+        "rank": 1,
+        "spellId": 12472,
+        "name": "急速冷却"
+      },
+      {
+        "talentId": 741,
+        "rank": 2,
+        "spellId": 16758,
+        "name": "极寒延伸（等级 1）"
+      },
+      {
+        "talentId": 67,
+        "rank": 5,
+        "spellId": 12985,
+        "name": "碎冰（等级 1）"
+      },
+      {
+        "talentId": 72,
+        "rank": 1,
+        "spellId": 11958,
+        "name": "寒冰屏障"
+      },
+      {
+        "talentId": 64,
+        "rank": 3,
+        "spellId": 12490,
+        "name": "强化冰锥术（等级 1）"
+      },
+      {
+        "talentId": 71,
+        "rank": 1,
+        "spellId": 11426,
+        "name": "寒冰护体（等级 1）"
+      },
+      {
+        "talentId": 38,
+        "rank": 3,
+        "spellId": 12497,
+        "name": "霜寒刺骨（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "61": 34,
+      "81": 17
+    },
+    "learnTalentOrder": [
+      [
+        37,
+        0
+      ],
+      [
+        37,
+        1
+      ],
+      [
+        37,
+        2
+      ],
+      [
+        37,
+        3
+      ],
+      [
+        37,
+        4
+      ],
+      [
+        74,
+        0
+      ],
+      [
+        74,
+        1
+      ],
+      [
+        76,
+        0
+      ],
+      [
+        76,
+        1
+      ],
+      [
+        76,
+        2
+      ],
+      [
+        1649,
+        0
+      ],
+      [
+        1649,
+        1
+      ],
+      [
+        1649,
+        2
+      ],
+      [
+        38,
+        0
+      ],
+      [
+        38,
+        1
+      ],
+      [
+        38,
+        2
+      ],
+      [
+        62,
+        0
+      ],
+      [
+        62,
+        1
+      ],
+      [
+        65,
+        0
+      ],
+      [
+        65,
+        1
+      ],
+      [
+        65,
+        2
+      ],
+      [
+        73,
+        0
+      ],
+      [
+        73,
+        1
+      ],
+      [
+        73,
+        2
+      ],
+      [
+        73,
+        3
+      ],
+      [
+        73,
+        4
+      ],
+      [
+        75,
+        0
+      ],
+      [
+        75,
+        1
+      ],
+      [
+        75,
+        2
+      ],
+      [
+        75,
+        3
+      ],
+      [
+        75,
+        4
+      ],
+      [
+        1650,
+        0
+      ],
+      [
+        1650,
+        1
+      ],
+      [
+        1650,
+        2
+      ],
+      [
+        1650,
+        3
+      ],
+      [
+        1650,
+        4
+      ],
+      [
+        69,
+        0
+      ],
+      [
+        67,
+        0
+      ],
+      [
+        67,
+        1
+      ],
+      [
+        67,
+        2
+      ],
+      [
+        67,
+        3
+      ],
+      [
+        67,
+        4
+      ],
+      [
+        88,
+        0
+      ],
+      [
+        88,
+        1
+      ],
+      [
+        741,
+        0
+      ],
+      [
+        741,
+        1
+      ],
+      [
+        64,
+        0
+      ],
+      [
+        64,
+        1
+      ],
+      [
+        64,
+        2
+      ],
+      [
+        72,
+        0
+      ],
+      [
+        71,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      130,
+      475,
+      759,
+      1953,
+      2139,
+      2855,
+      3552,
+      7301,
+      10053,
+      10054,
+      10139,
+      10157,
+      10161,
+      10170,
+      10174,
+      10187,
+      10193,
+      10199,
+      10202,
+      10207,
+      10216,
+      10220,
+      10225,
+      10230,
+      11426,
+      11958,
+      12051,
+      12472,
+      12475,
+      12490,
+      12497,
+      12571,
+      12577,
+      12592,
+      12598,
+      12826,
+      12840,
+      12985,
+      13033,
+      15053,
+      16758,
+      16766,
+      22783,
+      23028,
+      25304,
+      25306,
+      25345,
+      28272,
+      28609,
+      28612,
+      29440,
+      29447
+    ],
+    "baseSpellCount": 34,
+    "requiredSkills": [
+      11426,
+      11958,
+      12472
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [
+      3561,
+      3562,
+      3565,
+      10059,
+      11416,
+      11419
+    ],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62014,
+    "class_id": 8,
+    "role": 2,
+    "name": "PVP-Presence-Pyro",
+    "talents": [
+      {
+        "talentId": 74,
+        "rank": 2,
+        "spellId": 12592,
+        "name": "奥术精妙（等级 1）"
+      },
+      {
+        "talentId": 76,
+        "rank": 5,
+        "spellId": 12842,
+        "name": "奥术集中（等级 1）"
+      },
+      {
+        "talentId": 1650,
+        "rank": 5,
+        "spellId": 29447,
+        "name": "魔法吸收（等级 1）"
+      },
+      {
+        "talentId": 75,
+        "rank": 5,
+        "spellId": 12577,
+        "name": "奥术专注（等级 1）"
+      },
+      {
+        "talentId": 88,
+        "rank": 2,
+        "spellId": 12598,
+        "name": "强化法术反制（等级 1）"
+      },
+      {
+        "talentId": 1142,
+        "rank": 1,
+        "spellId": 18462,
+        "name": "奥术冥想（等级 1）"
+      },
+      {
+        "talentId": 86,
+        "rank": 1,
+        "spellId": 12043,
+        "name": "气定神闲"
+      },
+      {
+        "talentId": 26,
+        "rank": 5,
+        "spellId": 12341,
+        "name": "强化火球术（等级 1）"
+      },
+      {
+        "talentId": 30,
+        "rank": 5,
+        "spellId": 12360,
+        "name": "冲击（等级 1）"
+      },
+      {
+        "talentId": 29,
+        "rank": 1,
+        "spellId": 11366,
+        "name": "炎爆术（等级 1）"
+      },
+      {
+        "talentId": 34,
+        "rank": 5,
+        "spellId": 12848,
+        "name": "点燃（等级 1）"
+      },
+      {
+        "talentId": 28,
+        "rank": 2,
+        "spellId": 12353,
+        "name": "烈焰投掷（等级 1）"
+      },
+      {
+        "talentId": 27,
+        "rank": 3,
+        "spellId": 12342,
+        "name": "强化火焰冲击（等级 1）"
+      },
+      {
+        "talentId": 32,
+        "rank": 1,
+        "spellId": 11113,
+        "name": "冲击波（等级 1）"
+      },
+      {
+        "talentId": 23,
+        "rank": 2,
+        "spellId": 12351,
+        "name": "燃烧之魂（等级 1）"
+      },
+      {
+        "talentId": 25,
+        "rank": 3,
+        "spellId": 12873,
+        "name": "强化灼烧（等级 1）"
+      },
+      {
+        "talentId": 1639,
+        "rank": 3,
+        "spellId": 29076,
+        "name": "元素大师（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "41": 30,
+      "81": 21
+    },
+    "learnTalentOrder": [
+      [
+        26,
+        0
+      ],
+      [
+        26,
+        1
+      ],
+      [
+        26,
+        2
+      ],
+      [
+        26,
+        3
+      ],
+      [
+        26,
+        4
+      ],
+      [
+        30,
+        0
+      ],
+      [
+        30,
+        1
+      ],
+      [
+        30,
+        2
+      ],
+      [
+        30,
+        3
+      ],
+      [
+        30,
+        4
+      ],
+      [
+        74,
+        0
+      ],
+      [
+        74,
+        1
+      ],
+      [
+        76,
+        0
+      ],
+      [
+        76,
+        1
+      ],
+      [
+        76,
+        2
+      ],
+      [
+        76,
+        3
+      ],
+      [
+        76,
+        4
+      ],
+      [
+        27,
+        0
+      ],
+      [
+        27,
+        1
+      ],
+      [
+        27,
+        2
+      ],
+      [
+        28,
+        0
+      ],
+      [
+        28,
+        1
+      ],
+      [
+        34,
+        0
+      ],
+      [
+        34,
+        1
+      ],
+      [
+        34,
+        2
+      ],
+      [
+        34,
+        3
+      ],
+      [
+        34,
+        4
+      ],
+      [
+        75,
+        0
+      ],
+      [
+        75,
+        1
+      ],
+      [
+        75,
+        2
+      ],
+      [
+        75,
+        3
+      ],
+      [
+        75,
+        4
+      ],
+      [
+        1650,
+        0
+      ],
+      [
+        1650,
+        1
+      ],
+      [
+        1650,
+        2
+      ],
+      [
+        1650,
+        3
+      ],
+      [
+        1650,
+        4
+      ],
+      [
+        23,
+        0
+      ],
+      [
+        23,
+        1
+      ],
+      [
+        29,
+        0
+      ],
+      [
+        25,
+        0
+      ],
+      [
+        25,
+        1
+      ],
+      [
+        25,
+        2
+      ],
+      [
+        88,
+        0
+      ],
+      [
+        88,
+        1
+      ],
+      [
+        1142,
+        0
+      ],
+      [
+        1639,
+        0
+      ],
+      [
+        1639,
+        1
+      ],
+      [
+        1639,
+        2
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        86,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      130,
+      475,
+      759,
+      1953,
+      2139,
+      2855,
+      3552,
+      7301,
+      10053,
+      10054,
+      10139,
+      10157,
+      10161,
+      10170,
+      10174,
+      10187,
+      10193,
+      10199,
+      10202,
+      10207,
+      10216,
+      10220,
+      10225,
+      10230,
+      11113,
+      11366,
+      12043,
+      12051,
+      12341,
+      12342,
+      12351,
+      12353,
+      12360,
+      12577,
+      12592,
+      12598,
+      12826,
+      12842,
+      12848,
+      12873,
+      13021,
+      18462,
+      18809,
+      22783,
+      23028,
+      25304,
+      25306,
+      25345,
+      28272,
+      28609,
+      28612,
+      29076,
+      29447
+    ],
+    "baseSpellCount": 34,
+    "requiredSkills": [
+      11113,
+      11366,
+      12043
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [
+      3561,
+      3562,
+      3565,
+      10059,
+      11416,
+      11419
+    ],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62015,
+    "class_id": 9,
+    "role": 2,
+    "name": "PVP-SoulLink-Survival",
+    "talents": [
+      {
+        "talentId": 1003,
+        "rank": 5,
+        "spellId": 17814,
+        "name": "强化腐蚀术（等级 1）"
+      },
+      {
+        "talentId": 1005,
+        "rank": 2,
+        "spellId": 18175,
+        "name": "镇压（等级 1）"
+      },
+      {
+        "talentId": 1223,
+        "rank": 5,
+        "spellId": 18701,
+        "name": "恶魔之拥（等级 1）"
+      },
+      {
+        "talentId": 1221,
+        "rank": 2,
+        "spellId": 18693,
+        "name": "强化治疗石（等级 1）"
+      },
+      {
+        "talentId": 1225,
+        "rank": 3,
+        "spellId": 18707,
+        "name": "强化虚空行者（等级 1）"
+      },
+      {
+        "talentId": 1241,
+        "rank": 5,
+        "spellId": 18752,
+        "name": "恶魔耐力（等级 1）"
+      },
+      {
+        "talentId": 1226,
+        "rank": 1,
+        "spellId": 18708,
+        "name": "恶魔支配"
+      },
+      {
+        "talentId": 1227,
+        "rank": 2,
+        "spellId": 18710,
+        "name": "召唤大师（等级 1）"
+      },
+      {
+        "talentId": 1262,
+        "rank": 5,
+        "spellId": 18773,
+        "name": "邪恶强化（等级 1）"
+      },
+      {
+        "talentId": 1281,
+        "rank": 1,
+        "spellId": 18788,
+        "name": "恶魔牺牲"
+      },
+      {
+        "talentId": 1243,
+        "rank": 1,
+        "spellId": 18754,
+        "name": "强化魅魔（等级 1）"
+      },
+      {
+        "talentId": 1244,
+        "rank": 5,
+        "spellId": 23825,
+        "name": "恶魔学识大师"
+      },
+      {
+        "talentId": 1282,
+        "rank": 1,
+        "spellId": 19028,
+        "name": "灵魂链接"
+      },
+      {
+        "talentId": 944,
+        "rank": 5,
+        "spellId": 17803,
+        "name": "强化暗影箭（等级 1）"
+      },
+      {
+        "talentId": 943,
+        "rank": 5,
+        "spellId": 17792,
+        "name": "灾祸（等级 1）"
+      },
+      {
+        "talentId": 963,
+        "rank": 1,
+        "spellId": 17877,
+        "name": "暗影灼烧（等级 1）"
+      },
+      {
+        "talentId": 981,
+        "rank": 2,
+        "spellId": 18131,
+        "name": "破坏（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "301": 13,
+      "302": 7,
+      "303": 31
+    },
+    "learnTalentOrder": [
+      [
+        944,
+        0
+      ],
+      [
+        944,
+        1
+      ],
+      [
+        944,
+        2
+      ],
+      [
+        944,
+        3
+      ],
+      [
+        944,
+        4
+      ],
+      [
+        1003,
+        0
+      ],
+      [
+        1003,
+        1
+      ],
+      [
+        1003,
+        2
+      ],
+      [
+        1003,
+        3
+      ],
+      [
+        1003,
+        4
+      ],
+      [
+        1005,
+        0
+      ],
+      [
+        1005,
+        1
+      ],
+      [
+        1221,
+        0
+      ],
+      [
+        1221,
+        1
+      ],
+      [
+        1223,
+        0
+      ],
+      [
+        1223,
+        1
+      ],
+      [
+        1223,
+        2
+      ],
+      [
+        1223,
+        3
+      ],
+      [
+        1223,
+        4
+      ],
+      [
+        943,
+        0
+      ],
+      [
+        943,
+        1
+      ],
+      [
+        943,
+        2
+      ],
+      [
+        943,
+        3
+      ],
+      [
+        943,
+        4
+      ],
+      [
+        1225,
+        0
+      ],
+      [
+        1225,
+        1
+      ],
+      [
+        1225,
+        2
+      ],
+      [
+        963,
+        0
+      ],
+      [
+        981,
+        0
+      ],
+      [
+        981,
+        1
+      ],
+      [
+        1226,
+        0
+      ],
+      [
+        1241,
+        0
+      ],
+      [
+        1241,
+        1
+      ],
+      [
+        1241,
+        2
+      ],
+      [
+        1241,
+        3
+      ],
+      [
+        1241,
+        4
+      ],
+      [
+        1243,
+        0
+      ],
+      [
+        1227,
+        0
+      ],
+      [
+        1227,
+        1
+      ],
+      [
+        1262,
+        0
+      ],
+      [
+        1262,
+        1
+      ],
+      [
+        1262,
+        2
+      ],
+      [
+        1262,
+        3
+      ],
+      [
+        1262,
+        4
+      ],
+      [
+        1281,
+        0
+      ],
+      [
+        1244,
+        0
+      ],
+      [
+        1244,
+        1
+      ],
+      [
+        1244,
+        2
+      ],
+      [
+        1244,
+        3
+      ],
+      [
+        1244,
+        4
+      ],
+      [
+        1282,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      126,
+      132,
+      603,
+      688,
+      691,
+      696,
+      697,
+      698,
+      712,
+      2970,
+      5500,
+      5697,
+      5784,
+      6215,
+      11675,
+      11678,
+      11684,
+      11689,
+      11695,
+      11700,
+      11703,
+      11708,
+      11713,
+      11717,
+      11719,
+      11722,
+      11726,
+      11730,
+      11735,
+      11743,
+      17728,
+      17792,
+      17803,
+      17814,
+      17862,
+      17877,
+      17923,
+      17924,
+      17926,
+      17928,
+      17953,
+      18131,
+      18175,
+      18647,
+      18693,
+      18701,
+      18707,
+      18708,
+      18710,
+      18752,
+      18754,
+      18773,
+      18788,
+      18871,
+      19028,
+      20757,
+      23161,
+      23825,
+      25307,
+      25309,
+      25311,
+      28610,
+      33391
+    ],
+    "baseSpellCount": 45,
+    "requiredSkills": [
+      17877,
+      18708,
+      18788,
+      19028
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62016,
+    "class_id": 9,
+    "role": 2,
+    "name": "PVP-ShadowMastery-Ruin",
+    "talents": [
+      {
+        "talentId": 1003,
+        "rank": 5,
+        "spellId": 17814,
+        "name": "强化腐蚀术（等级 1）"
+      },
+      {
+        "talentId": 1005,
+        "rank": 5,
+        "spellId": 18178,
+        "name": "镇压（等级 1）"
+      },
+      {
+        "talentId": 1061,
+        "rank": 1,
+        "spellId": 18288,
+        "name": "诅咒增幅"
+      },
+      {
+        "talentId": 1007,
+        "rank": 2,
+        "spellId": 18183,
+        "name": "强化生命分流（等级 1）"
+      },
+      {
+        "talentId": 1001,
+        "rank": 5,
+        "spellId": 17787,
+        "name": "恶魔专注（等级 1）"
+      },
+      {
+        "talentId": 1284,
+        "rank": 3,
+        "spellId": 18830,
+        "name": "强化痛苦诅咒（等级 1）"
+      },
+      {
+        "talentId": 1041,
+        "rank": 1,
+        "spellId": 18265,
+        "name": "生命虹吸（等级 1）"
+      },
+      {
+        "talentId": 1081,
+        "rank": 1,
+        "spellId": 18223,
+        "name": "疲劳诅咒"
+      },
+      {
+        "talentId": 1021,
+        "rank": 2,
+        "spellId": 18219,
+        "name": "无情延伸（等级 1）"
+      },
+      {
+        "talentId": 1042,
+        "rank": 5,
+        "spellId": 18275,
+        "name": "暗影掌握（等级 1）"
+      },
+      {
+        "talentId": 944,
+        "rank": 5,
+        "spellId": 17803,
+        "name": "强化暗影箭（等级 1）"
+      },
+      {
+        "talentId": 943,
+        "rank": 5,
+        "spellId": 17792,
+        "name": "灾祸（等级 1）"
+      },
+      {
+        "talentId": 981,
+        "rank": 5,
+        "spellId": 18134,
+        "name": "破坏（等级 1）"
+      },
+      {
+        "talentId": 963,
+        "rank": 1,
+        "spellId": 17877,
+        "name": "暗影灼烧（等级 1）"
+      },
+      {
+        "talentId": 964,
+        "rank": 2,
+        "spellId": 17918,
+        "name": "毁灭延伸（等级 1）"
+      },
+      {
+        "talentId": 985,
+        "rank": 2,
+        "spellId": 18136,
+        "name": "强烈（等级 1）"
+      },
+      {
+        "talentId": 967,
+        "rank": 1,
+        "spellId": 17959,
+        "name": "毁灭（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "301": 21,
+      "302": 30
+    },
+    "learnTalentOrder": [
+      [
+        944,
+        0
+      ],
+      [
+        944,
+        1
+      ],
+      [
+        944,
+        2
+      ],
+      [
+        944,
+        3
+      ],
+      [
+        944,
+        4
+      ],
+      [
+        1003,
+        0
+      ],
+      [
+        1003,
+        1
+      ],
+      [
+        1003,
+        2
+      ],
+      [
+        1003,
+        3
+      ],
+      [
+        1003,
+        4
+      ],
+      [
+        1005,
+        0
+      ],
+      [
+        1005,
+        1
+      ],
+      [
+        1005,
+        2
+      ],
+      [
+        1005,
+        3
+      ],
+      [
+        1005,
+        4
+      ],
+      [
+        943,
+        0
+      ],
+      [
+        943,
+        1
+      ],
+      [
+        943,
+        2
+      ],
+      [
+        943,
+        3
+      ],
+      [
+        943,
+        4
+      ],
+      [
+        1007,
+        0
+      ],
+      [
+        1007,
+        1
+      ],
+      [
+        963,
+        0
+      ],
+      [
+        981,
+        0
+      ],
+      [
+        981,
+        1
+      ],
+      [
+        981,
+        2
+      ],
+      [
+        981,
+        3
+      ],
+      [
+        981,
+        4
+      ],
+      [
+        1001,
+        0
+      ],
+      [
+        1001,
+        1
+      ],
+      [
+        1001,
+        2
+      ],
+      [
+        1001,
+        3
+      ],
+      [
+        1001,
+        4
+      ],
+      [
+        1061,
+        0
+      ],
+      [
+        1284,
+        0
+      ],
+      [
+        1284,
+        1
+      ],
+      [
+        1284,
+        2
+      ],
+      [
+        964,
+        0
+      ],
+      [
+        964,
+        1
+      ],
+      [
+        985,
+        0
+      ],
+      [
+        985,
+        1
+      ],
+      [
+        1021,
+        0
+      ],
+      [
+        1021,
+        1
+      ],
+      [
+        967,
+        0
+      ],
+      [
+        1041,
+        0
+      ],
+      [
+        1081,
+        0
+      ],
+      [
+        1042,
+        0
+      ],
+      [
+        1042,
+        1
+      ],
+      [
+        1042,
+        2
+      ],
+      [
+        1042,
+        3
+      ],
+      [
+        1042,
+        4
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      126,
+      132,
+      603,
+      688,
+      691,
+      696,
+      697,
+      698,
+      712,
+      2970,
+      5500,
+      5697,
+      5784,
+      6215,
+      11675,
+      11678,
+      11684,
+      11689,
+      11695,
+      11700,
+      11703,
+      11708,
+      11713,
+      11717,
+      11719,
+      11722,
+      11726,
+      11730,
+      11735,
+      11743,
+      17728,
+      17787,
+      17792,
+      17803,
+      17814,
+      17862,
+      17877,
+      17918,
+      17923,
+      17924,
+      17926,
+      17928,
+      17953,
+      17959,
+      18134,
+      18136,
+      18178,
+      18183,
+      18219,
+      18223,
+      18265,
+      18275,
+      18288,
+      18647,
+      18830,
+      18871,
+      18881,
+      20757,
+      23161,
+      25307,
+      25309,
+      25311,
+      28610,
+      33391
+    ],
+    "baseSpellCount": 45,
+    "requiredSkills": [
+      17877,
+      17959,
+      18223,
+      18265,
+      18288
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 2,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62017,
+    "class_id": 11,
+    "role": 1,
+    "name": "PVP-Feral-NatureSwiftness",
+    "talents": [
+      {
+        "talentId": 761,
+        "rank": 1,
+        "spellId": 16689,
+        "name": "自然之握（等级 1）"
+      },
+      {
+        "talentId": 796,
+        "rank": 5,
+        "spellId": 16938,
+        "name": "凶暴（等级 1）"
+      },
+      {
+        "talentId": 794,
+        "rank": 5,
+        "spellId": 16933,
+        "name": "厚皮（等级 1）"
+      },
+      {
+        "talentId": 807,
+        "rank": 2,
+        "spellId": 24866,
+        "name": "豹之迅捷"
+      },
+      {
+        "talentId": 804,
+        "rank": 1,
+        "spellId": 16979,
+        "name": "野性冲锋"
+      },
+      {
+        "talentId": 798,
+        "rank": 3,
+        "spellId": 16944,
+        "name": "锋利兽爪（等级 1）"
+      },
+      {
+        "talentId": 803,
+        "rank": 3,
+        "spellId": 16975,
+        "name": "猛兽攻击（等级 1）"
+      },
+      {
+        "talentId": 802,
+        "rank": 2,
+        "spellId": 16968,
+        "name": "强化撕碎（等级 1）"
+      },
+      {
+        "talentId": 801,
+        "rank": 2,
+        "spellId": 16961,
+        "name": "原始狂怒（等级 1）"
+      },
+      {
+        "talentId": 1162,
+        "rank": 1,
+        "spellId": 16857,
+        "name": "精灵之火（野性）（等级 1）"
+      },
+      {
+        "talentId": 805,
+        "rank": 1,
+        "spellId": 16998,
+        "name": "野蛮暴怒（等级 1）"
+      },
+      {
+        "talentId": 808,
+        "rank": 4,
+        "spellId": 17006,
+        "name": "野性之心（等级 1）"
+      },
+      {
+        "talentId": 822,
+        "rank": 5,
+        "spellId": 17061,
+        "name": "激怒（等级 1）"
+      },
+      {
+        "talentId": 824,
+        "rank": 5,
+        "spellId": 17073,
+        "name": "强化治疗之触（等级 1）"
+      },
+      {
+        "talentId": 823,
+        "rank": 5,
+        "spellId": 17068,
+        "name": "自然集中（等级 1）"
+      },
+      {
+        "talentId": 829,
+        "rank": 3,
+        "spellId": 17108,
+        "name": "反射（等级 1）"
+      },
+      {
+        "talentId": 827,
+        "rank": 1,
+        "spellId": 5570,
+        "name": "虫群（等级 1）"
+      },
+      {
+        "talentId": 830,
+        "rank": 1,
+        "spellId": 17111,
+        "name": "强化回春术（等级 1）"
+      },
+      {
+        "talentId": 831,
+        "rank": 1,
+        "spellId": 17116,
+        "name": "自然迅捷"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "281": 29,
+      "282": 21,
+      "283": 1
+    },
+    "learnTalentOrder": [
+      [
+        761,
+        0
+      ],
+      [
+        796,
+        0
+      ],
+      [
+        796,
+        1
+      ],
+      [
+        796,
+        2
+      ],
+      [
+        796,
+        3
+      ],
+      [
+        796,
+        4
+      ],
+      [
+        822,
+        0
+      ],
+      [
+        822,
+        1
+      ],
+      [
+        822,
+        2
+      ],
+      [
+        822,
+        3
+      ],
+      [
+        822,
+        4
+      ],
+      [
+        794,
+        0
+      ],
+      [
+        794,
+        1
+      ],
+      [
+        794,
+        2
+      ],
+      [
+        794,
+        3
+      ],
+      [
+        794,
+        4
+      ],
+      [
+        823,
+        0
+      ],
+      [
+        823,
+        1
+      ],
+      [
+        823,
+        2
+      ],
+      [
+        823,
+        3
+      ],
+      [
+        823,
+        4
+      ],
+      [
+        824,
+        0
+      ],
+      [
+        824,
+        1
+      ],
+      [
+        824,
+        2
+      ],
+      [
+        824,
+        3
+      ],
+      [
+        824,
+        4
+      ],
+      [
+        798,
+        0
+      ],
+      [
+        798,
+        1
+      ],
+      [
+        798,
+        2
+      ],
+      [
+        804,
+        0
+      ],
+      [
+        807,
+        0
+      ],
+      [
+        807,
+        1
+      ],
+      [
+        827,
+        0
+      ],
+      [
+        829,
+        0
+      ],
+      [
+        829,
+        1
+      ],
+      [
+        829,
+        2
+      ],
+      [
+        801,
+        0
+      ],
+      [
+        801,
+        1
+      ],
+      [
+        802,
+        0
+      ],
+      [
+        802,
+        1
+      ],
+      [
+        803,
+        0
+      ],
+      [
+        803,
+        1
+      ],
+      [
+        803,
+        2
+      ],
+      [
+        830,
+        0
+      ],
+      [
+        805,
+        0
+      ],
+      [
+        831,
+        0
+      ],
+      [
+        1162,
+        0
+      ],
+      [
+        808,
+        0
+      ],
+      [
+        808,
+        1
+      ],
+      [
+        808,
+        2
+      ],
+      [
+        808,
+        3
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      768,
+      783,
+      1066,
+      2782,
+      2893,
+      5209,
+      5225,
+      5229,
+      5570,
+      6795,
+      8983,
+      9634,
+      9821,
+      9827,
+      9830,
+      9835,
+      9846,
+      9850,
+      9853,
+      9858,
+      9863,
+      9867,
+      9881,
+      9885,
+      9892,
+      9896,
+      9898,
+      9901,
+      9904,
+      9907,
+      9908,
+      9910,
+      9912,
+      9913,
+      16689,
+      16857,
+      16933,
+      16938,
+      16944,
+      16961,
+      16968,
+      16975,
+      16979,
+      16998,
+      17006,
+      17061,
+      17068,
+      17073,
+      17108,
+      17111,
+      17116,
+      17329,
+      17392,
+      17402,
+      18658,
+      20719,
+      20748,
+      21850,
+      22812,
+      22829,
+      22896,
+      24866,
+      24977,
+      25297,
+      25298,
+      25299,
+      29166
+    ],
+    "baseSpellCount": 45,
+    "requiredSkills": [
+      5570,
+      16689,
+      16857,
+      16979,
+      17116
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 1,
+      "weapon": "class_appropriate_pvp",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  },
+  {
+    "id": 62018,
+    "class_id": 11,
+    "role": 4,
+    "name": "PVP-Restoration-FlagSupport",
+    "talents": [
+      {
+        "talentId": 796,
+        "rank": 5,
+        "spellId": 16938,
+        "name": "凶暴（等级 1）"
+      },
+      {
+        "talentId": 794,
+        "rank": 5,
+        "spellId": 16933,
+        "name": "厚皮（等级 1）"
+      },
+      {
+        "talentId": 804,
+        "rank": 1,
+        "spellId": 16979,
+        "name": "野性冲锋"
+      },
+      {
+        "talentId": 822,
+        "rank": 5,
+        "spellId": 17061,
+        "name": "激怒（等级 1）"
+      },
+      {
+        "talentId": 824,
+        "rank": 5,
+        "spellId": 17073,
+        "name": "强化治疗之触（等级 1）"
+      },
+      {
+        "talentId": 823,
+        "rank": 5,
+        "spellId": 17068,
+        "name": "自然集中（等级 1）"
+      },
+      {
+        "talentId": 843,
+        "rank": 5,
+        "spellId": 24972,
+        "name": "宁静之魂（等级 1）"
+      },
+      {
+        "talentId": 831,
+        "rank": 1,
+        "spellId": 17116,
+        "name": "自然迅捷"
+      },
+      {
+        "talentId": 829,
+        "rank": 3,
+        "spellId": 17108,
+        "name": "反射（等级 1）"
+      },
+      {
+        "talentId": 827,
+        "rank": 1,
+        "spellId": 5570,
+        "name": "虫群（等级 1）"
+      },
+      {
+        "talentId": 830,
+        "rank": 3,
+        "spellId": 17113,
+        "name": "强化回春术（等级 1）"
+      },
+      {
+        "talentId": 828,
+        "rank": 5,
+        "spellId": 24946,
+        "name": "自然赐福（等级 1）"
+      },
+      {
+        "talentId": 844,
+        "rank": 1,
+        "spellId": 18562,
+        "name": "迅捷治愈"
+      },
+      {
+        "talentId": 825,
+        "rank": 5,
+        "spellId": 17078,
+        "name": "强化愈合（等级 1）"
+      },
+      {
+        "talentId": 821,
+        "rank": 1,
+        "spellId": 17050,
+        "name": "强化野性印记（等级 1）"
+      }
+    ],
+    "pointTotal": 51,
+    "pointsByTree": {
+      "281": 11,
+      "282": 40
+    },
+    "learnTalentOrder": [
+      [
+        796,
+        0
+      ],
+      [
+        796,
+        1
+      ],
+      [
+        796,
+        2
+      ],
+      [
+        796,
+        3
+      ],
+      [
+        796,
+        4
+      ],
+      [
+        821,
+        0
+      ],
+      [
+        822,
+        0
+      ],
+      [
+        822,
+        1
+      ],
+      [
+        822,
+        2
+      ],
+      [
+        822,
+        3
+      ],
+      [
+        822,
+        4
+      ],
+      [
+        794,
+        0
+      ],
+      [
+        794,
+        1
+      ],
+      [
+        794,
+        2
+      ],
+      [
+        794,
+        3
+      ],
+      [
+        794,
+        4
+      ],
+      [
+        823,
+        0
+      ],
+      [
+        823,
+        1
+      ],
+      [
+        823,
+        2
+      ],
+      [
+        823,
+        3
+      ],
+      [
+        823,
+        4
+      ],
+      [
+        824,
+        0
+      ],
+      [
+        824,
+        1
+      ],
+      [
+        824,
+        2
+      ],
+      [
+        824,
+        3
+      ],
+      [
+        824,
+        4
+      ],
+      [
+        804,
+        0
+      ],
+      [
+        827,
+        0
+      ],
+      [
+        829,
+        0
+      ],
+      [
+        829,
+        1
+      ],
+      [
+        829,
+        2
+      ],
+      [
+        830,
+        0
+      ],
+      [
+        830,
+        1
+      ],
+      [
+        830,
+        2
+      ],
+      [
+        843,
+        0
+      ],
+      [
+        843,
+        1
+      ],
+      [
+        843,
+        2
+      ],
+      [
+        843,
+        3
+      ],
+      [
+        843,
+        4
+      ],
+      [
+        828,
+        0
+      ],
+      [
+        828,
+        1
+      ],
+      [
+        828,
+        2
+      ],
+      [
+        828,
+        3
+      ],
+      [
+        828,
+        4
+      ],
+      [
+        831,
+        0
+      ],
+      [
+        825,
+        0
+      ],
+      [
+        825,
+        1
+      ],
+      [
+        825,
+        2
+      ],
+      [
+        825,
+        3
+      ],
+      [
+        825,
+        4
+      ],
+      [
+        844,
+        0
+      ]
+    ],
+    "verifiedBasis": "Native 1.12 Talent/TalentTab rank,classmask,tier,prereq,51-point order. First allocation reviewed archived PvP draft; alternative curated candidate, not unique BiS.",
+    "native_runtime_verified": false,
+    "spells": [
+      768,
+      783,
+      1066,
+      2782,
+      2893,
+      5209,
+      5225,
+      5229,
+      5570,
+      6795,
+      8983,
+      9634,
+      9821,
+      9827,
+      9830,
+      9835,
+      9846,
+      9850,
+      9853,
+      9858,
+      9863,
+      9867,
+      9881,
+      9885,
+      9892,
+      9896,
+      9898,
+      9901,
+      9904,
+      9907,
+      9908,
+      9910,
+      9912,
+      9913,
+      16933,
+      16938,
+      16979,
+      17050,
+      17061,
+      17068,
+      17073,
+      17078,
+      17108,
+      17113,
+      17116,
+      17402,
+      18562,
+      18658,
+      20719,
+      20748,
+      21850,
+      22812,
+      22829,
+      22896,
+      24946,
+      24972,
+      24977,
+      25297,
+      25298,
+      25299,
+      29166
+    ],
+    "baseSpellCount": 45,
+    "requiredSkills": [
+      5570,
+      16979,
+      17116,
+      18562
+    ],
+    "raceSpellPolicy": "Race-restricted SkillLineAbility spells excluded from common template; native race/class learning must supply legal racials.",
+    "raceExcluded": [],
+    "requiredGear": {
+      "role": 4,
+      "weapon": "healing_caster",
+      "current610xxCompatible": null,
+      "note": "UNKNOWN until actual faction/class/role and weapon/enchant/proficiency audit; never equate role equality with PvP/BiS verification."
+    }
+  }
+]

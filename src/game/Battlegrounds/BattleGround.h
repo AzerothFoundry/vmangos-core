@@ -175,6 +175,7 @@ class BattleGround
 
         /* Map pointers */
         void SetBgMap(BattleGroundMap* map) { m_map = map; }
+        BattleGroundMap const* GetBgMap() const { return m_map; }
         BattleGroundMap* GetBgMap()
         {
             MANGOS_ASSERT(m_map);
@@ -254,6 +255,7 @@ class BattleGround
         /* Battleground events */
         virtual void EventPlayerDroppedFlag(Player* /*player*/) {}
         virtual void EventPlayerClickedOnFlag(Player* /*player*/, GameObject* /*targetGo*/) {}
+        virtual bool ShouldRejectDirectCaptureUse(GameObject const*) const { return false; }
         virtual void EventPlayerCapturedFlag(Player* /*player*/) {}
 
         /* Death related */
@@ -289,6 +291,7 @@ class BattleGround
         }
         ObjectGuid GetSingleCreatureGuid(uint8 event1, uint8 event2);
         ObjectGuid GetSingleGameObjectGuid(uint8 event1, uint8 event2);
+        std::vector<ObjectGuid> const& GetEventGameObjectGuids(uint8 event1, uint8 event2) const;
 
         void OpenDoorEvent(uint8 event1, uint8 event2 = 0);
         static bool IsDoor(uint8 event1, uint8 event2);

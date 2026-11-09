@@ -121,6 +121,10 @@ bool PlayerBotAI::SpawnNewPlayer(WorldSession* sess, uint8 class_, uint32 race_,
     }
     // Generate position
     Map* map = sMapMgr.FindMap(mapId, instanceId);
+    // A cold realm may have no human on the opposite continent yet.
+    // Create only its base world map; dungeon/BG instances must already exist.
+    if (!map && mapId <= 1 && instanceId == 0)
+        map = sMapMgr.CreateMap(mapId, newChar);
     if (!map)
     {
         sLog.Out(LOG_BASIC, LOG_LVL_ERROR, "PlayerBotAI::SpawnNewPlayer: Map (%u, %u) not found!", mapId, instanceId);

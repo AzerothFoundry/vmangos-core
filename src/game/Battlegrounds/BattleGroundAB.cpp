@@ -23,6 +23,8 @@
 #include "Player.h"
 #include "BattleGround.h"
 #include "BattleGroundAB.h"
+#include "BattleGroundCapturePolicy.h"
+#include "Map.h"
 #include "GameObject.h"
 #include "BattleGroundMgr.h"
 #include "Language.h"
@@ -335,6 +337,19 @@ void BattleGroundAB::_NodeOccupied(uint8 node, Team team)
 }
 
 /* Invoked if a player used a banner as a gameobject */
+bool BattleGroundAB::ShouldRejectDirectCaptureUse(GameObject const* go) const
+{
+    if(!go||GetStatus()!=STATUS_IN_PROGRESS||go->GetMap()!=GetBgMap())return false;
+    for(unsigned node=0;node<BG_AB_NODES_MAX;++node){
+        unsigned state=m_nodes[node];
+        if(!IsActiveEvent(node,state))continue;
+        auto const& objects=GetEventGameObjectGuids(node,state);
+        bool owned=std::find(objects.begin(),objects.end(),go->GetObjectGuid())!=objects.end();
+        if(BattleGroundCapturePolicy::RejectDirectArathiUse(owned,node,state,go->GetEntry(),go->GetGoType(),go->GetGOInfo()->GetLockId()==1479,go->isSpawned()))return true;
+    }
+    return false;
+}
+
 void BattleGroundAB::EventPlayerClickedOnFlag(Player* source, GameObject* targetGo)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)

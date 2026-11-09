@@ -32,6 +32,10 @@ namespace Movement
         public:
 
             static int WriteMonsterMove(MoveSpline const& mov, WorldPacket& data, int firstPoint = 1);
+            // Explicit budget for deterministic packet regression tests.
+            static int WriteMonsterMove(MoveSpline const& mov, WorldPacket& data, int firstPoint, unsigned maxPoints);
+            static bool WriteContinuation(MoveSpline& mov, WorldPacket& data, unsigned maxPoints);
+            static bool WriteContinuation(MoveSpline& mov, WorldPacket& data);
             static void WriteCreate(MoveSpline const& mov, ByteBuffer& data);
     };
 }

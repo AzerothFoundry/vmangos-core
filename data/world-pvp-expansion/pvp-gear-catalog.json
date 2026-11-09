@@ -1,0 +1,3147 @@
+[
+  {
+    "id": 62101,
+    "spec_id": 62001,
+    "class_id": 1,
+    "role": 1,
+    "team": 469,
+    "source_gear_id": 61001,
+    "name": "PVP-469-Arms-Enrage-Sword",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16478,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16480,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16477,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20041,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16479,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16483,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18445,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16484,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18854,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18876,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18833,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62102,
+    "spec_id": 62001,
+    "class_id": 1,
+    "role": 1,
+    "team": 67,
+    "source_gear_id": 61009,
+    "name": "PVP-67-Arms-Enrage-Sword",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16542,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19095,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16544,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16541,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20204,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16543,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16545,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18429,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16548,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18834,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20068,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18877,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18835,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62103,
+    "spec_id": 62002,
+    "class_id": 1,
+    "role": 1,
+    "team": 469,
+    "source_gear_id": 61001,
+    "name": "PVP-469-Arms-LastStand",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16478,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16480,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16477,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20041,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16479,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16483,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18445,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16484,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18854,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18876,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18833,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62104,
+    "spec_id": 62002,
+    "class_id": 1,
+    "role": 1,
+    "team": 67,
+    "source_gear_id": 61009,
+    "name": "PVP-67-Arms-LastStand",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16542,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19095,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16544,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16541,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20204,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16543,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16545,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18429,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16548,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18834,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20068,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18877,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18835,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62105,
+    "spec_id": 62003,
+    "class_id": 2,
+    "role": 1,
+    "team": 469,
+    "source_gear_id": 61002,
+    "name": "PVP-469-Retribution-Control",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16474,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16476,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16473,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20042,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16475,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16472,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18445,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16471,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18864,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18876,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 23203,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62107,
+    "spec_id": 62004,
+    "class_id": 2,
+    "role": 4,
+    "team": 469,
+    "source_gear_id": 61002,
+    "name": "PVP-469-Holy-Protection",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16474,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16476,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16473,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20042,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16475,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16472,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18445,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16471,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18864,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23454,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 18825,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 23006,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62109,
+    "spec_id": 62005,
+    "class_id": 3,
+    "role": 2,
+    "team": 469,
+    "source_gear_id": 61003,
+    "name": "PVP-469-Marksman-Survival",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16465,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16468,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16466,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20043,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16467,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16462,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18448,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16463,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18856,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18869,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18833,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62110,
+    "spec_id": 62005,
+    "class_id": 3,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61010,
+    "name": "PVP-67-Marksman-Survival",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16566,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19095,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16568,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16565,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20150,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16567,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16569,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16532,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16571,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18846,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20068,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18871,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18835,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62111,
+    "spec_id": 62006,
+    "class_id": 3,
+    "role": 2,
+    "team": 469,
+    "source_gear_id": 61003,
+    "name": "PVP-469-BeastMaster-Aimed",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16465,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16468,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16466,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20043,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16467,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16462,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18448,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16463,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18856,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18869,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18833,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62112,
+    "spec_id": 62006,
+    "class_id": 3,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61010,
+    "name": "PVP-67-BeastMaster-Aimed",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16566,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19095,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16568,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16565,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20150,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16567,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16569,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16532,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16571,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18846,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20068,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18871,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18835,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62113,
+    "spec_id": 62007,
+    "class_id": 4,
+    "role": 1,
+    "team": 469,
+    "source_gear_id": 61004,
+    "name": "PVP-469-ColdBlood-Hemorrhage-Prep",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16455,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16457,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16453,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20045,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16456,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16446,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18452,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16454,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18857,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 12584,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23456,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18833,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62114,
+    "spec_id": 62007,
+    "class_id": 4,
+    "role": 1,
+    "team": 67,
+    "source_gear_id": 61011,
+    "name": "PVP-67-ColdBlood-Hemorrhage-Prep",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16561,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19095,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16562,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16563,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20190,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16564,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16558,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16497,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16560,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18849,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20068,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 16345,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23467,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18835,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62115,
+    "spec_id": 62008,
+    "class_id": 4,
+    "role": 1,
+    "team": 469,
+    "source_gear_id": 61004,
+    "name": "PVP-469-ColdBlood-Prep-Dagger",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16455,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19097,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16457,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16453,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20045,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16456,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16446,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18452,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16454,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18857,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20073,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18838,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 18838,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18833,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62116,
+    "spec_id": 62008,
+    "class_id": 4,
+    "role": 1,
+    "team": 67,
+    "source_gear_id": 61011,
+    "name": "PVP-67-ColdBlood-Prep-Dagger",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16561,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19095,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16562,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16563,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20190,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16564,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16558,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16497,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16560,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 19325,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 19384,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18849,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 20068,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 18840,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 18840,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 18835,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62117,
+    "spec_id": 62009,
+    "class_id": 5,
+    "role": 2,
+    "team": 469,
+    "source_gear_id": 61005,
+    "name": "PVP-469-Shadow-Control",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17602,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17604,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17605,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20047,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17603,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17607,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18456,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17608,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18862,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23454,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23452,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62118,
+    "spec_id": 62009,
+    "class_id": 5,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61012,
+    "name": "PVP-67-Shadow-Control",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17623,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17622,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17624,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20163,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17625,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17618,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16486,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17620,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18851,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23464,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23468,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62119,
+    "spec_id": 62010,
+    "class_id": 5,
+    "role": 4,
+    "team": 469,
+    "source_gear_id": 61005,
+    "name": "PVP-469-Discipline-Holy-Support",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17602,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17604,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17605,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20047,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17603,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17607,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18456,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17608,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18862,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23454,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23453,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62120,
+    "spec_id": 62010,
+    "class_id": 5,
+    "role": 4,
+    "team": 67,
+    "source_gear_id": 61012,
+    "name": "PVP-67-Discipline-Holy-Support",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17623,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17622,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17624,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20163,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17625,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17618,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16486,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17620,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18851,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23464,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23469,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62122,
+    "spec_id": 62011,
+    "class_id": 7,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61013,
+    "name": "PVP-67-Elemental-Restoration",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16578,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16580,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16577,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20195,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16579,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16573,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16532,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16574,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21707,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18845,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23464,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 18826,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 23199,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62124,
+    "spec_id": 62012,
+    "class_id": 7,
+    "role": 4,
+    "team": 67,
+    "source_gear_id": 61013,
+    "name": "PVP-67-Restoration-Support",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16578,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16580,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16577,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20195,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16579,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16573,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16532,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16574,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21707,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18845,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23464,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 18826,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22396,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62125,
+    "spec_id": 62013,
+    "class_id": 8,
+    "role": 2,
+    "team": 469,
+    "source_gear_id": 61006,
+    "name": "PVP-469-Frost-Counterspell",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16441,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16444,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16443,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20047,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16442,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16437,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18456,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16440,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18859,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23451,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23452,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62126,
+    "spec_id": 62013,
+    "class_id": 8,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61014,
+    "name": "PVP-67-Frost-Counterspell",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16533,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16536,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16535,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20163,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16534,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16539,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16486,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16540,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18850,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23466,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23468,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62127,
+    "spec_id": 62014,
+    "class_id": 8,
+    "role": 2,
+    "team": 469,
+    "source_gear_id": 61006,
+    "name": "PVP-469-Presence-Pyro",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16441,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16444,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16443,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20047,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16442,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16437,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18456,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16440,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18859,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23451,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23452,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62128,
+    "spec_id": 62014,
+    "class_id": 8,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61014,
+    "name": "PVP-67-Presence-Pyro",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16533,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16536,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16535,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20163,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16534,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16539,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16486,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16540,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18850,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23466,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23468,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62129,
+    "spec_id": 62015,
+    "class_id": 9,
+    "role": 2,
+    "team": 469,
+    "source_gear_id": 61007,
+    "name": "PVP-469-SoulLink-Survival",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17578,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17580,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17581,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20047,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17579,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17583,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18456,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17584,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18858,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23451,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23452,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62130,
+    "spec_id": 62015,
+    "class_id": 9,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61015,
+    "name": "PVP-67-SoulLink-Survival",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17591,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17590,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17592,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20163,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17593,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17586,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16486,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17588,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18852,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23466,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23468,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62131,
+    "spec_id": 62016,
+    "class_id": 9,
+    "role": 2,
+    "team": 469,
+    "source_gear_id": 61007,
+    "name": "PVP-469-ShadowMastery-Ruin",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17578,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17580,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17581,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20047,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17579,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17583,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18456,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17584,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18858,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23451,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23452,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62132,
+    "spec_id": 62016,
+    "class_id": 9,
+    "role": 2,
+    "team": 67,
+    "source_gear_id": 61015,
+    "name": "PVP-67-ShadowMastery-Ruin",
+    "items": [
+      {
+        "slot": 0,
+        "item": 17591,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 17590,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 17592,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20163,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 17593,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 17586,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 16486,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 17588,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21563,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18852,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23466,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23468,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 22821,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62133,
+    "spec_id": 62017,
+    "class_id": 11,
+    "role": 1,
+    "team": 469,
+    "source_gear_id": 61008,
+    "name": "PVP-469-Feral-NatureSwiftness",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16451,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16449,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16452,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20046,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16450,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16459,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18454,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16448,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21707,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18863,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 19358,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 23004,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62134,
+    "spec_id": 62017,
+    "class_id": 11,
+    "role": 1,
+    "team": 67,
+    "source_gear_id": 61016,
+    "name": "PVP-67-Feral-NatureSwiftness",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16550,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16551,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16549,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20171,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16552,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16554,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18434,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16555,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21707,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18853,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 19358,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 23004,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62135,
+    "spec_id": 62018,
+    "class_id": 11,
+    "role": 4,
+    "team": 469,
+    "source_gear_id": 61008,
+    "name": "PVP-469-Restoration-FlagSupport",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16451,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19098,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16449,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16452,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20046,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16450,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16459,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18454,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16448,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21707,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18863,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19086,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23454,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23453,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 23004,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  },
+  {
+    "id": 62136,
+    "spec_id": 62018,
+    "class_id": 11,
+    "role": 4,
+    "team": 67,
+    "source_gear_id": 61016,
+    "name": "PVP-67-Restoration-FlagSupport",
+    "items": [
+      {
+        "slot": 0,
+        "item": 16550,
+        "enchant": 0
+      },
+      {
+        "slot": 1,
+        "item": 19096,
+        "enchant": 0
+      },
+      {
+        "slot": 2,
+        "item": 16551,
+        "enchant": 0
+      },
+      {
+        "slot": 4,
+        "item": 16549,
+        "enchant": 0
+      },
+      {
+        "slot": 5,
+        "item": 20171,
+        "enchant": 0
+      },
+      {
+        "slot": 6,
+        "item": 16552,
+        "enchant": 0
+      },
+      {
+        "slot": 7,
+        "item": 16554,
+        "enchant": 0
+      },
+      {
+        "slot": 8,
+        "item": 18434,
+        "enchant": 0
+      },
+      {
+        "slot": 9,
+        "item": 16555,
+        "enchant": 0
+      },
+      {
+        "slot": 10,
+        "item": 21707,
+        "enchant": 0
+      },
+      {
+        "slot": 11,
+        "item": 21709,
+        "enchant": 0
+      },
+      {
+        "slot": 12,
+        "item": 18853,
+        "enchant": 0
+      },
+      {
+        "slot": 13,
+        "item": 19024,
+        "enchant": 0
+      },
+      {
+        "slot": 14,
+        "item": 19085,
+        "enchant": 0
+      },
+      {
+        "slot": 15,
+        "item": 23464,
+        "enchant": 0
+      },
+      {
+        "slot": 16,
+        "item": 23469,
+        "enchant": 0
+      },
+      {
+        "slot": 17,
+        "item": 23004,
+        "enchant": 0
+      }
+    ],
+    "runtime_verified": false,
+    "pvp_baseline_not_unique_bis": true,
+    "honor_rank_internal": 18,
+    "required_weapon_skills": 300
+  }
+]

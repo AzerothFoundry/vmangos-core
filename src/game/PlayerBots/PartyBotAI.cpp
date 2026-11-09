@@ -15,6 +15,28 @@
 */
 
 #include "PartyBotAI.h"
+#include "PartyBotLootPolicy.h"
+#include "LootMgr.h"
+#include "Packets/Loot.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
+#include "CellImpl.h"
+#include "DungeonTankPolicy.h"
+#include "PartyBotFormation.h"
+#include "WarriorTankPolicy.h"
+#include <mutex>
+#include "BotMountPolicy.h"
+#include "PartyBotRecoveryPolicy.h"
+#include "PathFinder.h"
+#include "PointMovementGenerator.h"
+#include "MoveSpline.h"
+#include "Creature.h"
+#include "RaidCoordination.h"
+#include "McBotTactics.h"
+#include "BotDamagePolicy.h"
+#include "PartyBotPreset.h"
+#include "RaidBotPlanner.h"
+#include "Timer.h"
 #include "Player.h"
 #include "CreatureAI.h"
 #include "MotionMaster.h"
@@ -151,6 +173,7 @@ Unit* PartyBotAI::GetDistancingTarget(Unit* pEnemy)
 
     Unit* pNonTank = nullptr;
     Group* pGroup = me->GetGroup();
+    if(!pGroup)return nullptr;
     for (GroupReference* itr = pGroup->GetFirstMember(); itr != nullptr; itr = itr->next())
     {
         if (Player* pMember = itr->getSource())
@@ -182,6 +205,16 @@ bool PartyBotAI::RunAwayFromTarget(Unit* pEnemy)
     return me->GetMotionMaster()->MoveDistance(pEnemy, 15.0f);
 }
 
+SpellCastResult PartyBotAI::CastPartySpell(Unit* target, SpellEntry const* spell, bool triggered)
+{
+    if(!spell || !AllowLegacySpell(spell))return SPELL_FAILED_DONT_REPORT;
+    return me->CastSpell(target,spell,triggered);
+}
+SpellCastResult PartyBotAI::CastPartySpell(Unit* target, uint32 spellId, bool triggered)
+{
+    return CastPartySpell(target,sSpellMgr.GetSpellEntry(spellId),triggered);
+}
+
 bool PartyBotAI::DrinkAndEat()
 {
     if (m_isBuffing)
@@ -209,7 +242,7 @@ bool PartyBotAI::DrinkAndEat()
         }
         if (SpellEntry const* pSpellEntry = sSpellMgr.GetSpellEntry(PB_SPELL_FOOD))
         {
-            me->CastSpell(me, pSpellEntry, true);
+            CastPartySpell(me, pSpellEntry, true);
             me->RemoveSpellCooldown(pSpellEntry);
         }
         return true;
@@ -225,7 +258,7 @@ bool PartyBotAI::DrinkAndEat()
         }
         if (SpellEntry const* pSpellEntry = sSpellMgr.GetSpellEntry(PB_SPELL_DRINK))
         {
-            me->CastSpell(me, pSpellEntry, true);
+            CastPartySpell(me, pSpellEntry, true);
             me->RemoveSpellCooldown(pSpellEntry);
         }
         return true;
@@ -234,8 +267,11 @@ bool PartyBotAI::DrinkAndEat()
     return needToEat || needToDrink;
 }
 
+namespace { bool ReservedCorpse(Player* corpse); }
+
 bool PartyBotAI::ShouldAutoRevive() const
 {
+    if(me->IsRessurectRequested() || (me->GetDeathState()==CORPSE && ReservedCorpse(me)))return false;
     if (me->GetDeathState() == DEAD)
         return true;
 
@@ -265,18 +301,38 @@ bool PartyBotAI::ShouldAutoRevive() const
     return alivePlayerNearby;
 }
 
+namespace DungeonTank {
+bool Scene(PartyBotAI const& ai);
+bool AreaSafe(PartyBotAI const& ai,Unit const* center,SpellEntry const* spell,float forcedRadius=0,float const* ground=nullptr);
+bool GuardAoe(PartyBotAI& ai);
+bool TryAoe(PartyBotAI& ai);
+}
+
 bool PartyBotAI::CanTryToCastSpell(Unit const* pTarget, SpellEntry const* pSpellEntry) const
 {
+    if (!McBotTactics::AllowSpell(*this,pTarget,pSpellEntry) || !RaidCoordination::AllowDamage(*this,pTarget,pSpellEntry)) return false;
     if (!CombatBotBaseAI::CanTryToCastSpell(pTarget, pSpellEntry))
         return false;
 
+    if(DungeonTank::Scene(*this)&&(m_role==ROLE_MELEE_DPS||m_role==ROLE_RANGE_DPS)){
+        // Some multi-target attacks are self buffs, chains or next-swing
+        // actions, so the generic hostile-AOE classification is insufficient.
+        bool chain=(me->GetClass()==CLASS_SHAMAN&&pSpellEntry==m_spells.shaman.pChainLightning)||(me->GetClass()==CLASS_HUNTER&&pSpellEntry==m_spells.hunter.pMultiShot);
+        float radius=chain?30.0f:8.0f;
+        bool multi=chain||(me->GetClass()==CLASS_ROGUE&&pSpellEntry==m_spells.rogue.pBladeFlurry)||(me->GetClass()==CLASS_WARRIOR&&pSpellEntry==m_spells.warrior.pCleave)||(me->GetClass()==CLASS_PRIEST&&pSpellEntry==m_spells.priest.pHolyNova);
+        if(multi)return DungeonTank::AreaSafe(*this,pTarget,pSpellEntry,radius);
+    }
+
     if (pSpellEntry->IsAreaOfEffectSpell() && !pSpellEntry->IsPositiveSpell() && !IsInDuel())
     {
-        if (!m_marksToCC.empty())
-            return false;
+        if(DungeonTank::Scene(*this)&&(m_role==ROLE_MELEE_DPS||m_role==ROLE_RANGE_DPS))
+            return DungeonTank::AreaSafe(*this,pTarget,pSpellEntry);
+        for(auto mark:m_marksToCC)if(Unit* controlled=GetMarkedTarget(mark))
+            if(controlled->IsAlive() && pTarget && controlled->IsWithinDistInMap(pTarget,30.0f))return false;
 
-        // do not cast aoe if it will pull aggro
-        if (m_role != ROLE_TANK)
+        // Coordinated parties use the shared per-target threat budget above.
+        // Keep the legacy health-sized AoE margin only for uncoordinated bots.
+        if (m_role != ROLE_TANK && !RaidCoordination::Enabled(me))
         {
             float radius;
             if (pSpellEntry->EffectRadiusIndex[0])
@@ -314,7 +370,7 @@ bool PartyBotAI::CanTryToCastSpell(Unit const* pTarget, SpellEntry const* pSpell
 
 bool PartyBotAI::CanUseCrowdControl(SpellEntry const* pSpellEntry, Unit* pTarget) const
 {
-    if (IsInDuel())
+    if (IsInDuel() || !me->GetGroup())
         return true;
 
     if (pSpellEntry->HasAuraInterruptFlag(AURA_INTERRUPT_DAMAGE_CANCELS) &&
@@ -333,6 +389,9 @@ bool PartyBotAI::CanUseCrowdControl(SpellEntry const* pSpellEntry, Unit* pTarget
 
 bool PartyBotAI::AttackStart(Unit* pVictim)
 {
+    if(RaidCoordination::PullPending(me))return false;
+    if (!McBotTactics::AllowAttack(*this,pVictim) || !RaidCoordination::AllowDamage(*this,pVictim,nullptr)) return false;
+    if(RaidCoordination::Enabled(me) && m_role==ROLE_TANK && pVictim && RaidCoordination::AssignedTank(me,pVictim)!=me)return false;
     m_isBuffing = false;
 
     if (me->IsMounted())
@@ -349,6 +408,7 @@ bool PartyBotAI::AttackStart(Unit* pVictim)
 
 Unit* PartyBotAI::GetMarkedTarget(RaidTargetIcon mark) const
 {
+    if(!me->GetGroup())return nullptr;
     ObjectGuid targetGuid = me->GetGroup()->GetTargetWithIcon(mark);
     if (targetGuid.IsUnit())
         return me->GetMap()->GetUnit(targetGuid);
@@ -356,8 +416,280 @@ Unit* PartyBotAI::GetMarkedTarget(RaidTargetIcon mark) const
     return nullptr;
 }
 
+namespace DungeonLoot {
+struct State {uint32 touched=0,next=0,started=0;ObjectGuid corpse;std::map<uint64,uint32> tried;};
+std::map<uint64,State> states;std::recursive_mutex mutex;
+bool GroupSafe(Player* p){
+ if(!p||!p->IsAlive()||!p->IsInWorld()||p->IsBeingTeleported()||p->IsInCombat()||p->IsNonMeleeSpellCasted()||p->GetTradeData()||p->GetLootGuid()||p->HasUnitState(UNIT_STATE_NO_FREE_MOVE))return false;
+ for(GroupReference* r=p->GetGroup()->GetFirstMember();r;r=r->next())if(Player* q=r->getSource()){
+  if(!q->IsInWorld()||q->IsBeingTeleported())continue;
+  if(q->GetMap()==p->GetMap()&&(q->IsInCombat()||(q->GetPet()&&q->GetPet()->IsInCombat())))return false;
+ }
+ return true;
+}
+bool SlotsForPersistent(PartyBotAI& ai,Creature* corpse){
+ if(!ai.AllowsPersistentSave())return false;
+ PermissionTypes permission=NONE_PERMISSION;
+ Group* group=ai.me->GetGroup();
+ if(group&&group==corpse->GetGroupLootRecipient()){
+  switch(group->GetLootMethod()){
+   case MASTER_LOOT:permission=MASTER_PERMISSION;break;
+   case FREE_FOR_ALL:permission=ALL_PERMISSION;break;
+   case ROUND_ROBIN:permission=ROUND_ROBIN_PERMISSION;break;
+   default:permission=GROUP_PERMISSION;break;
+  }
+ }
+ WorldPackets::Loot::LootResponse view;LootView(corpse->loot,ai.me,permission).WriteLoot(view);
+ // Follow the same viewer-specific slots and visibility as the native loot
+ // window, including appended quest slots and round-robin ownership.
+ for(auto const& shown:view.items){
+  if(shown.slotType!=LOOT_SLOT_TYPE_ALLOW_LOOT&&shown.slotType!=LOOT_SLOT_TYPE_OWNER)continue;
+  ItemPosCountVec destinations;bool fits=ai.me->CanStoreNewItem(NULL_BAG,NULL_SLOT,destinations,shown.itemId,shown.count)==EQUIP_ERR_OK;
+  if(!PartyBotLootPolicy::TakeItem(true,true,false,fits))continue;
+  WorldPackets::Loot::AutoStoreLootItem take;take.lootSlot=shown.idx;ai.me->GetSession()->HandleAutostoreLootItemOpcode(take);
+ }
+ return true;
+}
+bool Update(PartyBotAI& ai,Player* leader){
+ Player* p=ai.me;
+ if(!ai.m_initialized||!p||!p->IsInWorld()||!p->GetGroup()||!p->GetMap()->IsDungeon()||p->InBattleGround()||p->m_duel||!leader||!leader->IsInWorld()||leader->IsBeingTeleported()||leader->GetMap()!=p->GetMap())return false;
+ std::lock_guard<std::recursive_mutex> lock(mutex);uint32 now=WorldTimer::getMSTime();
+ for(auto it=states.begin();it!=states.end();)if(uint32(now-it->second.touched)>300000)it=states.erase(it);else ++it;
+ auto& state=states[p->GetGUID()];state.touched=now;
+ auto cancel=[&](){
+  if(!state.corpse.IsEmpty()){
+   if(auto point=dynamic_cast<PointMovementGenerator<Player> const*>(p->GetMotionMaster()->GetCurrent()))if(point->GetId()==0x50424c54){p->StopMoving();p->GetMotionMaster()->Clear();p->GetMotionMaster()->MoveIdle();}
+   state.corpse.Clear();
+  }
+ };
+ if(!GroupSafe(p)){cancel();return false;}
+ if(int32(now-state.next)<0)return !state.corpse.IsEmpty();
+ state.next=now+2000;
+ for(auto it=state.tried.begin();it!=state.tried.end();)if(uint32(now-it->second)>120000)it=state.tried.erase(it);else ++it;
+ std::list<Creature*> corpses;MaNGOS::AnyUnitInObjectRangeCheck check(p,25.0f);MaNGOS::CreatureListSearcher<MaNGOS::AnyUnitInObjectRangeCheck> search(corpses,check);Cell::VisitGridObjects(p,search,25.0f);
+ Creature* best=nullptr;float nearest=1000;
+ for(Creature* corpse:corpses){
+  bool actionable=corpse->loot.gold>0||ai.AllowsPersistentSave();
+  if(!PartyBotLootPolicy::Candidate(!corpse->IsAlive(),corpse->IsTappedBy(p),p->IsAllowedToLoot(corpse),!corpse->loot.isLooted(),actionable,p->GetDistance(corpse),leader->GetDistance(corpse)))continue;
+  if(state.tried.count(corpse->GetGUID()))continue;
+  if(!p->IsWithinLOSInMap(corpse))continue;
+  std::list<Unit*> nearby; p->GetEnemyListInRadiusAround(corpse,10.0f,nearby);
+  bool danger=false;for(Unit* e:nearby)if(e->IsAlive()&&p->IsValidAttackTarget(e)&&e->IsVisibleForOrDetect(p,p,false)&&corpse->IsWithinLOSInMap(e)){danger=true;break;}
+  if(danger)continue;
+  float distance=p->GetDistance(corpse);if(distance<nearest){best=corpse;nearest=distance;}
+ }
+ if(!best){cancel();return false;}
+ if(state.corpse!=best->GetObjectGuid()){cancel();state.corpse=best->GetObjectGuid();state.started=now;}
+ if(uint32(now-state.started)>20000){state.tried[best->GetGUID()]=now;cancel();return false;}
+ if(!p->IsWithinDistInMap(best,p->GetMaxLootDistance(best),true,SizeFactor::None)){
+  if(auto point=dynamic_cast<PointMovementGenerator<Player> const*>(p->GetMotionMaster()->GetCurrent()))if(point->GetId()==0x50424c54&&p->IsMoving())return true;
+  PathInfo path(p);path.ExcludeSteepSlopes();
+  if(!path.calculate(best->GetPositionX(),best->GetPositionY(),best->GetPositionZ())||path.getPathType()!=PATHFIND_NORMAL||path.Length()>40||path.getPath().empty()){state.tried[best->GetGUID()]=now;cancel();return false;}
+  auto end=path.getPath().back();if(std::hypot(end.x-best->GetPositionX(),end.y-best->GetPositionY())>2||std::fabs(end.z-best->GetPositionZ())>2){state.tried[best->GetGUID()]=now;cancel();return false;}
+  p->GetMotionMaster()->MovePoint(0x50424c54,best->GetPositionX(),best->GetPositionY(),best->GetPositionZ(),MOVE_PATHFINDING|MOVE_EXCLUDE_STEEP_SLOPES);return true;
+ }
+ p->StopMoving();p->SetStandState(UNIT_STAND_STATE_STAND);if(p->IsMounted())p->RemoveSpellsCausingAura(SPELL_AURA_MOUNTED);
+ ObjectGuid guid=best->GetObjectGuid();WorldPackets::Loot::LootUnit open;open.guid=guid;p->GetSession()->HandleLootOpcode(open);
+ if(p->GetLootGuid()==guid){
+  bool permitted=p->IsAllowedToLoot(best)&&p->GetGroup()==best->GetGroupLootRecipient();
+  // Money has no inventory-capacity dependency; native handler shares it.
+  if(PartyBotLootPolicy::TakeMoney(permitted,best->loot.gold)){NullClientPacket money(CMSG_LOOT_MONEY);p->GetSession()->HandleLootMoneyOpcode(money);}
+  if(permitted&&best->IsInWorld())SlotsForPersistent(ai,best);
+  WorldPackets::Loot::LootRelease close;close.guid=guid;p->GetSession()->HandleLootReleaseOpcode(close);
+  if(ai.AllowsPersistentSave())p->SaveToDB();
+ }
+ state.tried[guid.GetRawValue()]=now;cancel();return true;
+}
+}
+
+namespace DungeonTank {
+struct Turn {uint32 touched=0,until=0,rotated=0,demo=0;uint64 rescue=0;std::map<uint64,uint32> served;};
+std::map<uint64,Turn> turns;
+std::recursive_mutex turnsMutex;
+bool Scene(PartyBotAI const& ai){
+ Player* p=ai.me;
+ return p&&ai.m_initialized&&p->IsInWorld()&&p->IsAlive()&&p->GetGroup()&&p->GetMap()->IsDungeon()&&!p->GetMap()->IsRaid()&&!p->InBattleGround()&&!p->m_duel&&!p->IsBeingTeleported()&&!RaidCoordination::Enabled(p);
+}
+bool Active(PartyBotAI const& ai){return ai.GetRole()==ROLE_TANK&&Scene(ai);}
+bool Tank(Player* p){
+ if(!p)return false;
+ if(auto* ai=dynamic_cast<PartyBotAI*>(p->AI()))return ai->GetRole()==ROLE_TANK;
+ return p->GetGroup()&&(p->GetObjectGuid()==p->GetGroup()->GetMainTankGuid()||PartyPreset::PreferredRole(p)==ROLE_TANK);
+}
+bool AreaSafe(PartyBotAI const& ai,Unit const* center,SpellEntry const* spell,float forcedRadius,float const* ground){
+ if(!Scene(ai)||!center||!spell||center->GetMap()!=ai.me->GetMap())return false;
+ float radius=forcedRadius;
+ for(unsigned i=0;i<3;++i)if(spell->EffectRadiusIndex[i])radius=std::max(radius,Spells::GetSpellRadius(sSpellRadiusStore.LookupEntry(spell->EffectRadiusIndex[i])));
+ if(radius<=0)radius=10.0f;
+ unsigned held=0;bool unsafe=false,threatSafe=true;std::list<Unit*> nearby;
+ float x=ground?ground[0]:center->GetPositionX(),y=ground?ground[1]:center->GetPositionY(),z=ground?ground[2]:center->GetPositionZ();
+ float search=ground?std::min(100.0f,ai.me->GetDistance(x,y,z)+radius):radius;
+ ai.me->GetEnemyListInRadiusAround(ground?static_cast<Unit const*>(ai.me):center,search,nearby);
+ for(Unit* enemy:nearby){
+  if(enemy&&!enemy->IsWithinDist3d(x,y,z,radius))continue;
+  if(!enemy||!enemy->IsAlive()||enemy->GetTypeId()!=TYPEID_UNIT||enemy->GetCharmerOrOwnerPlayerOrPlayerItself())continue;
+  if(!enemy->IsVisibleForOrDetect(ai.me,ai.me,false)||!ai.me->GetMap()->isInLineOfSight(x,y,z+1.0f,enemy->GetPositionX(),enemy->GetPositionY(),enemy->GetPositionZ()+1.0f,true))continue;
+  Unit* victim=enemy->GetVictim();Player* tank=victim?victim->ToPlayer():nullptr;
+  bool controlled=enemy->HasBreakableByDamageCrowdControlAura();
+  for(auto mark:ai.m_marksToCC)if(enemy->GetObjectGuid()==ai.me->GetGroup()->GetTargetWithIcon(mark))controlled=true;
+  bool heldByTank=tank&&tank->IsInWorld()&&!tank->IsBeingTeleported()&&tank->GetGroup()==ai.me->GetGroup()&&Tank(tank);
+  if(controlled||!enemy->IsInCombat()||!heldByTank){unsafe=true;continue;}
+  if(!ai.IsValidHostileTarget(enemy))continue;
+  ++held;
+  if(enemy->CanHaveThreatList()){
+   float tankThreat=enemy->GetThreatManager().getThreat(tank),mine=enemy->GetThreatManager().getThreat(ai.me);
+   if(tankThreat<=0||mine>=tankThreat*0.8f)threatSafe=false;
+  }
+ }
+ return DungeonTankPolicy::AoeReady(held,unsafe,threatSafe);
+}
+bool GuardAoe(PartyBotAI& ai){
+ if(!Scene(ai)||(ai.GetRole()!=ROLE_MELEE_DPS&&ai.GetRole()!=ROLE_RANGE_DPS))return false;
+ for(auto slot:{CURRENT_GENERIC_SPELL,CURRENT_CHANNELED_SPELL})if(Spell* cast=ai.me->GetCurrentSpell(slot)){
+  auto spell=cast->m_spellInfo;
+  bool channel=(ai.me->GetClass()==CLASS_MAGE&&spell==ai.m_spells.mage.pBlizzard)||(ai.me->GetClass()==CLASS_WARLOCK&&spell==ai.m_spells.warlock.pRainOfFire)||(ai.me->GetClass()==CLASS_HUNTER&&spell==ai.m_spells.hunter.pVolley)||(ai.me->GetClass()==CLASS_DRUID&&spell==ai.m_spells.druid.pHurricane);
+  if(!channel)continue;
+  float location[3];float const* ground=nullptr;
+  if(cast->m_targets.m_targetMask&TARGET_FLAG_DEST_LOCATION){cast->m_targets.getDestination(location[0],location[1],location[2]);ground=location;}
+  Unit* center=cast->m_targets.getUnitTarget();if(!center)center=ai.me->GetVictim();if(!center)center=ai.me;
+  if(!AreaSafe(ai,center,spell,0,ground)){ai.me->InterruptSpell(slot,true);return true;}
+ }
+ return false;
+}
+bool TryAoe(PartyBotAI& ai){
+ if(!Scene(ai)||(ai.GetRole()!=ROLE_MELEE_DPS&&ai.GetRole()!=ROLE_RANGE_DPS)||!ai.me->IsInCombat()||ai.me->IsNonMeleeSpellCasted())return false;
+ Unit* victim=ai.me->GetVictim();if(!victim||!ai.IsValidHostileTarget(victim))return false;
+ // Let the class's existing interrupt/defensive decisions handle live casts.
+ if(victim->IsNonMeleeSpellCasted())return false;
+ auto cast=[&](SpellEntry const* spell,bool self,float radius=0.0f){
+  Unit* center=self?static_cast<Unit*>(ai.me):victim;
+  if(!spell||!AreaSafe(ai,center,spell,radius)||!ai.CanTryToCastSpell(center,spell))return false;
+  return ai.DoCastSpell(center,spell)==SPELL_CAST_OK;
+ };
+ switch(ai.me->GetClass()){
+  case CLASS_MAGE:return cast(ai.m_spells.mage.pBlizzard,false)||cast(ai.m_spells.mage.pArcaneExplosion,true);
+  case CLASS_WARLOCK:return cast(ai.m_spells.warlock.pRainOfFire,false);
+  case CLASS_HUNTER:return cast(ai.m_spells.hunter.pVolley,false);
+  case CLASS_DRUID:return cast(ai.m_spells.druid.pHurricane,false);
+  case CLASS_PALADIN:return cast(ai.m_spells.paladin.pConsecration,true);
+  case CLASS_SHAMAN:return cast(ai.m_spells.shaman.pChainLightning,false,30.0f);
+  case CLASS_WARRIOR:return cast(ai.m_spells.warrior.pWhirlwind,true)||(!ai.me->GetCurrentSpell(CURRENT_MELEE_SPELL)&&cast(ai.m_spells.warrior.pCleave,false,8.0f));
+  case CLASS_ROGUE:return cast(ai.m_spells.rogue.pBladeFlurry,true,8.0f);
+  case CLASS_PRIEST:return !ai.me->HasAura(15473)&&cast(ai.m_spells.priest.pHolyNova,true);
+  default:return false;
+ }
+}
+Unit* AssistTarget(PartyBotAI const& ai){
+ if(!Scene(ai)||(ai.GetRole()!=ROLE_MELEE_DPS&&ai.GetRole()!=ROLE_RANGE_DPS))return nullptr;
+ Player* p=ai.me;Player* best=nullptr;Unit* enemy=nullptr;
+ for(GroupReference* ref=p->GetGroup()->GetFirstMember();ref;ref=ref->next())if(Player* tank=ref->getSource()){
+  if(!tank->IsInWorld()||!tank->IsAlive()||tank->IsBeingTeleported()||tank->GetMap()!=p->GetMap()||!Tank(tank))continue;
+  Unit* current=tank->GetVictim();if(!current)continue;
+  Unit* victim=current->GetVictim();Player* victimOwner=victim?victim->GetCharmerOrOwnerPlayerOrPlayerItself():nullptr;
+  bool groupVictim=victimOwner&&victimOwner->IsInWorld()&&!victimOwner->IsBeingTeleported()&&victimOwner->GetGroup()==p->GetGroup();
+  if(current->GetTypeId()!=TYPEID_UNIT||current->GetCharmerOrOwnerPlayerOrPlayerItself()||!DungeonTankPolicy::Assistable(current->IsAlive(),current->IsInCombat(),groupVictim,ai.IsValidHostileTarget(current),p->IsWithinDistInMap(current,50.0f),p->IsWithinLOSInMap(current)))continue;
+  bool main=tank->GetObjectGuid()==p->GetGroup()->GetMainTankGuid();
+  bool oldMain=best&&best->GetObjectGuid()==p->GetGroup()->GetMainTankGuid();
+  if(!best||(main&&!oldMain)||(main==oldMain&&tank->GetObjectGuid()<best->GetObjectGuid())){best=tank;enemy=current;}
+ }
+ return enemy;
+}
+bool Assist(PartyBotAI& ai){
+ Unit* enemy=AssistTarget(ai);if(!enemy||ai.me->GetVictim()==enemy)return false;
+ return ai.AttackStart(enemy);
+}
+Unit* Select(PartyBotAI const& ai){
+ if(!Active(ai))return nullptr;
+ std::lock_guard<std::recursive_mutex> guard(turnsMutex);
+ Player* p=ai.me;uint32 now=WorldTimer::getMSTime();
+ for(auto it=turns.begin();it!=turns.end();)if(uint32(now-it->second.touched)>300000)it=turns.erase(it);else ++it;
+ auto& turn=turns[p->GetGUID()];turn.touched=now;
+ for(auto it=turn.served.begin();it!=turn.served.end();)if(uint32(now-it->second)>30000)it=turn.served.erase(it);else ++it;
+ std::list<Unit*> enemies;p->GetEnemyListInRadiusAround(p,40.0f,enemies);
+ Unit* best=nullptr;Unit* committed=nullptr;DungeonTankPolicy::Candidate bestRank,currentRank;
+ for(Unit* enemy:enemies){
+  if(!enemy||enemy->GetTypeId()!=TYPEID_UNIT||enemy->GetCharmerOrOwnerPlayerOrPlayerItself())continue;
+  Unit* victim=enemy->GetVictim();if(!victim||victim==p)continue;
+  Player* owner=victim->GetCharmerOrOwnerPlayerOrPlayerItself();
+  if(!owner||!owner->IsInWorld()||owner->IsBeingTeleported()||owner->GetGroup()!=p->GetGroup()||!owner->IsAlive()||owner->GetMap()!=p->GetMap())continue;
+  auto* victimAI=owner->AI()?dynamic_cast<PartyBotAI*>(owner->AI()):nullptr;
+  DungeonTankPolicy::Candidate rank;rank.guid=enemy->GetGUID();rank.alive=enemy->IsAlive();rank.engaged=enemy->IsInCombat();rank.groupVictim=true;rank.heldByTank=victim==owner&&Tank(owner);
+  rank.controlled=enemy->HasBreakableByDamageCrowdControlAura();rank.distance=p->GetDistance(enemy);rank.victimHealth=victim->GetHealthPercent();rank.healerVictim=victimAI?victimAI->GetRole()==ROLE_HEALER:PartyPreset::PreferredRole(owner)==ROLE_HEALER;
+  rank.legal=ai.IsValidHostileTarget(enemy)&&p->IsWithinLOSInMap(enemy);rank.reachable=true;auto served=turn.served.find(rank.guid);if(served!=turn.served.end())rank.servedAt=served->second;
+  if(!DungeonTankPolicy::Eligible(rank))continue;
+  bool reserved=false;
+  for(GroupReference* ref=p->GetGroup()->GetFirstMember();ref;ref=ref->next())if(Player* other=ref->getSource()){
+   if(other==p||!other->IsInWorld()||!other->IsAlive()||other->IsBeingTeleported()||other->GetMap()!=p->GetMap()||other->HasUnitState(UNIT_STATE_CAN_NOT_REACT_OR_LOST_CONTROL)||!Tank(other))continue;
+   auto state=turns.find(other->GetGUID());
+   if(state!=turns.end()&&state->second.rescue==rank.guid&&int32(now-state->second.until)<0){reserved=true;break;}
+  }
+  if(reserved)continue;
+  // Don't chase caster targets on another floor or behind an unreachable ledge.
+  if(!p->CanReachWithMeleeAutoAttack(enemy)){
+   PathInfo path(p);path.ExcludeSteepSlopes();if(!path.calculate(enemy->GetPositionX(),enemy->GetPositionY(),enemy->GetPositionZ())||path.getPathType()!=PATHFIND_NORMAL||path.Length()>65||path.getPath().empty())continue;
+   auto end=path.getPath().back();if(std::hypot(end.x-enemy->GetPositionX(),end.y-enemy->GetPositionY())>3||std::fabs(end.z-enemy->GetPositionZ())>3)continue;
+  }
+  if(rank.guid==turn.rescue){committed=enemy;currentRank=rank;}
+  if(!best||DungeonTankPolicy::Better(rank,bestRank,now)){best=enemy;bestRank=rank;}
+ }
+ if(committed&&best&&DungeonTankPolicy::KeepCommitment(currentRank,bestRank,int32(now-turn.until)<0))return committed;
+ return best;
+}
+// Shared party reservation: successful native cast is the only event that commits it.
+bool MassTaunt(PartyBotAI& ai){
+ if(!Active(ai)||ai.me->IsNonMeleeSpellCasted()||ai.me->HasUnitState(UNIT_STATE_CAN_NOT_REACT_OR_LOST_CONTROL))return false;
+ std::lock_guard<std::recursive_mutex> guard(turnsMutex);
+ static std::map<uint64,uint32> last;
+ uint64 key=ai.me->GetGroup()->GetLeaderGuid().GetRawValue();uint32 now=WorldTimer::getMSTime();
+ if(last[key]&&uint32(now-last[key])<8000)return false;
+ std::vector<Player*> candidates;
+ for(GroupReference* ref=ai.me->GetGroup()->GetFirstMember();ref;ref=ref->next())if(Player* tank=ref->getSource())candidates.push_back(tank);
+ auto main=ai.me->GetGroup()->GetMainTankGuid();
+ std::sort(candidates.begin(),candidates.end(),[&](Player* a,Player* b){bool am=a->GetObjectGuid()==main,bm=b->GetObjectGuid()==main;return am!=bm?am:a->GetObjectGuid()<b->GetObjectGuid();});
+ for(Player* tank:candidates){
+  auto* actor=dynamic_cast<PartyBotAI*>(tank->AI());
+  if(!actor||!Active(*actor)||tank->GetMap()!=ai.me->GetMap()||tank->IsNonMeleeSpellCasted()||tank->HasUnitState(UNIT_STATE_CAN_NOT_REACT_OR_LOST_CONTROL))continue;
+  uint32 id=tank->GetClass()==CLASS_WARRIOR?1161:tank->GetClass()==CLASS_DRUID?5209:0;
+  auto* spell=id&&tank->HasSpell(id)?sSpellMgr.GetSpellEntry(id):nullptr;
+  if(!spell||!actor->CanTryToCastSpell(tank,spell))continue;
+  std::list<Unit*> enemies;tank->GetEnemyListInRadiusAround(tank,10,enemies);unsigned leaks=0;bool unsafe=false;
+  for(Unit* e:enemies){
+   if(!e||!e->IsAlive()||e->GetTypeId()!=TYPEID_UNIT||!actor->IsValidHostileTarget(e))continue;
+   Unit* v=e->GetVictim();Player* owner=v?v->GetCharmerOrOwnerPlayerOrPlayerItself():nullptr;
+   bool marked=false;for(auto mark:actor->m_marksToCC)if(e->GetObjectGuid()==tank->GetGroup()->GetTargetWithIcon(mark))marked=true;
+   if(marked||!e->IsInCombat()||e->HasBreakableByDamageCrowdControlAura()||!owner||owner->GetGroup()!=tank->GetGroup()){unsafe=true;break;}
+   if(v==owner&&Tank(owner))continue;
+   ++leaks;
+  }
+  if(unsafe||!WarriorTankPolicy::MassTaunt(leaks,8000))continue;
+  if(tank!=ai.me)return false;
+  if(actor->DoCastSpell(tank,spell)==SPELL_CAST_OK){last[key]=now;return true;}
+ }
+ return false;
+}
+bool Protect(PartyBotAI& ai){
+ if(!Active(ai)||ai.me->IsNonMeleeSpellCasted()||ai.me->HasUnitState(UNIT_STATE_CAN_NOT_REACT_OR_LOST_CONTROL))return false;
+ std::lock_guard<std::recursive_mutex> guard(turnsMutex);
+ Unit* enemy=Select(ai);if(!enemy)return false;
+ bool changed=ai.me->GetVictim()!=enemy;
+ if(changed&&!ai.AttackStart(enemy))return false;
+ auto& turn=turns[ai.me->GetGUID()];
+ if(turn.rescue!=enemy->GetGUID()||int32(WorldTimer::getMSTime()-turn.until)>=0){turn.rescue=enemy->GetGUID();turn.until=WorldTimer::getMSTime()+4000;}
+ if(changed){turn.served[enemy->GetGUID()]=WorldTimer::getMSTime();
+  sLog.Out(LOG_BASIC,LOG_LVL_DEBUG,"[DungeonTank] tank=%u intercept=%u victim=%u",ai.me->GetGUIDLow(),enemy->GetGUIDLow(),enemy->GetVictim()?enemy->GetVictim()->GetGUIDLow():0);}
+ for(auto* spell:ai.m_spellListTaunt){
+  if(!spell||spell->IsAreaOfEffectSpell()||enemy->IsImmuneToSpell(spell,false))continue;
+  if(ai.CanTryToCastSpell(enemy,spell)&&ai.DoCastSpell(enemy,spell)==SPELL_CAST_OK){turns[ai.me->GetGUID()].served[enemy->GetGUID()]=WorldTimer::getMSTime();return true;}
+ }
+ // If autoattack hasn't entered combat yet, don't let the ordinary OOC
+ // drinking/follow/leader-assist loop replace the selected rescue target.
+ return !ai.me->IsInCombat();
+}
+}
+
 Unit* PartyBotAI::SelectAttackTarget(Player* pLeader) const
 {
+    if(Unit* tankTarget=DungeonTank::AssistTarget(*this))return tankTarget;
     if (IsInDuel())
     {
         if (me->m_duel->opponent && IsValidHostileTarget(me->m_duel->opponent))
@@ -386,6 +718,9 @@ Unit* PartyBotAI::SelectAttackTarget(Player* pLeader) const
         }
     }
 
+    // Small-dungeon tanks protect party targets before self attackers.
+    if(Unit* endangered=DungeonTank::Select(*this))return endangered;
+
     // Who is attacking me.
     for (const auto pAttacker : me->GetAttackers())
     {
@@ -413,7 +748,10 @@ Unit* PartyBotAI::SelectAttackTarget(Player* pLeader) const
 
 Unit* PartyBotAI::SelectPartyAttackTarget() const
 {
+    if(RaidCoordination::Enabled(me) && m_role==ROLE_TANK)return RaidCoordination::TankTarget(*this);
+    if(DungeonTank::Active(*this))return DungeonTank::Select(*this);
     Group* pGroup = me->GetGroup();
+    if(!pGroup)return nullptr;
     for (GroupReference* itr = pGroup->GetFirstMember(); itr != nullptr; itr = itr->next())
     {
         if (Player* pMember = itr->getSource())
@@ -434,32 +772,324 @@ Unit* PartyBotAI::SelectPartyAttackTarget() const
     return nullptr;
 }
 
+namespace {
+struct ResurrectionReservation
+{
+    ObjectGuid caster;
+    uint32 created;
+    uint32 castTime;
+    uint32 spellId;
+};
+std::map<uint64, ResurrectionReservation> resurrectionReservations;
+bool ReservedCorpse(Player* corpse)
+{
+    auto it = resurrectionReservations.find(corpse->GetGUID());
+    if (it == resurrectionReservations.end())
+        return false;
+    Player* caster = ObjectAccessor::FindPlayer(it->second.caster);
+    bool const valid = caster && caster->IsAlive() && caster->IsInWorld() &&
+        !caster->IsBeingTeleported() && corpse->GetGroup() && caster->GetGroup() == corpse->GetGroup() &&
+        caster->GetMap() == corpse->GetMap() && !caster->IsInCombat() && !corpse->IsAlive();
+    Spell* cast = valid ? caster->GetCurrentSpell(CURRENT_GENERIC_SPELL) : nullptr;
+    bool const casting = cast && cast->getState() != SPELL_STATE_FINISHED &&
+        cast->m_spellInfo->Id == it->second.spellId && cast->m_targets.getUnitTarget() == corpse;
+    if (!PartyBotRecoveryPolicy::KeepReservation(valid, casting, corpse->IsRessurectRequested(),
+            WorldTimer::getMSTime() - it->second.created, it->second.castTime))
+    {
+        resurrectionReservations.erase(it);
+        return false;
+    }
+    return true;
+}
+}
+
 Player* PartyBotAI::SelectResurrectionTarget() const
 {
-    if (IsInDuel())
+    if (IsInDuel() || !m_resurrectionSpell || me->GetClass() == CLASS_DRUID || !me->GetGroup())
         return nullptr;
-
-    Group* pGroup = me->GetGroup();
-    for (GroupReference* itr = pGroup->GetFirstMember(); itr != nullptr; itr = itr->next())
+    Player* best = nullptr;
+    unsigned bestPriority = 100;
+    float bestDistance = 0;
+    uint32 const now = WorldTimer::getMSTime();
+    for (GroupReference* itr = me->GetGroup()->GetFirstMember(); itr; itr = itr->next())
     {
-        if (Player* pMember = itr->getSource())
+        Player* p = itr->getSource();
+        if (!p || p == me || !p->IsInWorld() || p->IsBeingTeleported() || p->GetDeathState() != CORPSE ||
+            p->IsRessurectRequested() || !me->IsWithinDistInMap(p, PartyBotRecoveryPolicy::SearchDistance) || ReservedCorpse(p))
+            continue;
+        auto const failure = m_failedResurrectionTargets.find(p->GetGUID());
+        if (failure != m_failedResurrectionTargets.end() && PartyBotRecoveryPolicy::RetryBlocked(now, failure->second))
+            continue;
+        unsigned role = 0;
+        if (p->IsBot())
+            if (auto const* ai = dynamic_cast<PartyBotAI const*>(p->AI()))
+                if (ai->m_initialized)
+                    role = unsigned(ai->GetRole());
+        unsigned priority = RaidBotPlanner::ResurrectionPriority(p->IsBot(), role, p->GetClass());
+        priority = priority * 2 + (!p->IsBot() && p->GetObjectGuid() != m_leaderGuid ? 1 : 0);
+        float distance = me->GetDistance(p);
+        if (!best || priority < bestPriority || (priority == bestPriority &&
+            (distance < bestDistance || (distance == bestDistance && p->GetGUID() < best->GetGUID()))))
+        { best = p; bestPriority = priority; bestDistance = distance; }
+    }
+    return best;
+}
+
+void PartyBotAI::PrepareRecoveryCast(bool stopMoving)
+{
+    me->RemoveAurasDueToSpell(PB_SPELL_FOOD);
+    me->RemoveAurasDueToSpell(PB_SPELL_DRINK);
+    me->SetStandState(UNIT_STAND_STATE_STAND);
+    if (stopMoving)
+    {
+        me->StopMoving();
+        me->GetMotionMaster()->Clear(false, true);
+        me->GetMotionMaster()->MoveIdle();
+    }
+}
+
+bool PartyBotAI::TryEmergencyHeal()
+{
+    if (m_role != ROLE_HEALER || me->IsNonMeleeSpellCasted(false, false, true))
+        return false;
+    Unit* target = SelectHealTarget(25.0f, 25.0f);
+    if (!target || target->GetTypeId() != TYPEID_PLAYER)
+        return false;
+    // Check affordability/form before interrupting a drink. The native selector still chooses
+    // the efficient direct heal, without redirecting a critical player to a raid assignment.
+    for (SpellEntry const* spell : m_spellListDirectHeal)
+        if (CanTryToCastSpell(target, spell))
         {
-            // Can't resurrect self.
-            if (pMember == me)
-                continue;
+            PrepareRecoveryCast(true);
+            return HealInjuredTargetDirect(target);
+        }
+    return false;
+}
 
-            if (pMember->GetDeathState() != CORPSE)
-                continue;
+bool PartyBotAI::TryRecoveryDispel(Unit* target, SpellEntry const* spell)
+{
+    // Keep native control, power, cooldown and spell-specific shapeshift checks. Do not leave
+    // cat/bear/shadow form just to dispel, or cancel a cast already in progress.
+    if (me->IsNonMeleeSpellCasted(false, false, true) || !CanTryToCastSpell(target, spell))
+        return false;
+    PrepareRecoveryCast(spell->GetCastTime(me) > 0);
+    return DoCastSpell(target, spell) == SPELL_CAST_OK;
+}
 
-            if (!me->IsWithinLOSInMap(pMember))
-                continue;
-
-            if (m_resurrectionSpell->IsTargetInRange(me, pMember))
-                return pMember;
+namespace
+{
+bool SafeResurrectionApproach(Player* actor, Player* corpse, SpellEntry const* spell, float& x, float& y, float& z)
+{
+    SpellRangeEntry const* range = sSpellRangeStore.LookupEntry(spell->rangeIndex);
+    if (!range || Spells::GetSpellMaxRange(range) <= 2)
+        return false;
+    float const castRange = Spells::GetSpellMaxRange(range) - 2.0f;
+    PathFinder path(actor);
+    path.ExcludeSteepSlopes();
+    path.setPathLengthLimit(PartyBotRecoveryPolicy::MaxPathLength + 1);
+    if (!path.calculate(corpse->GetPositionX(), corpse->GetPositionY(), corpse->GetPositionZ()) ||
+        path.getPathType() != PATHFIND_NORMAL || path.Length() > PartyBotRecoveryPolicy::MaxPathLength)
+        return false;
+    // Stop at the first point on the route with range/LOS, not in the middle of the corpse pack.
+    bool found = false;
+    auto const& route = path.getPath();
+    for (size_t i = 1; i < route.size() && !found; ++i)
+    {
+        auto const from = route[i-1];
+        auto const to = route[i];
+        unsigned const samples = std::max(1u, unsigned(std::ceil((to-from).length() / 2.0f)));
+        for (unsigned n = 1; n <= samples; ++n)
+        {
+            auto const point = from + (to-from) * (float(n) / samples);
+            if (corpse->IsWithinDist3d(point.x, point.y, point.z, castRange) &&
+                corpse->IsWithinLOS(point.x, point.y, point.z))
+            { x = point.x; y = point.y; z = point.z; found = true; break; }
         }
     }
+    if (!found || !path.calculate(x, y, z) || path.getPathType() != PATHFIND_NORMAL ||
+        path.Length() > PartyBotRecoveryPolicy::MaxPathLength)
+        return false;
+    // Native aggro distance includes level difference, detection auras and server aggro rate.
+    // Reject conservatively even if a wall might hide the creature: a healer must not pull.
+    std::list<Unit*> enemies;
+    actor->GetEnemyListInRadiusAround(actor, PartyBotRecoveryPolicy::MaxPathLength + 100.0f, enemies);
+    auto const& points = path.getPath();
+    for (Unit* enemy : enemies)
+    {
+        if (!enemy || !enemy->IsAlive())
+            continue;
+        float const aggro = enemy->GetTypeId() == TYPEID_UNIT ?
+            static_cast<Creature*>(enemy)->GetAttackDistance(actor) : 40.0f;
+        float const radius = std::max(5.0f, aggro) + enemy->GetCombatReach() + actor->GetCombatReach() + 3.0f;
+        for (size_t i = 1; i < points.size(); ++i)
+            if (!PartyBotRecoveryPolicy::ClearSegment(
+                {points[i-1].x, points[i-1].y, points[i-1].z}, {points[i].x, points[i].y, points[i].z},
+                {enemy->GetPositionX(), enemy->GetPositionY(), enemy->GetPositionZ()}, radius))
+                return false;
+    }
+    return true;
+}
+}
 
-    return nullptr;
+namespace
+{
+bool SafeResurrectionMotion(Player* actor)
+{
+    if (!actor->movespline->Initialized() || actor->movespline->Finalized())
+        return true;
+    std::list<Unit*> enemies;
+    actor->GetEnemyListInRadiusAround(actor, PartyBotRecoveryPolicy::MaxPathLength + 100.0f, enemies);
+    auto from = actor->movespline->ComputePosition();
+    for (int32 i = actor->movespline->_currentSplineIdx() + 1; i <= int32(actor->movespline->CountSplinePoints()); ++i)
+    {
+        auto const to = actor->movespline->GetPoint(i);
+        for (Unit* enemy : enemies)
+        {
+            if (!enemy || !enemy->IsAlive()) continue;
+            float const aggro = enemy->GetTypeId() == TYPEID_UNIT ?
+                static_cast<Creature*>(enemy)->GetAttackDistance(actor) : 40.0f;
+            float const radius = std::max(5.0f, aggro) + enemy->GetCombatReach() + actor->GetCombatReach() + 3.0f;
+            if (!PartyBotRecoveryPolicy::ClearSegment({from.x, from.y, from.z}, {to.x, to.y, to.z},
+                {enemy->GetPositionX(), enemy->GetPositionY(), enemy->GetPositionZ()}, radius))
+                return false;
+        }
+        from.x = to.x; from.y = to.y; from.z = to.z;
+    }
+    return true;
+}
+}
+
+bool PartyBotAI::OwnsResurrectionApproach() const
+{
+    if (!me || m_resurrectionApproachTarget.IsEmpty()) return false;
+    auto const* point = dynamic_cast<PointMovementGenerator<Player> const*>(me->GetMotionMaster()->GetCurrent());
+    return point && point->GetId() == 0x5253;
+}
+
+void PartyBotAI::StopResurrectionApproach()
+{
+    // Pop only our own point. A new MC escape, fear, chase or player-issued point wins.
+    if (me && me->IsInWorld() && OwnsResurrectionApproach())
+    {
+        me->StopMoving();
+        me->GetMotionMaster()->MovementExpired(false);
+        me->GetMotionMaster()->MoveIdle();
+    }
+    m_resurrectionApproachTarget.Clear();
+}
+
+bool PartyBotAI::TryResurrectParty()
+{
+    if (!me || !me->IsInWorld() || me->IsBeingTeleported() || m_preventCasting || !me->IsAlive() || me->IsInCombat() || me->InBattleGround() || IsInDuel() ||
+        me->GetClass() == CLASS_DRUID || !me->GetGroup() || !m_resurrectionSpell ||
+        me->IsNonMeleeSpellCasted(false, false, true))
+    {
+        StopResurrectionApproach();
+        return false;
+    }
+    if (!m_resurrectionApproachTarget.IsEmpty() && !OwnsResurrectionApproach())
+    {
+        StopResurrectionApproach(); // metadata only; never cancel a replacement movement
+        return false;
+    }
+    if (OwnsResurrectionApproach() && !SafeResurrectionMotion(me))
+    {
+        m_failedResurrectionTargets[m_resurrectionApproachTarget.GetRawValue()] = WorldTimer::getMSTime();
+        StopResurrectionApproach();
+        return false;
+    }
+    auto const motion = me->GetMotionMaster()->GetCurrentMovementGeneratorType();
+    if (!OwnsResurrectionApproach() && motion != IDLE_MOTION_TYPE && motion != FOLLOW_MOTION_TYPE)
+        return false;
+    for (GroupReference* itr = me->GetGroup()->GetFirstMember(); itr; itr = itr->next())
+        if (Player* p = itr->getSource())
+            if (p->GetMap() == me->GetMap() && (p->IsInCombat() || (p->GetPet() && p->GetPet()->IsInCombat())))
+            {
+                StopResurrectionApproach();
+                return false;
+            }
+    for (auto it = resurrectionReservations.begin(); it != resurrectionReservations.end();)
+    {
+        auto current = it++;
+        Player* p = ObjectAccessor::FindPlayer(ObjectGuid(current->first));
+        if (!p)
+            resurrectionReservations.erase(current);
+        else
+            ReservedCorpse(p); // removes interrupted, completed and invalid-context casts now
+    }
+    uint32 const recoveryNow = WorldTimer::getMSTime();
+    for (auto it = m_failedResurrectionTargets.begin(); it != m_failedResurrectionTargets.end();)
+        if (!PartyBotRecoveryPolicy::RetryBlocked(recoveryNow, it->second))
+            it = m_failedResurrectionTargets.erase(it);
+        else
+            ++it;
+    Player* target = SelectResurrectionTarget();
+    if (!target)
+    {
+        StopResurrectionApproach();
+        return false;
+    }
+    Powers const powerType = Powers(m_resurrectionSpell->powerType);
+    bool const healthCost = powerType == POWER_HEALTH;
+    uint32 const available = healthCost ? me->GetHealth() : me->GetPower(powerType);
+    if (!PartyBotRecoveryPolicy::CanAfford(available, Spell::CalculatePowerCost(m_resurrectionSpell, me), healthCost) ||
+        !me->IsSpellReady(m_resurrectionSpell) || me->HasGCD(m_resurrectionSpell))
+    {
+        StopResurrectionApproach();
+        return false; // continue drinking only until one resurrection is affordable
+    }
+
+    if (!m_resurrectionSpell->IsTargetInRange(me, target) || !me->IsWithinLOSInMap(target))
+    {
+        uint32 const now = WorldTimer::getMSTime();
+        bool const changed = m_resurrectionApproachTarget != target->GetObjectGuid();
+        if (changed)
+        {
+            m_resurrectionApproachTarget = target->GetObjectGuid();
+            m_resurrectionApproachStarted = now;
+        }
+        if (PartyBotRecoveryPolicy::ApproachExpired(now, m_resurrectionApproachStarted))
+        {
+            m_failedResurrectionTargets[target->GetGUID()] = now;
+            StopResurrectionApproach();
+            return true; // next update can choose another corpse
+        }
+        float x = 0, y = 0, z = 0;
+        if (!SafeResurrectionApproach(me, target, m_resurrectionSpell, x, y, z))
+        {
+            m_failedResurrectionTargets[target->GetGUID()] = now;
+            StopResurrectionApproach();
+            return false;
+        }
+        if (changed || me->IsStopped() || me->GetMotionMaster()->GetCurrentMovementGeneratorType() != POINT_MOTION_TYPE)
+        {
+            PrepareRecoveryCast(false);
+            me->GetMotionMaster()->MovePoint(0x5253, x, y, z,
+                MOVE_PATHFINDING | MOVE_RUN_MODE | MOVE_EXCLUDE_STEEP_SLOPES);
+            // Validate what MovePoint actually issued, not just the earlier candidate route.
+            if (!SafeResurrectionMotion(me))
+            {
+                m_failedResurrectionTargets[target->GetGUID()] = now;
+                StopResurrectionApproach();
+                return false;
+            }
+        }
+        return true;
+    }
+    if (!CanTryToCastSpell(target, m_resurrectionSpell))
+    {
+        StopResurrectionApproach();
+        return false;
+    }
+    StopResurrectionApproach();
+    PrepareRecoveryCast(true);
+    m_resurrectionApproachTarget.Clear();
+    resurrectionReservations[target->GetGUID()] = {me->GetObjectGuid(), WorldTimer::getMSTime(),
+        m_resurrectionSpell->GetCastTime(me), m_resurrectionSpell->Id};
+    if (DoCastSpell(target, m_resurrectionSpell) == SPELL_CAST_OK)
+        return true;
+    resurrectionReservations.erase(target->GetGUID());
+    return false;
 }
 
 Player* PartyBotAI::SelectShieldTarget() const
@@ -468,6 +1098,7 @@ Player* PartyBotAI::SelectShieldTarget() const
         return nullptr;
 
     Group* pGroup = me->GetGroup();
+    if(!pGroup)return nullptr;
     for (GroupReference* itr = pGroup->GetFirstMember(); itr != nullptr; itr = itr->next())
     {
         if (Player* pMember = itr->getSource())
@@ -543,6 +1174,7 @@ void PartyBotAI::AddToPlayerGroup()
 
 void PartyBotAI::OnPacketReceived(WorldPacket const* packet)
 {
+    if(PartyBotServices::Packet(*this,*packet))return;
     //printf("Bot received %s\n", LookupOpcodeName(packet->GetOpcode()));
     switch (packet->GetOpcode())
     {
@@ -587,7 +1219,7 @@ void PartyBotAI::OnPacketReceived(WorldPacket const* packet)
                     }
                 }
             }
-            
+
             return;
         }
     }
@@ -603,6 +1235,9 @@ void PartyBotAI::OnPlayerLogin()
 
 void PartyBotAI::UpdateAI(uint32 const diff)
 {
+    // Removal is a registry request, including not-yet-initialized avatars.
+    // Do not configure/join a group after an owner cancelled a pending bot.
+    if (botEntry && botEntry->requestRemoval) { StopResurrectionApproach(); return; }
     m_updateTimer.Update(diff);
     if (m_updateTimer.Passed())
         m_updateTimer.Reset(PB_UPDATE_INTERVAL);
@@ -610,7 +1245,7 @@ void PartyBotAI::UpdateAI(uint32 const diff)
         return;
 
     if (!me->IsInWorld() || me->IsBeingTeleported())
-        return;
+    { StopResurrectionApproach(); return; }
 
     if (!m_initialized)
     {
@@ -629,6 +1264,19 @@ void PartyBotAI::UpdateAI(uint32 const diff)
             {
                 CloneFromPlayer(sObjectAccessor.FindPlayer(m_cloneGuid));
                 AutoAssignRole();
+            }
+            else if (m_presetSpecId)
+            {
+                std::string result;
+                if (!PartyPreset::Initialize(*this, result))
+                {
+                    if (Player* owner = ObjectAccessor::FindPlayer(m_leaderGuid))
+                        ChatHandler(owner).SendSysMessage(("GMUI|ERROR|Preset companion initialization failed: " + result).substr(0,230).c_str());
+                    botEntry->requestRemoval = true;
+                    return;
+                }
+                if (Player* owner = ObjectAccessor::FindPlayer(m_leaderGuid))
+                    ChatHandler(owner).SendSysMessage(("GMUI|OK|Party companion ready: " + result).substr(0,230).c_str());
             }
             else
             {
@@ -660,9 +1308,13 @@ void PartyBotAI::UpdateAI(uint32 const diff)
             me->TeleportTo(m_mapId, m_x, m_y, m_z, m_o);
         }
 
+        PartyBotServices::Initialize(*this);
         ResetSpellData();
         PopulateSpellData();
         AddAllSpellReagents();
+        // A ready check must not require the first failed ranged attack to
+        // initialize ammo. Only newly generated quick-raid companions use this.
+        if(m_quickRaid && m_race && m_class && me->GetClass()==CLASS_HUNTER)AddHunterAmmo();
         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_SPAWNING);
         SummonPetIfNeeded();
         me->SetHealthPercent(100.0f);
@@ -673,6 +1325,7 @@ void PartyBotAI::UpdateAI(uint32 const diff)
         me->UpdateZone(newzone, newarea);
 
         m_initialized = true;
+        if(m_quickRaid)PartyPreset::ArrangeRaid(GetPartyLeader());
         return;
     }
 
@@ -686,16 +1339,20 @@ void PartyBotAI::UpdateAI(uint32 const diff)
     Player* pLeader = GetPartyLeader();
     if (!pLeader)
     {
+        StopResurrectionApproach();
         botEntry->requestRemoval = true;
         return;
     }
 
     if (!pLeader->IsInWorld())
-        return;
+    { StopResurrectionApproach(); return; }
+
+    if(m_quickRaid)PartyPreset::ArrangeRaid(pLeader);
 
     if (pLeader->InBattleGround() &&
         !me->InBattleGround())
     {
+        StopResurrectionApproach();
         if (m_receivedBgInvite)
         {
             SendBattlefieldPortPacket();
@@ -704,11 +1361,13 @@ void PartyBotAI::UpdateAI(uint32 const diff)
         }
 
         // Remain idle until we can join battleground.
+        StopResurrectionApproach();
         return;
     }
 
     if (pLeader->IsTaxiFlying())
     {
+        StopResurrectionApproach();
         if (me->GetMotionMaster()->GetCurrentMovementGeneratorType())
         {
             me->GetMotionMaster()->Clear(false, true);
@@ -724,12 +1383,14 @@ void PartyBotAI::UpdateAI(uint32 const diff)
 
     if (me->HasUnitState(UNIT_STATE_CAN_NOT_REACT_OR_LOST_CONTROL))
     {
+        StopResurrectionApproach();
         BreakCrowdControlEffects();
         return;
     }
 
     if (me->IsDead())
     {
+        StopResurrectionApproach();
         if (me->InBattleGround())
         {
             if (me->GetDeathState() == CORPSE)
@@ -744,13 +1405,53 @@ void PartyBotAI::UpdateAI(uint32 const diff)
             {
                 me->ResurrectPlayer(0.5f);
                 me->SpawnCorpseBones();
-                me->CastSpell(me, PB_SPELL_HONORLESS_TARGET, true);
+                CastPartySpell(me, PB_SPELL_HONORLESS_TARGET, true);
             }
         }
 
         return;
     }
 
+    bool recoveryBlocked = me->IsInCombat() || !me->GetGroup() || m_preventCasting;
+    if (Group* group = me->GetGroup())
+        for (GroupReference* it = group->GetFirstMember(); it; it = it->next())
+            if (Player* member = it->getSource())
+                if (member->GetMap() == me->GetMap() && (member->IsInCombat() ||
+                    (member->GetPet() && member->GetPet()->IsInCombat())))
+                    recoveryBlocked = true;
+    if (recoveryBlocked) StopResurrectionApproach();
+    if(RaidCoordination::UpdatePull(*this))return;
+    if(McBotTactics::Update(*this))return;
+    if(RaidCoordination::Enabled(me))
+        for(auto slot:{CURRENT_GENERIC_SPELL,CURRENT_CHANNELED_SPELL,CURRENT_AUTOREPEAT_SPELL})
+            if(Spell* current=me->GetCurrentSpell(slot))
+                if(BotDamagePolicy::IsDamage(current->m_spellInfo))
+                {
+                    Unit* target=current->m_targets.getUnitTarget();
+                    if(!target)target=me->GetVictim();
+                    bool areaAllowed=true;
+                    if(current->m_spellInfo->IsAreaOfEffectSpell())
+                    {
+                        if(current->m_targets.m_targetMask & TARGET_FLAG_DEST_LOCATION)
+                        {
+                            float x,y,z;current->m_targets.getDestination(x,y,z);
+                            areaAllowed=RaidCoordination::AllowAreaDamage(*this,current->m_spellInfo,x,y,z);
+                        }
+                        else if(!target)areaAllowed=false;
+                    }
+                    if(!areaAllowed || !McBotTactics::AllowSpell(*this,target,current->m_spellInfo) ||
+                       !RaidCoordination::AllowDamage(*this,target,current->m_spellInfo))
+                        me->InterruptSpell(slot,true);
+                }
+    if(me->GetVictim() && !RaidCoordination::AllowDamage(*this,me->GetVictim(),nullptr)){
+        me->AttackStop();
+        if(Pet* pet=me->GetPet()){pet->AttackStop();pet->GetMotionMaster()->MoveFollow(me,2.0f,0.0f);}
+    }
+    if(me->GetTradeData())m_isBuffing=false;
+    if(DungeonTank::GuardAoe(*this))return;
+    if(PartyBotServices::Update(*this))return;
+
+    if (me->GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL)&&PartyBotFormation::Update(*this))return;
     if (me->GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL))
     {
         // Stop auto shot if no target.
@@ -789,8 +1490,15 @@ void PartyBotAI::UpdateAI(uint32 const diff)
     if (me->GetTargetGuid() == me->GetObjectGuid())
         me->ClearTarget();
 
+    if (DungeonTank::MassTaunt(*this))return;
+    if (DungeonTank::Protect(*this))return;
+    if (DungeonTank::Assist(*this))return;
+
     if (!me->IsInCombat())
     {
+        if (TryEmergencyHeal()) return;
+        if (TryResurrectParty()) return;
+        if (CheckForDispelTargets()) return;
         if (DrinkAndEat())
         {
             if (!me->IsWithinDistInMap(pLeader, 100.0f))
@@ -835,6 +1543,8 @@ void PartyBotAI::UpdateAI(uint32 const diff)
             return;
     }
 
+    if(DungeonLoot::Update(*this,pLeader))return;
+
     Unit* pVictim = me->GetVictim();
 
     if (GetRole() != ROLE_HEALER)
@@ -857,7 +1567,10 @@ void PartyBotAI::UpdateAI(uint32 const diff)
         // Mount if leader is mounted and we don't have a target.
         if (pLeader->IsMounted() && !me->GetVictim())
         {
-            if (!me->IsMounted())
+            uint32 ownMount=BotMountPolicy::Select(me->GetGUIDLow(),me->GetRace(),me->GetClass(),me->GetLevel());
+            if(me->IsMounted())for(auto* aura:me->GetAurasByType(SPELL_AURA_MOUNTED))
+                if(!BotMountPolicy::Allows(aura->GetId(),me->GetRace(),me->GetClass(),me->GetLevel())){me->RemoveSpellsCausingAura(SPELL_AURA_MOUNTED);break;}
+            if (!me->IsMounted() && ownMount)
             {
                 // Leave shapeshift before mounting.
                 if (me->IsInDisallowedMountForm() &&
@@ -865,14 +1578,14 @@ void PartyBotAI::UpdateAI(uint32 const diff)
                     me->HasAuraType(SPELL_AURA_MOD_SHAPESHIFT))
                     me->RemoveSpellsCausingAura(SPELL_AURA_MOD_SHAPESHIFT);
 
-                auto auraList = pLeader->GetAurasByType(SPELL_AURA_MOUNTED);
-                if (!auraList.empty())
+                // Copy the leader's mounted state, never their class/race spell.
+                if (sSpellMgr.GetSpellEntry(ownMount))
                 {
                     bool oldStateCastTime = me->HasCheatOption(PLAYER_CHEAT_NO_CAST_TIME);
                     bool oldStatePower = me->HasCheatOption(PLAYER_CHEAT_NO_POWER);
                     me->SetCheatOption(PLAYER_CHEAT_NO_CAST_TIME, true);
                     me->SetCheatOption(PLAYER_CHEAT_NO_POWER, true);
-                    me->CastSpell(me, (*auraList.begin())->GetId(), true);
+                    CastPartySpell(me, ownMount, true);
                     me->SetCheatOption(PLAYER_CHEAT_NO_CAST_TIME, oldStateCastTime);
                     me->SetCheatOption(PLAYER_CHEAT_NO_POWER, oldStatePower);
                 }
@@ -882,7 +1595,12 @@ void PartyBotAI::UpdateAI(uint32 const diff)
             me->RemoveSpellsCausingAura(SPELL_AURA_MOUNTED);
     }
 
-    if (!me->IsMoving())
+    if (me->IsInCombat()) {
+        if (TryEmergencyHeal()) return;
+        if (CheckForDispelTargets()) return;
+    }
+    if (PartyBotFormation::Update(*this)) return;
+    if (!me->IsMoving()&&!PartyBotFormation::Holding(*this))
     {
         if (!pVictim)
         {
@@ -914,13 +1632,10 @@ void PartyBotAI::UpdateAI(uint32 const diff)
 
 void PartyBotAI::UpdateOutOfCombatAI()
 {
+    if (TryEmergencyHeal()) return;
     if (!IsInDuel())
     {
-        if (m_resurrectionSpell)
-            if (Player* pTarget = SelectResurrectionTarget())
-                if (CanTryToCastSpell(pTarget, m_resurrectionSpell))
-                    if (DoCastSpell(pTarget, m_resurrectionSpell) == SPELL_CAST_OK)
-                        return;
+        if(TryResurrectParty())return;
 
         if (m_role != ROLE_TANK && me->GetVictim() && CrowdControlMarkedTargets())
             return;
@@ -963,14 +1678,21 @@ void PartyBotAI::UpdateOutOfCombatAI()
 
 void PartyBotAI::UpdateInCombatAI()
 {
+    if (TryEmergencyHeal()) return;
+    if(RaidCoordination::TryMassTaunt(*this))return;
     if (!IsInDuel())
     {
         if (m_role == ROLE_TANK)
         {
             Unit* pVictim = me->GetVictim();
+            if(RaidCoordination::Enabled(me)){
+                Unit* assigned=RaidCoordination::TankTarget(*this);
+                if(pVictim && RaidCoordination::AssignedTank(me,pVictim)!=me){me->AttackStop();pVictim=nullptr;}
+                if(assigned && assigned!=pVictim){AttackStart(assigned);pVictim=me->GetVictim();}
+            }
 
             // Defend party members.
-            if (!pVictim || pVictim->GetVictim() == me)
+            if (!DungeonTank::Active(*this) && (!pVictim || pVictim->GetVictim() == me))
             {
                 if (pVictim = SelectPartyAttackTarget())
                 {
@@ -980,10 +1702,13 @@ void PartyBotAI::UpdateInCombatAI()
             }
 
             // Taunt target if its attacking someone else.
-            if (pVictim && pVictim->GetVictim() != me)
+            if (!DungeonTank::Active(*this) && pVictim && pVictim->GetVictim() != me)
             {
                 for (const auto& pSpellEntry : m_spellListTaunt)
                 {
+                    // Coordinated area taunts are reserved by TryMassTaunt;
+                    // do not bypass that policy through the single-target loop.
+                    if(RaidCoordination::Enabled(me) && pSpellEntry->IsAreaOfEffectSpell())continue;
                     if (CanTryToCastSpell(pVictim, pSpellEntry))
                     {
                         if (DoCastSpell(pVictim, pSpellEntry) == SPELL_CAST_OK)
@@ -998,6 +1723,8 @@ void PartyBotAI::UpdateInCombatAI()
 
     if (CheckForDispelTargets())
         return;
+
+    if(DungeonTank::TryAoe(*this))return;
 
     switch (me->GetClass())
     {
@@ -1036,8 +1763,8 @@ void PartyBotAI::UpdateInCombatAI()
 
 bool PartyBotAI::CheckForDispelTargets()
 {
-    if (me->GetShapeshiftForm() != FORM_NONE)
-        return false;
+    // Spell-specific native form restrictions decide; Shadowform can dispel magic, while
+    // a feral tank must not leave its form just to cast an illegal dispel.
 
     switch (me->GetClass())
     {
@@ -1049,7 +1776,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, m_spells.paladin.pCleanse))
                     {
-                        if (DoCastSpell(pFriend, m_spells.paladin.pCleanse) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, m_spells.paladin.pCleanse))
                             return true;
                     }
                 }
@@ -1064,7 +1791,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, m_spells.shaman.pCureDisease))
                     {
-                        if (DoCastSpell(pFriend, m_spells.shaman.pCureDisease) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, m_spells.shaman.pCureDisease))
                             return true;
                     }
                 }
@@ -1076,7 +1803,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, m_spells.shaman.pCurePoison))
                     {
-                        if (DoCastSpell(pFriend, m_spells.shaman.pCurePoison) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, m_spells.shaman.pCurePoison))
                             return true;
                     }
                 }
@@ -1091,7 +1818,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, m_spells.mage.pRemoveLesserCurse))
                     {
-                        if (DoCastSpell(pFriend, m_spells.mage.pRemoveLesserCurse) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, m_spells.mage.pRemoveLesserCurse))
                             return true;
                     }
                 }
@@ -1106,7 +1833,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, m_spells.priest.pDispelMagic))
                     {
-                        if (DoCastSpell(pFriend, m_spells.priest.pDispelMagic) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, m_spells.priest.pDispelMagic))
                             return true;
                     }
                 }
@@ -1117,7 +1844,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, m_spells.priest.pAbolishDisease))
                     {
-                        if (DoCastSpell(pFriend, m_spells.priest.pAbolishDisease) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, m_spells.priest.pAbolishDisease))
                             return true;
                     }
                 }
@@ -1136,7 +1863,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, pDispelSpell))
                     {
-                        if (DoCastSpell(pFriend, pDispelSpell) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, pDispelSpell))
                             return true;
                     }
                 }
@@ -1148,7 +1875,7 @@ bool PartyBotAI::CheckForDispelTargets()
                 {
                     if (CanTryToCastSpell(pFriend, m_spells.druid.pRemoveCurse))
                     {
-                        if (DoCastSpell(pFriend, m_spells.druid.pRemoveCurse) == SPELL_CAST_OK)
+                        if (TryRecoveryDispel(pFriend, m_spells.druid.pRemoveCurse))
                             return true;
                     }
                 }
@@ -1160,8 +1887,56 @@ bool PartyBotAI::CheckForDispelTargets()
     return false;
 }
 
+namespace {
+SpellEntry const* KnownSupport(Player* player,char const* name) {
+    SpellEntry const* best=nullptr;
+    for(auto const& known:player->GetSpellMap()){
+        if(known.second.state==PLAYERSPELL_REMOVED || known.second.disabled)continue;
+        SpellEntry const* spell=sSpellMgr.GetSpellEntry(known.first);
+        if(spell && spell->SpellName[0]==name && (!best || spell->spellLevel>best->spellLevel))best=spell;
+    }
+    return best;
+}
+}
+void PartyBotAI::ConfigureRaidSupport() {
+    if(!m_quickRaid || !me->GetGroup())return;
+    bool melee=false,tank=false;
+    for(GroupReference* itr=me->GetGroup()->GetFirstMember();itr;itr=itr->next())if(Player* p=itr->getSource())if(p->GetSubGroup()==me->GetSubGroup()){
+        unsigned role=PartyPreset::PreferredRole(p);tank=tank||role==ROLE_TANK;melee=melee||role==ROLE_TANK||role==ROLE_MELEE_DPS||p->GetClass()==CLASS_ROGUE||p->GetClass()==CLASS_WARRIOR;
+    }
+    if(me->GetClass()==CLASS_PALADIN){if(auto spell=KnownSupport(me,tank?"Devotion Aura":"Concentration Aura"))m_spells.paladin.pAura=spell;}
+    if(me->GetClass()==CLASS_SHAMAN){
+        m_spells.shaman.pAirTotem=KnownSupport(me,melee?"Windfury Totem":"Tranquil Air Totem");
+        m_spells.shaman.pEarthTotem=KnownSupport(me,melee?"Strength of Earth Totem":"Stoneskin Totem");
+        m_spells.shaman.pWaterTotem=KnownSupport(me,"Mana Spring Totem");
+        // Never let a randomly selected offensive fire totem pull idle mobs.
+        m_spells.shaman.pFireTotem=nullptr;
+    }
+}
+bool PartyBotAI::BuffRaidBlessings() {
+    if(!m_quickRaid || me->GetClass()!=CLASS_PALADIN || !me->GetGroup())return false;
+    std::vector<PartyBotAI const*> paladins;
+    for(auto const* ai:sPlayerBotMgr.GetOwnedPartyBots(m_leaderGuid))if(ai->m_initialized && ai->me && ai->me->GetGroup()==me->GetGroup() && ai->me->GetClass()==CLASS_PALADIN && ai->me->IsAlive())paladins.push_back(ai);
+    std::sort(paladins.begin(),paladins.end(),[](PartyBotAI const* a,PartyBotAI const* b){return a->me->GetGUID()<b->me->GetGUID();});
+    unsigned index=0;for(;index<paladins.size()&&paladins[index]!=this;++index){}
+    for(GroupReference* itr=me->GetGroup()->GetFirstMember();itr;itr=itr->next())if(Player* target=itr->getSource()){
+        if(!target->IsAlive() || target->GetMap()!=me->GetMap() || !me->IsWithinLOSInMap(target))continue;
+        unsigned role=PartyPreset::PreferredRole(target);char const* name=nullptr;
+        switch(index%4){
+            case 0:name="Blessing of Kings";break;
+            case 1:if(role!=ROLE_TANK)name="Blessing of Salvation";break;
+            case 2:name=(role==ROLE_HEALER || target->GetClass()==CLASS_MAGE || target->GetClass()==CLASS_WARLOCK || target->GetClass()==CLASS_PRIEST)?"Blessing of Wisdom":"Blessing of Might";break;
+            case 3:name="Blessing of Light";break;
+        }
+        if(!name)continue;
+        SpellEntry const* spell=KnownSupport(me,name);
+        if(spell && !target->HasAura(spell->Id) && CanTryToCastSpell(target,spell) && DoCastSpell(target,spell)==SPELL_CAST_OK){m_isBuffing=true;return true;}
+    }
+    m_isBuffing=false;return false;
+}
 void PartyBotAI::UpdateOutOfCombatAI_Paladin()
 {
+    ConfigureRaidSupport();
     if (m_spells.paladin.pAura &&
         CanTryToCastSpell(me, m_spells.paladin.pAura))
     {
@@ -1177,7 +1952,8 @@ void PartyBotAI::UpdateOutOfCombatAI_Paladin()
             return;
     }
 
-    if (m_spells.paladin.pBlessingBuff)
+    if(m_quickRaid && BuffRaidBlessings())return;
+    if (!m_quickRaid && m_spells.paladin.pBlessingBuff)
     {
         if (Player* pTarget = SelectBuffTarget(m_spells.paladin.pBlessingBuff))
         {
@@ -1301,7 +2077,7 @@ void PartyBotAI::UpdateInCombatAI_Paladin()
             m_spells.paladin.pSeal &&
             CanTryToCastSpell(me, m_spells.paladin.pSeal))
         {
-            me->CastSpell(me, m_spells.paladin.pSeal, false);
+            CastPartySpell(me, m_spells.paladin.pSeal, false);
         }
 
         if (Unit* pVictim = me->GetVictim())
@@ -1388,6 +2164,7 @@ void PartyBotAI::UpdateInCombatAI_Paladin()
 
 void PartyBotAI::UpdateOutOfCombatAI_Shaman()
 {
+    ConfigureRaidSupport();
     if (m_spells.shaman.pWeaponBuff &&
         CanTryToCastSpell(me, m_spells.shaman.pWeaponBuff))
     {
@@ -1417,6 +2194,8 @@ void PartyBotAI::UpdateOutOfCombatAI_Shaman()
 
 void PartyBotAI::UpdateInCombatAI_Shaman()
 {
+    ConfigureRaidSupport();
+    if(m_quickRaid && SummonShamanTotems())return;
     if (m_spells.shaman.pManaTideTotem &&
        (me->GetPowerPercent(POWER_MANA) < 50.0f) &&
         CanTryToCastSpell(me, m_spells.shaman.pManaTideTotem))
@@ -1551,7 +2330,7 @@ void PartyBotAI::UpdateInCombatAI_Hunter()
         }
 
         if (m_spells.hunter.pVolley &&
-           (me->GetEnemyCountInRadiusAround(pVictim, 10.0f) > 2) &&
+           ((RaidCoordination::Enabled(me) && me->GetMapId()==409) ? McBotTactics::WantsAoe(*this,pVictim) : me->GetEnemyCountInRadiusAround(pVictim,10.0f)>2) &&
             CanTryToCastSpell(pVictim, m_spells.hunter.pVolley))
         {
             if (DoCastSpell(pVictim, m_spells.hunter.pVolley) == SPELL_CAST_OK)
@@ -1563,7 +2342,7 @@ void PartyBotAI::UpdateInCombatAI_Hunter()
             (me->GetCombatDistance(pVictim) > 8.0f) &&
             !me->IsNonMeleeSpellCasted())
         {
-            switch (me->CastSpell(pVictim, PB_SPELL_AUTO_SHOT, false))
+            switch (CastPartySpell(pVictim, PB_SPELL_AUTO_SHOT, false))
             {
                 case SPELL_FAILED_NEED_AMMO:
                 case SPELL_FAILED_NO_AMMO:
@@ -1850,7 +2629,7 @@ void PartyBotAI::UpdateInCombatAI_Mage()
         }
 
         if (m_spells.mage.pBlizzard &&
-           (me->GetEnemyCountInRadiusAround(pVictim, 10.0f) > 2) &&
+           ((RaidCoordination::Enabled(me) && me->GetMapId()==409) ? McBotTactics::WantsAoe(*this,pVictim) : me->GetEnemyCountInRadiusAround(pVictim,10.0f)>2) &&
             CanTryToCastSpell(pVictim, m_spells.mage.pBlizzard))
         {
             if (DoCastSpell(pVictim, m_spells.mage.pBlizzard) == SPELL_CAST_OK)
@@ -1929,7 +2708,7 @@ void PartyBotAI::UpdateInCombatAI_Mage()
            !me->IsMoving() &&
            (me->GetPowerPercent(POWER_MANA) < 5.0f) &&
            !me->GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL))
-            me->CastSpell(pVictim, PB_SPELL_SHOOT_WAND, false);
+            CastPartySpell(pVictim, PB_SPELL_SHOOT_WAND, false);
     }
 }
 
@@ -2165,7 +2944,7 @@ void PartyBotAI::UpdateInCombatAI_Priest()
            !me->IsMoving() &&
            (me->GetPowerPercent(POWER_MANA) < 10.0f) &&
            !me->GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL))
-            me->CastSpell(pVictim, PB_SPELL_SHOOT_WAND, false);
+            CastPartySpell(pVictim, PB_SPELL_SHOOT_WAND, false);
     }
 }
 
@@ -2369,7 +3148,7 @@ void PartyBotAI::UpdateInCombatAI_Warlock()
            !me->IsMoving() &&
            (me->GetPowerPercent(POWER_MANA) < 5.0f) &&
            !me->GetCurrentSpell(CURRENT_AUTOREPEAT_SPELL))
-            me->CastSpell(pVictim, PB_SPELL_SHOOT_WAND, false);
+            CastPartySpell(pVictim, PB_SPELL_SHOOT_WAND, false);
     }
 }
 
@@ -2408,6 +3187,76 @@ void PartyBotAI::UpdateOutOfCombatAI_Warrior()
 
 void PartyBotAI::UpdateInCombatAI_Warrior()
 {
+    // PvE tanks never fall through into the shared DPS/PvP stance dance.
+    if(m_role==ROLE_TANK && me->GetGroup() && me->GetMap()->IsDungeon() && !me->InBattleGround() && !IsInDuel()){
+        auto cast=[&](Unit* target,SpellEntry const* spell){return spell&&CanTryToCastSpell(target,spell)&&DoCastSpell(target,spell)==SPELL_CAST_OK;};
+        if(me->GetShapeshiftForm()!=FORM_DEFENSIVESTANCE){cast(me,m_spells.warrior.pDefensiveStance);return;}
+        Unit* target=me->GetVictim();if(!target)return;
+        if(me->GetHealthPercent()<20 && cast(me,m_spells.warrior.pLastStand))return;
+        if(me->GetHealthPercent()<40 && IsWearingShield(me) && cast(me,m_spells.warrior.pShieldWall))return;
+        if(target->IsNonMeleeSpellCasted(false,false,true)&&IsWearingShield(me)&&cast(target,m_spells.warrior.pShieldBash))return;
+        // Build threat on the weakest held target, without stealing an assigned tank's mob.
+        {
+        std::lock_guard<std::recursive_mutex> tankGuard(DungeonTank::turnsMutex);
+        auto& tankTurn=DungeonTank::turns[me->GetGUID()];
+        uint32 tankNow=WorldTimer::getMSTime();
+        if((DungeonTank::Active(*this)||RaidCoordination::Enabled(me))&&target->GetVictim()==me&&(!tankTurn.rotated||uint32(tankNow-tankTurn.rotated)>=2000)){
+            std::list<Unit*> enemies;me->GetEnemyListInRadiusAround(me,8,enemies);
+            Unit* weakest=nullptr;float margin=1.3f;
+            for(Unit* e:enemies){
+                if(!e||e->GetTypeId()!=TYPEID_UNIT||e->GetCharmerOrOwnerPlayerOrPlayerItself()||!e->IsAlive()||!e->IsInCombat()||e->GetVictim()!=me||!e->CanHaveThreatList()||!IsValidHostileTarget(e)||e->HasBreakableByDamageCrowdControlAura()||!me->CanReachWithMeleeAutoAttack(e)||!me->IsWithinLOSInMap(e))continue;
+
+                bool cc=false;for(auto mark:m_marksToCC)if(e->GetObjectGuid()==me->GetGroup()->GetTargetWithIcon(mark))cc=true;
+                WarriorTankPolicy::Candidate candidate{e->GetTypeId()==TYPEID_UNIT&&!e->GetCharmerOrOwnerPlayerOrPlayerItself(),e->IsAlive(),e->IsInCombat(),e->GetVictim()==me,e->CanHaveThreatList(),IsValidHostileTarget(e),cc||e->HasBreakableByDamageCrowdControlAura(),me->CanReachWithMeleeAutoAttack(e)&&me->IsWithinLOSInMap(e),!RaidCoordination::Enabled(me)||RaidCoordination::AssignedTank(me,e)==me};
+                if(!WarriorTankPolicy::Eligible(candidate))continue;
+                float competitor=0;for(GroupReference* ref=me->GetGroup()->GetFirstMember();ref;ref=ref->next())if(Player* member=ref->getSource())if(member!=me&&member->IsInWorld()&&member->GetMap()==me->GetMap()){
+                    competitor=std::max(competitor,e->GetThreatManager().getThreat(member));
+                    if(Unit* pet=member->GetPet())competitor=std::max(competitor,e->GetThreatManager().getThreat(pet));
+                }
+                float mine=e->GetThreatManager().getThreat(me),score=WarriorTankPolicy::Margin(mine,competitor);
+                if(WarriorTankPolicy::Rotate(mine,competitor)&&score<margin){weakest=e;margin=score;}
+            }
+            if(weakest&&weakest!=target&&AttackStart(weakest)){tankTurn.rotated=tankNow;target=me->GetVictim();if(!target)return;}
+        }
+        }
+        if(IsWearingShield(me)&&WarriorTankPolicy::ShieldBlock(me->GetHealthPercent(),me->GetAttackers().size(),me->GetPower(POWER_RAGE))&&cast(me,m_spells.warrior.pShieldBlock))return;
+        if(cast(target,m_spells.warrior.pRevenge))return;
+        if(IsWearingShield(me)&&cast(target,m_spells.warrior.pShieldSlam))return;
+        // CanTryToCastSpell rejects any existing aura; Sunder must instead stack/refresh.
+        if(auto* spell=m_spells.warrior.pSunderArmor){
+            auto* aura=target->GetSpellAuraHolder(spell->Id);
+            bool needed=!aura||WarriorTankPolicy::MaintainSunder(aura->GetStackAmount(),aura->GetAuraDuration());
+            bool owner=true;if(RaidCoordination::Enabled(me))owner=RaidCoordination::AssignedTank(me,target)==me;
+            if(owner&&needed&&McBotTactics::AllowSpell(*this,target,spell)&&RaidCoordination::AllowDamage(*this,target,spell)&&me->IsSpellReady(spell)&&!me->HasGCD(spell)&&me->GetPower(POWER_RAGE)>=Spell::CalculatePowerCost(spell,me)&&spell->GetErrorAtShapeshiftedCast(me->GetShapeshiftForm())==SPELL_CAST_OK&&DoCastSpell(target,spell)==SPELL_CAST_OK)return;
+        }
+        if(cast(target,m_spells.warrior.pBloodthirst))return;
+        if(WarriorTankPolicy::DumpRage(me->GetPower(POWER_RAGE))&&!me->GetCurrentSpell(CURRENT_MELEE_SPELL)){
+            bool safe=true;unsigned count=0;std::list<Unit*> enemies;me->GetEnemyListInRadiusAround(target,10,enemies);
+            for(Unit* e:enemies)if(e&&e->IsAlive()&&IsValidHostileTarget(e)){
+                if(!e->IsInCombat()||e->GetVictim()!=me||e->HasBreakableByDamageCrowdControlAura())safe=false;
+                ++count;
+            }
+            if(count>1&&safe){if(cast(target,m_spells.warrior.pCleave))return;}
+            else if(count<=1&&cast(target,m_spells.warrior.pHeroicStrike))return;
+        }
+        // Maintain mitigation after the primary threat builders, without stance switching.
+        if(me->GetPower(POWER_RAGE)>=200){
+            bool safe=true,needed=false;std::list<Unit*> enemies;me->GetEnemyListInRadiusAround(me,10,enemies);
+            for(Unit* e:enemies)if(e&&e->IsAlive()&&IsValidHostileTarget(e)){
+                if(!e->IsInCombat()||e->HasBreakableByDamageCrowdControlAura())safe=false;
+                if(m_spells.warrior.pDemoralizingShout){auto* aura=e->GetSpellAuraHolder(m_spells.warrior.pDemoralizingShout->Id);if(!aura||aura->GetAuraDuration()<5000)needed=true;}
+            }
+            if(safe&&needed){
+                std::lock_guard<std::recursive_mutex> guard(DungeonTank::turnsMutex);
+                auto& last= DungeonTank::turns[me->GetGUID()].demo;uint32 now=WorldTimer::getMSTime();
+                // A stronger non-stacking shout/roar can suppress our exact aura.
+                // Even then a successful native attempt must not consume every GCD.
+                if((!last||uint32(now-last)>=10000)&&cast(me,m_spells.warrior.pDemoralizingShout)){last=now;return;}
+            }
+        }
+        if(!me->CanReachWithMeleeAutoAttack(target))BeginChasing(target);
+        return;
+    }
     if (Unit* pVictim = me->GetVictim())
     {
         if (pVictim->IsNonMeleeSpellCasted(false, false, true))

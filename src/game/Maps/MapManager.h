@@ -89,6 +89,7 @@ class MapManager : public MaNGOS::Singleton<MapManager, MaNGOS::ClassLevelLockab
 
         uint32 GetContinentInstanceId(uint32 mapId, float x, float y, bool* transitionArea = nullptr);
         Map* CreateMap(uint32, WorldObject const* obj);
+        Map* CreateContinentMap(uint32 mapId, float x, float y);
         Map* CreateBgMap(uint32 mapid, BattleGround* bg);
         Map* CreateTestMap(uint32 mapid, bool instanced, float posX, float posY);
         void DeleteTestMap(Map* map);

@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "UnitAuraVisibilityPolicy.h"
 #include "Object.h"
 #include "SharedDefines.h"
 #include "WorldPacket.h"
@@ -761,9 +762,14 @@ void Object::BuildValuesUpdate(uint8 updatetype, ByteBuffer* data, UpdateMask* u
                          (index >= PLAYER_FIELD_RESISTANCEBUFFMODSNEGATIVE  && index <= (PLAYER_FIELD_RESISTANCEBUFFMODSNEGATIVE + 6)) ||
                          (index >= PLAYER_FIELD_POSSTAT0    && index <= PLAYER_FIELD_POSSTAT4))
                     *data << uint32(m_floatValues[index]);
-                // Gamemasters should be always able to select units and view auras
-                else if (index == UNIT_FIELD_FLAGS && target->IsGameMaster())
-                    *data << ((m_uint32Values[index] | UNIT_FLAG_AURAS_VISIBLE) & ~UNIT_FLAG_NOT_SELECTABLE);
+                // Viewer-only aura visibility. Never mutate real unit flags or
+                // grant the GM-only ability to select normally unselectable units.
+                else if (index == UNIT_FIELD_FLAGS)
+                {
+                    static_assert(UnitAuraVisibilityPolicy::AurasVisible == UNIT_FLAG_AURAS_VISIBLE, "Native aura visibility bit");
+                    static_assert(UnitAuraVisibilityPolicy::NotSelectable == UNIT_FLAG_NOT_SELECTABLE, "Native selection bit");
+                    *data << UnitAuraVisibilityPolicy::ForObserver(m_uint32Values[index],target->IsGameMaster(),sWorld.getConfig(CONFIG_BOOL_SHOW_ENEMY_BUFFS));
+                }
                 // hide lootable animation for unallowed players
                 else if (index == UNIT_DYNAMIC_FLAGS)
                 {

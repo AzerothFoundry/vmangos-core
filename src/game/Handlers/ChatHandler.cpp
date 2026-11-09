@@ -27,6 +27,7 @@
 #include "Opcodes.h"
 #include "ObjectMgr.h"
 #include "Chat.h"
+#include "PartyBotServices.h"
 #include "Database/DatabaseEnv.h"
 #include "ChannelMgr.h"
 #include "Group.h"
@@ -402,6 +403,10 @@ void WorldSession::HandleChatMessageOpcode(WorldPackets::Chat::ChatMessage const
                 SendPlayerNotFoundNotice(packet.whisperTargetOrChannel);
                 break;
             }
+            // Temporary party companions have no MasterPlayer entry. Route only the
+            // active, same-group trade partner's service reply; keep other whispers native.
+            if(packet.lang!=LANG_ADDON && m_muteTime<=time(nullptr) &&
+               PartyBotServices::Whisper(GetPlayer(),packet.whisperTargetOrChannel,packet.message))return;
             MasterPlayer* masterPlr = GetMasterPlayer();
             ASSERT(masterPlr);
 

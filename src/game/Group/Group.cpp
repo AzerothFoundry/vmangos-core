@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "PlayerBots/BotLoot33.h"
 #include "Common.h"
 #include "Opcodes.h"
 #include "WorldPacket.h"
@@ -1008,7 +1009,7 @@ void Group::StartLootRoll(Creature* lootTarget, LootMethod method, Loot* loot, u
         if (!playerToRoll || !playerToRoll->IsInWorld())
             continue;
 
-        if ((method != NEED_BEFORE_GREED || playerToRoll->CanUseItem(item) == EQUIP_ERR_OK) &&
+        if ((method != NEED_BEFORE_GREED || playerToRoll->CanUseItem(item) == EQUIP_ERR_OK || BotLoot33::Participant(playerToRoll)) &&
             lootItem.AllowedForPlayer(playerToRoll, lootTarget) &&
             loot->IsAllowedLooter(playerToRoll->GetObjectGuid(), false) &&
             playerToRoll->IsWithinLootXPDist(lootTarget))
@@ -1023,7 +1024,11 @@ void Group::StartLootRoll(Creature* lootTarget, LootMethod method, Loot* loot, u
         r->setLoot(loot);
         r->itemSlot = itemSlot;
 
-        if (r->totalPlayersRolling == 1)                    // single looter
+        Player* onlyPlayer=r->totalPlayersRolling==1?sObjectMgr.GetPlayer(r->playerVote.begin()->first):nullptr;
+        // Bot policy must get an actual vote even when it is the only voter;
+        // otherwise the legacy shortcut silently awards a forced Need.
+        bool botDecision=onlyPlayer&&onlyPlayer->IsBot()&&BotLoot33::Enabled();
+        if (r->totalPlayersRolling == 1 && !botDecision)      // original human shortcut
         {
             r->playerVote.begin()->second = ROLL_NEED;
             CountSingleLooterRoll(r);

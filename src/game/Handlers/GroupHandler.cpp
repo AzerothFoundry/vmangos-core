@@ -1,3 +1,4 @@
+#include "RaidCoordination.h"
 /*
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
  * Copyright (C) 2009-2011 MaNGOSZero <https://github.com/mangos/zero>
@@ -28,6 +29,7 @@
 #include "World.h"
 #include "ObjectMgr.h"
 #include "Player.h"
+#include "WorldBotAI.h"
 #include "Group.h"
 #include "Utilities/Random.h"
 #include "SocialMgr.h"
@@ -94,6 +96,16 @@ void WorldSession::HandleGroupInviteOpcode(WorldPackets::Group::GroupInvite cons
     Group* group2 = player->GetGroup();
     if (group2 && group2->isBGGroup())
         group2 = player->GetOriginalGroup();
+    // A persistent world actor's self-only helper group is not a real party.
+    // Release it only for a valid real-player invitation while safely idle.
+    if(group2 && !GetPlayer()->IsBot() && player!=GetPlayer() && player->IsBot() && player->AI() &&
+       dynamic_cast<WorldBotAI*>(player->AI()) && !group2->isBGGroup() && group2->GetMembersCount()==1 &&
+       group2->GetLeaderGuid()==player->GetObjectGuid() && !player->IsInCombat() && !player->m_duel &&
+       !player->InBattleGround() && !player->IsBeingTeleported() && !player->GetGroupInvite() &&
+       (!group || ((!group->IsFull()) && (group->IsLeader(GetPlayer()->GetObjectGuid()) || group->IsAssistant(GetPlayer()->GetObjectGuid())))))
+    {
+        player->RemoveFromGroup();group2=nullptr;
+    }
     // Player already in another group or invited
     if (group2 || player->GetGroupInvite())
     {
@@ -574,12 +586,14 @@ void WorldSession::HandleRaidReadyCheckOpcode(WorldPackets::Group::RaidReadyChec
         /********************/
 
         // everything is fine, do it
+        RaidCoordination::CancelPull(GetPlayer()); // A new native ready check supersedes any earlier pull consent.
         group->BroadcastPacket(std::make_unique<WorldPackets::Group::RaidReadyCheckFromServer_Request>(), false, -1);
 
         group->OfflineReadyCheck();
     }
     else // answer
     {
+        RaidCoordination::ReadyResponse(GetPlayer(),packet.state.value());
         Group* group = GetPlayer()->GetGroup();
         if (!group)
             return;

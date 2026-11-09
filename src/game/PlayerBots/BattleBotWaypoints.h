@@ -59,8 +59,12 @@ struct BattleBotWaypoint
 
 typedef std::vector<BattleBotWaypoint> BattleBotPath;
 
+extern std::vector<uint32> const vFlagsAB;
+extern std::vector<uint32> const vFlagsAV;
 extern std::vector<BattleBotPath*> const vPaths_WS;
 extern std::vector<BattleBotPath*> const vPaths_AB;
 extern std::vector<BattleBotPath*> const vPaths_AV;
+
+std::string BattleBotSnowfallRouteName(BattleBotPath const* path,bool reverse);
 
 #endif

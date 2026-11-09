@@ -131,6 +131,11 @@ class OPvPCapturePoint
 
         virtual void DeleteSpawns();
 
+        // Read-only bot/task observation; capture remains owned by native Update.
+        float CaptureValue() const { return m_value; }
+        unsigned CaptureActive(unsigned team) const { return team<2?m_activePlayers[team].size():0; }
+        float CaptureMaximum() const { return m_maxValue; }
+        GameObject* CaptureObject() const { return m_capturePoint; }
         uint32 m_capturePointGUID;
 
         GameObject* m_capturePoint;
@@ -323,6 +328,9 @@ class OutdoorPvP : public ZoneScript
 
     protected:
 
+    public:
+        OPvPCapturePointMap const& CapturePoints() const { return m_capturePoints; }
+    protected:
         // the map of the objectives belonging to this outdoorpvp
         OPvPCapturePointMap m_capturePoints;
         uint32 m_TypeId;

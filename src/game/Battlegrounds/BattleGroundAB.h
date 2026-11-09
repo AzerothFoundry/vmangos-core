@@ -218,6 +218,7 @@ class BattleGroundAB : public BattleGround
 
         /* Nodes occupying */
         void EventPlayerClickedOnFlag(Player* source, GameObject* targetGo) override;
+        bool ShouldRejectDirectCaptureUse(GameObject const*) const override;
 
     private:
         /* Gameobject spawning/despawning */

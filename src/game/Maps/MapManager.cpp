@@ -110,6 +110,22 @@ void MapManager::InitializeVisibilityDistanceInfo()
         itr.second->InitVisibilityDistance();
 }
 
+Map* MapManager::CreateContinentMap(uint32 id, float x, float y)
+{
+    if(id>1 || !std::isfinite(x) || !std::isfinite(y) || !MaNGOS::IsValidMapCoord(x,y))return nullptr;
+    MapEntry const* entry=sMapStorage.LookupEntry<MapEntry>(id);
+    if(!entry || entry->Instanceable())return nullptr;
+    Guard guard(*this);
+    uint32 instanceId=GetContinentInstanceId(id,x,y);
+    if(Map* existing=FindMap(id,instanceId))return existing;
+    Map* map=new WorldMap(id,i_gridCleanUpDelay,instanceId);
+    i_maps[MapID(id,instanceId)]=map;
+    map->CreateInstanceData(true);
+    map->SpawnActiveObjects();
+    sZoneScriptMgr.MapLoaded(id,map);
+    return map;
+}
+
 Map* MapManager::CreateMap(uint32 id, WorldObject const* obj)
 {
     MANGOS_ASSERT(obj);

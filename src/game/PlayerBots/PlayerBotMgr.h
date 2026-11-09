@@ -10,9 +10,11 @@
 #include <vector>
 #include <memory>
 
+class PartyBotAI;
 class PlayerBotAI;
 class WorldSession;
 class Player;
+uint8 SelectRandomRaceForClass(uint8 playerClass, Team playerTeam);
 
 enum PlayerBotAutoEquip
 {
@@ -80,6 +82,8 @@ class PlayerBotMgr
         bool AddOrRemoveBot();
 
         bool AddBot(PlayerBotAI* ai);
+        bool AddOwnedBot(std::unique_ptr<PlayerBotAI> ai);
+        std::vector<PartyBotAI const*> GetOwnedPartyBots(ObjectGuid owner, bool includeRemoving = false) const;
         bool AddBot(uint32 playerGuid, bool chatBot = false, PlayerBotAI* pAI = nullptr);
         bool DeleteBot(std::map<uint64, std::shared_ptr<PlayerBotEntry>>::iterator iter);
         bool DeleteBot(uint32 playerGuid);
@@ -89,6 +93,8 @@ class PlayerBotMgr
 
         void AddBattleBot(BattleGroundQueueTypeId queueType, Team botTeam, uint32 botLevel, bool temporary);
         void DeleteBattleBots();
+        void RequestBotRemoval(uint32 guid) { auto it=m_bots.find(guid); if(it!=m_bots.end())it->second->requestRemoval=true; }
+        bool HasBot(uint32 guid) const { return m_bots.count(guid) != 0; }
 
         void DeleteAll();
         void AddAllBots();

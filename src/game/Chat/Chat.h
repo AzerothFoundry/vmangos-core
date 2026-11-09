@@ -277,6 +277,7 @@ class ChatHandler
         bool HandleBotStopCommand(char * args);
         bool HandleBotStartCommand(char * args);
         bool PartyBotAddRequirementCheck(Player const* pPlayer, Player const* pTarget);
+        bool HandleGmUiCommand(char* args);
         bool HandlePartyBotAddCommand(char * args);
         bool HandlePartyBotCloneCommand(char * args);
         bool HandlePartyBotLoadCommand(char * args);

@@ -76,9 +76,29 @@ class TypeUnorderedMapContainer
             return TypeUnorderedMapContainer::find(i_elements, hdl, (SPECIFIC_TYPE*)nullptr);
         }
 
+        // Read-only typed snapshot; caller owns synchronization and pointer lifetime.
+        template<class T> std::vector<T*> snapshot() const
+        {
+            std::vector<T*> result;
+            snapshot(i_elements, result);
+            return result;
+        }
+
     private:
 
         ContainerUnorderedMap<OBJECT_TYPES, KEY_TYPE> i_elements;
+
+        template<class T> static void snapshot(ContainerUnorderedMap<TypeNull, KEY_TYPE> const&, std::vector<T*>&) {}
+        template<class T> static void snapshot(ContainerUnorderedMap<T, KEY_TYPE> const& elements, std::vector<T*>& result)
+        {
+            for(auto const& pair : elements._element) result.push_back(pair.second);
+        }
+        template<class H, class Tail, class T> static void snapshot(ContainerUnorderedMap<TypeList<H,Tail>, KEY_TYPE> const& elements, std::vector<T*>& result)
+        {
+            snapshot(elements._elements,result);
+            snapshot(elements._TailElements,result);
+        }
+        template<class Other, class T> static void snapshot(ContainerUnorderedMap<Other, KEY_TYPE> const&, std::vector<T*>&) {}
 
         // Helpers
         // Insert helpers

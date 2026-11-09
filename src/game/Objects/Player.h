@@ -1263,7 +1263,7 @@ class Player final: public Unit
     public:
         // Saves a new character directly in the database, without creating a Player object in memory.
         static bool SaveNewPlayer(WorldSession* session, uint32 guidlow, std::string const& name, uint8 raceId, uint8 classId, uint8 gender, uint8 skin, uint8 face, uint8 hairStyle, uint8 hairColor, uint8 facialHair);
-        void SaveToDB(bool online = true, bool force = false);
+        bool SaveToDB(bool online = true, bool force = false, bool synchronous = false);
         void SaveInventoryAndGoldToDB();                    // fast save function for item/money cheating preventing
         void SaveGoldToDB();
         static void SavePositionInDB(ObjectGuid guid, uint32 mapId, float x, float y, float z, float o, uint32 zone);
@@ -1417,6 +1417,11 @@ class Player final: public Unit
         uint32 CalculateTalentsPoints() const;
         void SendTalentWipeConfirm(ObjectGuid trainerGuid) const;
     public:
+        float GetBaseHealthRegenPerTick() const { return GetRegenHPPerSpirit(); }
+        float GetNaturalManaRegenPerSecond(bool interrupted) const { return interrupted ? m_modManaRegenInterrupt : m_modManaRegen; }
+        uint64 GetCreationTime() const { return uint64(m_createTime); }
+        uint32 GetUsedTalentPoints() const { return m_usedTalentCount; }
+        uint32 GetTalentPointLimit() const { return CalculateTalentsPoints(); }
         uint32 GetFreeTalentPoints() const { return GetUInt32Value(PLAYER_CHARACTER_POINTS1); }
         void SetFreeTalentPoints(uint32 points) { SetUInt32Value(PLAYER_CHARACTER_POINTS1, points); }
         bool ResetTalents(bool noCost = false);
@@ -1803,6 +1808,7 @@ class Player final: public Unit
         bool  m_undermapPosValid;
 
         uint32 GetHomeBindMap() const { return m_homebind.mapId; }
+        WorldLocation const& GetHomeBindLocation() const { return m_homebind; }
         uint16 GetHomeBindAreaId() const { return m_homebindAreaId; }
 
         void SendSummonRequest(ObjectGuid summonerGuid, uint32 mapId, uint32 zoneId, float x, float y, float z);

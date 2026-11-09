@@ -1,0 +1,3025 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "enabled": true,
+  "rules": [
+    {
+      "id": "warrior-berserker-rage",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 1200,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.controlled",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 18499,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warrior-shield-wall",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 1150,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 25
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "self.has_shield",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 871,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": true
+      }
+    },
+    {
+      "id": "warrior-pummel",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.interruptible",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 6552,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "interrupt",
+        "cancel_own_damage_cast": true
+      },
+      "timing": {
+        "chance": 0.85,
+        "reaction_min_ms": 200,
+        "reaction_max_ms": 450,
+        "progress_min_pct": 20,
+        "progress_max_pct": 75
+      }
+    },
+    {
+      "id": "warrior-shield-bash",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.interruptible",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 72,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "interrupt",
+        "cancel_own_damage_cast": true
+      },
+      "timing": {
+        "chance": 0.85,
+        "reaction_min_ms": 200,
+        "reaction_max_ms": 450,
+        "progress_min_pct": 20,
+        "progress_max_pct": 75
+      }
+    },
+    {
+      "id": "warrior-intercept",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 650,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "gte",
+          "value": 8
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 25
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.used_spell",
+              "op": "seen",
+              "value": 1953,
+              "within_ms": 6000
+            }
+          ],
+          "add": 250
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 20252,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warrior-execute",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 600,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.health_pct",
+          "op": "lte",
+          "value": 20
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5308,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warrior-mortal-strike",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 450,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 100
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 12294,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warrior-bloodthirst",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 430,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 23881,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warrior-hamstring",
+      "class": 1,
+      "role": 0,
+      "enabled": true,
+      "priority": 350,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        },
+        {
+          "field": "target.aura",
+          "op": "lacks",
+          "value": 1715
+        },
+        {
+          "field": "target.moving",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 1715,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "paladin-divine-shield",
+      "class": 2,
+      "role": 0,
+      "enabled": true,
+      "priority": 1200,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 18
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "self.carrying_flag",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 642,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": true
+      }
+    },
+    {
+      "id": "paladin-holy-shock-self",
+      "class": 2,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 30
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 20473,
+        "actor": "owner",
+        "target": "self",
+        "category": "heal",
+        "cancel_own_damage_cast": true
+      }
+    },
+    {
+      "id": "paladin-holy-shock-ally",
+      "class": 2,
+      "role": 0,
+      "enabled": true,
+      "priority": 1050,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 35
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 20473,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "paladin-freedom",
+      "class": 2,
+      "role": 0,
+      "enabled": true,
+      "priority": 1000,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [
+        {
+          "field": "self.aura",
+          "op": "has",
+          "value": 116
+        },
+        {
+          "field": "self.aura",
+          "op": "has",
+          "value": 122
+        },
+        {
+          "field": "self.aura",
+          "op": "has",
+          "value": 339
+        },
+        {
+          "field": "self.aura",
+          "op": "has",
+          "value": 1715
+        },
+        {
+          "field": "self.aura",
+          "op": "has",
+          "value": 2974
+        },
+        {
+          "field": "self.aura",
+          "op": "has",
+          "value": 8056
+        },
+        {
+          "field": "self.aura",
+          "op": "has",
+          "value": 18223
+        }
+      ],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 1044,
+        "actor": "owner",
+        "target": "self",
+        "category": "utility",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "paladin-hammer-justice",
+      "class": 2,
+      "role": 0,
+      "enabled": true,
+      "priority": 750,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 10
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 250
+        },
+        {
+          "when": [
+            {
+              "field": "self.health_pct",
+              "op": "lte",
+              "value": 35
+            }
+          ],
+          "add": 150
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 853,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "paladin-flash-light",
+      "class": 2,
+      "role": 4,
+      "enabled": true,
+      "priority": 600,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 70
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 19750,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "paladin-holy-light",
+      "class": 2,
+      "role": 4,
+      "enabled": true,
+      "priority": 590,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 45
+        },
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 635,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "paladin-holy-shock-enemy",
+      "class": 2,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.health_pct",
+          "op": "lte",
+          "value": 30
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 20473,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "paladin-judgement",
+      "class": 2,
+      "role": 0,
+      "enabled": true,
+      "priority": 250,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 10
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 20271,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-deterrence",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 30
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 8
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 19263,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-scatter-shot",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 850,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 15
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 40
+        },
+        {
+          "field": "target.healing",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 19503,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-wing-clip",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 650,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        },
+        {
+          "field": "target.aura",
+          "op": "lacks",
+          "value": 2974
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 2974,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-concussive-shot",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 550,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "gte",
+          "value": 8
+        },
+        {
+          "field": "target.moving",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.aura",
+          "op": "lacks",
+          "value": 5116
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5116,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-intimidation",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 800,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.has_pet",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 19577,
+        "actor": "owner",
+        "target": "pet",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-bestial-wrath",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 400,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.has_pet",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 19574,
+        "actor": "owner",
+        "target": "pet",
+        "category": "utility",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-aimed-shot",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 350,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "gte",
+          "value": 8
+        },
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 19434,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "hunter-multi-shot",
+      "class": 3,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "gte",
+          "value": 8
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 2643,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "rogue-evasion",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 30
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 8
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5277,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "rogue-kick",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.interruptible",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 1766,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "interrupt",
+        "cancel_own_damage_cast": true
+      },
+      "timing": {
+        "chance": 0.85,
+        "reaction_min_ms": 200,
+        "reaction_max_ms": 450,
+        "progress_min_pct": 20,
+        "progress_max_pct": 75
+      }
+    },
+    {
+      "id": "rogue-cheap-shot",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 850,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.stealthed",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 1833,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "rogue-kidney-shot",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 700,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.combo_points",
+          "op": "gte",
+          "value": 4
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 408,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "rogue-eviscerate",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 550,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.combo_points",
+          "op": "gte",
+          "value": 4
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.health_pct",
+              "op": "lte",
+              "value": 20
+            }
+          ],
+          "add": 400
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 2098,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "rogue-hemorrhage",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 320,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 16511,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "rogue-backstab",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 310,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 53,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "rogue-sinister-strike",
+      "class": 4,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 1752,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-shield-self",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 35
+        },
+        {
+          "field": "self.aura",
+          "op": "lacks",
+          "value": 17
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 17,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": true
+      }
+    },
+    {
+      "id": "priest-shield-ally",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 1080,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 30
+        },
+        {
+          "field": "ally.aura",
+          "op": "lacks",
+          "value": 17
+        },
+        {
+          "field": "ally.aura",
+          "op": "lacks",
+          "value": 6788
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 17,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-psychic-scream",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 950,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 45
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 8
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 8122,
+        "actor": "owner",
+        "target": "self",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-silence",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 15487,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-flash-heal",
+      "class": 5,
+      "role": 4,
+      "enabled": true,
+      "priority": 750,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 40
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 2061,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-renew",
+      "class": 5,
+      "role": 4,
+      "enabled": true,
+      "priority": 650,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 80
+        },
+        {
+          "field": "ally.own_aura",
+          "op": "lacks",
+          "value": 139
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 139,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-shadow-pain",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 400,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 589
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 589,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-mind-blast",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 350,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 8092,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-mind-flay",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 15407,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "priest-smite",
+      "class": 5,
+      "role": 0,
+      "enabled": true,
+      "priority": 200,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 585,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-earth-shock-interrupt",
+      "class": 7,
+      "role": 0,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.interruptible",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 20
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 8042,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "interrupt",
+        "cancel_own_damage_cast": true
+      },
+      "timing": {
+        "chance": 0.85,
+        "reaction_min_ms": 200,
+        "reaction_max_ms": 450,
+        "progress_min_pct": 20,
+        "progress_max_pct": 75
+      }
+    },
+    {
+      "id": "shaman-natures-swiftness",
+      "class": 7,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 25
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 16188,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-lesser-heal",
+      "class": 7,
+      "role": 4,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 40
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 8004,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-healing-wave",
+      "class": 7,
+      "role": 4,
+      "enabled": true,
+      "priority": 750,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 65
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 331,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-frost-shock",
+      "class": 7,
+      "role": 0,
+      "enabled": true,
+      "priority": 550,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.moving",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.aura",
+          "op": "lacks",
+          "value": 8056
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 8056,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-stormstrike",
+      "class": 7,
+      "role": 0,
+      "enabled": true,
+      "priority": 450,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 17364,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-chain-lightning",
+      "class": 7,
+      "role": 0,
+      "enabled": true,
+      "priority": 350,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "enemies.nearby",
+          "op": "gte",
+          "value": 2
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 421,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-lightning-bolt",
+      "class": 7,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 403,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "shaman-earth-shock-damage",
+      "class": 7,
+      "role": 0,
+      "enabled": true,
+      "priority": 200,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.health_pct",
+          "op": "lt",
+          "value": 20
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 8042,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "mage-ice-block",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 1200,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 18
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "self.carrying_flag",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 11958,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": true
+      }
+    },
+    {
+      "id": "mage-ice-barrier",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 65
+        },
+        {
+          "field": "self.aura",
+          "op": "lacks",
+          "value": 11426
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 11426,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "mage-counterspell",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.interruptible",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 30
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 2139,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "interrupt",
+        "cancel_own_damage_cast": true
+      },
+      "timing": {
+        "chance": 0.85,
+        "reaction_min_ms": 200,
+        "reaction_max_ms": 450,
+        "progress_min_pct": 20,
+        "progress_max_pct": 75
+      }
+    },
+    {
+      "id": "mage-frost-nova",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 750,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 8
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "target.aura",
+          "op": "lacks",
+          "value": 122
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 122,
+        "actor": "owner",
+        "target": "self",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "mage-fire-blast",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.health_pct",
+              "op": "lt",
+              "value": 25
+            }
+          ],
+          "add": 250
+        },
+        {
+          "when": [
+            {
+              "field": "self.moving",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 2136,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "mage-cone-of-cold",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 400,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 10
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 120,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "mage-frostbolt",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 350,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.used_spell",
+              "op": "seen",
+              "value": 1953,
+              "within_ms": 6000
+            }
+          ],
+          "add": 80
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 116,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "mage-fireball",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 250,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 133,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "mage-arcane-missiles",
+      "class": 8,
+      "role": 0,
+      "enabled": true,
+      "priority": 200,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5143,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-death-coil",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 1150,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 30
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 6789,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "defense",
+        "cancel_own_damage_cast": true
+      }
+    },
+    {
+      "id": "warlock-sacrifice-shield",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 25
+        },
+        {
+          "field": "self.has_pet",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 7812,
+        "actor": "pet",
+        "target": "owner",
+        "category": "defense",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-pet-spell-lock",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 900,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.interruptible",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 30
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 19244,
+        "actor": "pet",
+        "target": "enemy",
+        "category": "interrupt",
+        "cancel_own_damage_cast": true
+      },
+      "timing": {
+        "chance": 0.85,
+        "reaction_min_ms": 200,
+        "reaction_max_ms": 450,
+        "progress_min_pct": 20,
+        "progress_max_pct": 75
+      }
+    },
+    {
+      "id": "warlock-pet-devour-owner",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 950,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.controlled",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "self.has_pet",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 19505,
+        "actor": "pet",
+        "target": "owner",
+        "category": "utility",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-fear",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 650,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 20
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 45
+        },
+        {
+          "field": "target.healing",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5782,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-exhaustion",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 550,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.class",
+          "op": "in",
+          "value": [
+            1,
+            4
+          ]
+        },
+        {
+          "field": "target.moving",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 18223
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 18223,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-tongues",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 500,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 1714
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 200
+        },
+        {
+          "when": [
+            {
+              "field": "self.health_pct",
+              "op": "lte",
+              "value": 45
+            }
+          ],
+          "add": 100
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 1714,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-corruption",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 400,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 172
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.class",
+              "op": "in",
+              "value": [
+                8,
+                11
+              ]
+            }
+          ],
+          "add": 180
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 172,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-agony",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 390,
+      "fast": false,
+      "min_interval_ms": 5000,
+      "when": [
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 980
+        },
+        {
+          "field": "target.casting",
+          "op": "eq",
+          "value": false
+        },
+        {
+          "field": "target.health_pct",
+          "op": "gte",
+          "value": 35
+        },
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 1714
+        },
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 18223
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.class",
+              "op": "in",
+              "value": [
+                2,
+                5
+              ]
+            }
+          ],
+          "add": 150
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 980,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-shadow-bolt",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.used_spell",
+              "op": "seen",
+              "value": 2139,
+              "within_ms": 6000
+            }
+          ],
+          "add": 100
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 686,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-searing-pain",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 200,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5676,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "warlock-life-tap",
+      "class": 9,
+      "role": 0,
+      "enabled": true,
+      "priority": 350,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.mana_pct",
+          "op": "lt",
+          "value": 20
+        },
+        {
+          "field": "self.health_pct",
+          "op": "gte",
+          "value": 65
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 1454,
+        "actor": "owner",
+        "target": "self",
+        "category": "utility",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-barkskin",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 1100,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.health_pct",
+          "op": "lte",
+          "value": 35
+        },
+        {
+          "field": "self.combat",
+          "op": "eq",
+          "value": true
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 22812,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": true
+      }
+    },
+    {
+      "id": "druid-natures-swiftness",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 1080,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 25
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 17116,
+        "actor": "owner",
+        "target": "self",
+        "category": "defense",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-swiftmend",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 1050,
+      "fast": true,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 35
+        }
+      ],
+      "any": [
+        {
+          "field": "ally.aura",
+          "op": "has",
+          "value": 774
+        },
+        {
+          "field": "ally.aura",
+          "op": "has",
+          "value": 8936
+        }
+      ],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 18562,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-healing-touch",
+      "class": 11,
+      "role": 4,
+      "enabled": true,
+      "priority": 900,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 45
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5185,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-rejuvenation",
+      "class": 11,
+      "role": 4,
+      "enabled": true,
+      "priority": 700,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "ally.health_pct",
+          "op": "lt",
+          "value": 80
+        },
+        {
+          "field": "ally.own_aura",
+          "op": "lacks",
+          "value": 774
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 774,
+        "actor": "owner",
+        "target": "ally",
+        "category": "heal",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-bash",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 750,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "target.healing",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 250
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 5211,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-roots",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 600,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "gte",
+          "value": 8
+        },
+        {
+          "field": "target.moving",
+          "op": "eq",
+          "value": true
+        },
+        {
+          "field": "target.controlled",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 339,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "control",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-ferocious-bite",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 500,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.combo_points",
+          "op": "gte",
+          "value": 4
+        },
+        {
+          "field": "target.health_pct",
+          "op": "lt",
+          "value": 40
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 22568,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-rip",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 450,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.combo_points",
+          "op": "gte",
+          "value": 4
+        },
+        {
+          "field": "target.health_pct",
+          "op": "gte",
+          "value": 40
+        },
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        },
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 1079
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 1079,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-shred",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 350,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5221,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-claw",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.distance",
+          "op": "lte",
+          "value": 5
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 1082,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-moonfire",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 400,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "target.own_aura",
+          "op": "lacks",
+          "value": 8921
+        }
+      ],
+      "any": [],
+      "adjust": [
+        {
+          "when": [
+            {
+              "field": "self.moving",
+              "op": "eq",
+              "value": true
+            }
+          ],
+          "add": 150
+        }
+      ],
+      "action": {
+        "kind": "cast",
+        "spell": 8921,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-starfire",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 300,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 2912,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    },
+    {
+      "id": "druid-wrath",
+      "class": 11,
+      "role": 0,
+      "enabled": true,
+      "priority": 250,
+      "fast": false,
+      "min_interval_ms": 0,
+      "when": [
+        {
+          "field": "self.moving",
+          "op": "eq",
+          "value": false
+        }
+      ],
+      "any": [],
+      "adjust": [],
+      "action": {
+        "kind": "cast",
+        "spell": 5176,
+        "actor": "owner",
+        "target": "enemy",
+        "category": "damage",
+        "cancel_own_damage_cast": false
+      }
+    }
+  ]
+}

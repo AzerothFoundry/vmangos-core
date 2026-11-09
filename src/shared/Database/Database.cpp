@@ -539,10 +539,10 @@ bool Database::CommitTransactionDirect()
 
     // directly execute SqlTransaction
     SqlTransaction* pTrans = m_currentTransaction.release();
-    pTrans->Execute(m_pAsyncConn);
+    bool const success = pTrans->Execute(m_pAsyncConn);
     delete pTrans;
 
-    return true;
+    return success;
 }
 
 bool Database::RollbackTransaction()

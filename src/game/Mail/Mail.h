@@ -37,6 +37,8 @@
 #ifndef MANGOS_MAIL_H
 #define MANGOS_MAIL_H
 
+#include <functional>
+#include <vector>
 #include "Common.h"
 #include "ObjectGuid.h"
 #include <map>
@@ -251,7 +253,9 @@ class MailDraft
         void CloneFrom(MailDraft const& draft);
     public:                                                 // finishers
         void SendReturnToSender(uint32 sender_acc, ObjectGuid sender_guid, ObjectGuid receiver_guid);
-        void SendMailTo(MailReceiver const& receiver, MailSender const& sender, MailCheckMask checked = MAIL_CHECK_MASK_NONE, uint32 deliver_delay = 0, uint32 expire_delay = 0);
+        // External transactions require completion callbacks: invoke after a real commit,
+        // passing success, before reporting delivery. Dropping callbacks frees pending items.
+        void SendMailTo(MailReceiver const& receiver, MailSender const& sender, MailCheckMask checked = MAIL_CHECK_MASK_NONE, uint32 deliver_delay = 0, uint32 expire_delay = 0, bool ownTransaction = true, std::vector<std::function<void(bool)>>* completion = nullptr);
     private:
         MailDraft(MailDraft const&);                        // trap decl, no body, mail draft must cloned only explicitly...
         MailDraft& operator=(MailDraft const&);             // trap decl, no body, ...because items clone is high price operation

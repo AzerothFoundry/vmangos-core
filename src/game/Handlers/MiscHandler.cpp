@@ -27,6 +27,7 @@
 #include "Opcodes.h"
 #include "Log.h"
 #include "Player.h"
+#include "WorldBotAI.h"
 #include "Group.h"
 #include "World.h"
 #include "GuildMgr.h"
@@ -115,7 +116,8 @@ public:
             }
 
             // skip bots
-            if (!showBotsInWhoList && pPlayer->IsBot())
+            if (!showBotsInWhoList && pPlayer->IsBot() &&
+                !(pPlayer->AI() && dynamic_cast<WorldBotAI*>(pPlayer->AI())))
                 continue;
 
             // do not process players which are not in world

@@ -19,6 +19,7 @@
  */
 
 #include "Unit.h"
+#include "BattleBotTactics.h"
 #include "Creature.h"
 #include "Pet.h"
 #include "Totem.h"
@@ -209,6 +210,15 @@ void Unit::Update(uint32 update_diff, uint32 p_time)
 {
     if (!IsInWorld())
         return;
+
+    // Config reload must refresh already-visible units in both directions.
+    // Force serialization, without adding/removing a gameplay aura or flag.
+    bool const showEnemyBuffs=sWorld.getConfig(CONFIG_BOOL_SHOW_ENEMY_BUFFS);
+    if (m_showEnemyBuffsSent != showEnemyBuffs)
+    {
+        m_showEnemyBuffsSent=showEnemyBuffs;
+        ForceValuesUpdateAtIndex(UNIT_FIELD_FLAGS);
+    }
 
     // Buffer spell system update time to save on performance when players are updated twice per
     // world update. We do not need to update spells when the interval is only a few ms (~10ms)
@@ -825,6 +835,8 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
     if (health <= damage && pVictim->GetInvincibilityHpThreshold() == 0)
     {
         DEBUG_FILTER_LOG(LOG_FILTER_DAMAGE, "DealDamage: victim just died");
+        // Observe settled PvP damage before death effects can change health again.
+        BattleBotTactics::RecordDamage(this, pVictim, std::min<uint32>(health, damage));
         Kill(pVictim, spellProto, durabilityLoss);
 
         // last damage from non duel opponent or opponent controlled creature
@@ -847,6 +859,7 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
         {
             uint32 dmg = std::min<uint32>(health - pVictim->GetInvincibilityHpThreshold(), damage);
             pVictim->ModifyHealth(-(int32)dmg);
+            BattleBotTactics::RecordDamage(this, pVictim, dmg);
         }
 
         if (damagetype != DOT && damagetype != SELF_DAMAGE)
@@ -10644,7 +10657,7 @@ void Unit::UpdateSplineMovement(uint32 t_diff)
         if (HasPendingSplineDone() && !IsPlayer() && !GetPossessorGuid().IsPlayer())
             SetSplineDonePending(false);
     }
-    else if (!movespline->isCyclic() && movespline->getLastPointSent() >= 0 && movespline->getLastPointSent() < (movespline->currentPathIdx() + 3))
+    else if (movespline->NeedsPacketContinuation())
     {
         WorldPacket data(SMSG_MONSTER_MOVE, 64);
 #if SUPPORTED_CLIENT_BUILD > CLIENT_BUILD_1_8_4
@@ -10652,8 +10665,8 @@ void Unit::UpdateSplineMovement(uint32 t_diff)
 #else
         data << GetGUID();
 #endif
-        movespline->setLastPointSent(Movement::PacketBuilder::WriteMonsterMove(*movespline, data, movespline->getLastPointSent() + 1));
-        SendMovementMessageToSet(std::move(data), true);
+        if (Movement::PacketBuilder::WriteContinuation(*movespline, data))
+            SendMovementMessageToSet(std::move(data), true);
     }
 
     Movement::Location loc = movespline->ComputePosition();

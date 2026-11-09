@@ -29,6 +29,7 @@
 #include "Spell.h"
 #include "SpellAuras.h"
 #include "GameObject.h"
+#include "BattleGround.h"
 #include "Map.h"
 
 using namespace Spells;
@@ -251,6 +252,16 @@ void WorldSession::HandleGameObjectUseOpcode(WorldPackets::Misc::GameObjectUse c
 
     if (!obj->IsAtInteractDistance(_player))
         return;
+
+    // AB capture BUTTONs must follow native OPEN_LOCK. Plain Use would activate
+    // contested buttons with no autoclose, blocking later legitimate captures.
+    // The BG-owned query is false for all ordinary objects and neutral GOOBERs.
+    if (BattleGround* bg = _player->GetBattleGround())
+        if (bg->ShouldRejectDirectCaptureUse(obj))
+        {
+            SendNotification(GetSessionDbcLocale()==LOCALE_zhCN?"无法占领这面旗帜，请重试。":"Unable to capture this banner. Please try again.");
+            return;
+        }
 
     if (obj->PlayerCanUse(_player))
     {
